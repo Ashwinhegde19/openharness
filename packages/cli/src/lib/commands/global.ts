@@ -4,84 +4,120 @@ import { ALL_HARNESSES, HARNESS_LABEL, type HarnessId } from "../harness.js";
 import { isHarnessImplemented } from "../harness-registry.js";
 import { detectInstalledHarnesses } from "../detect.js";
 import {
+  OPENROUTER_API_KEY_ENV_REF,
+  preferEnvRef,
   readGlobalConfig,
-  setGlobalApiKey,
   resolveStoredApiKey,
   resolveStoredExaApiKey,
+  resolveStoredOpenRouterApiKey,
+  setGlobalApiKey,
   setGlobalExaApiKey,
+  setGlobalOpenRouterApiKey,
 } from "../global-config.js";
-import { EXA_API_KEY_ENV_REF } from "../together-core.js";
+import { EXA_API_KEY_ENV_REF, TOGETHER_API_KEY_ENV_REF } from "../together-core.js";
+import { OPENROUTER_API_KEY_ENV } from "../provider/openrouter-preset.js";
 import { VERSION } from "../version.js";
 
 export function printHelp() {
-  console.log(`togetherlink v${VERSION} — Together AI for coding CLIs
+  console.log(`togetherlink v${VERSION} — session-scoped multi-provider harness launcher
+
+Connect Claude Code, Codex, OpenCode, and Pi to model providers for one session
+without permanently rewriting harness config. Together is an optional preset,
+not a product requirement.
 
 Usage:
-  togetherlink configure
+  togetherlink configure              # optional provider keys (all skippable)
   togetherlink whoami
-  togetherlink chatgpt [--model <model>] [--restore]  (alpha)
-  togetherlink codex [...]       (alias: tcodex)
-  togetherlink claude [...]      (alias: tclaude)
-  togetherlink pi [...]          (alias: tpi)
-  togetherlink opencode [...]    (alias: topencode)
+  togetherlink opencode [...]         # default provider: Ollama (no API key)
+  togetherlink claude [...]           # Together preset (needs TOGETHER_API_KEY)
+  togetherlink codex [...]
+  togetherlink pi [...]
+  togetherlink chatgpt [--model <model>] [--restore]  (alpha · Together preset)
 
 OpenCode providers (session-only; does not write ~/.config/opencode):
-  togetherlink opencode                                    # Together AI (default)
-  togetherlink opencode --provider ollama                  # local Ollama
+  togetherlink opencode                                    # Ollama (default, no key)
   togetherlink opencode --provider ollama --main llama3.2
-  togetherlink opencode --provider openrouter              # OpenRouter (OPENROUTER_API_KEY)
+  togetherlink opencode --provider openrouter              # OPENROUTER_API_KEY
   togetherlink opencode --provider openrouter --main openai/gpt-4o-mini
-  togetherlink --provider ollama --main llama3.2 opencode  # flags before harness also work
-  togetherlink opencode --provider ollama --base-url http://127.0.0.1:11434/v1
+  togetherlink opencode --provider together                # TOGETHER_API_KEY
+  togetherlink --provider openrouter opencode              # flags before harness OK
 
-Extra args after codex/claude/pi/opencode are passed through.
-ChatGPT App support is alpha; run \`togetherlink chatgpt --restore\` (alias: codex-app) to restore the previous desktop config.
-
-Docs: https://togetherlink.vercel.app/llms.txt
-  LLM-readable documentation — if you are an AI agent asked to install, configure,
-  or use togetherlink (including headless use), read that file first.
+Credentials are required only for the selected provider at launch time.
 `);
 }
 
 export async function runConfigure(): Promise<boolean> {
   const home = os.homedir();
   clack.intro("togetherlink configure");
+  clack.log.info(
+    "Keys are optional and per provider. Skip any prompt with Enter. " +
+      "Ollama needs no key. Claude/Codex/Pi still use the Together preset today.",
+  );
 
   const detected = detectInstalledHarnesses();
   const notImplemented = ALL_HARNESSES.filter((h) => !isHarnessImplemented(h));
 
   const lines = ALL_HARNESSES.map((h) => {
     const found = detected[h].installed ? "found" : "not found";
-    const support = isHarnessImplemented(h) ? " (ephemeral settings)" : " (support coming later)";
+    const support = isHarnessImplemented(h) ? " (session-only launch)" : " (support coming later)";
     return `  ${HARNESS_LABEL[h]}: ${found}${support}`;
   });
   clack.log.info(`Detected tools:\n${lines.join("\n")}`);
 
   const existing = resolveStoredApiKey((await readGlobalConfig(home)).apiKey);
-  let apiKey = existing || process.env.TOGETHER_API_KEY || "";
-  if (!apiKey) {
+  let togetherKey = existing || process.env.TOGETHER_API_KEY?.trim() || "";
+  if (!togetherKey) {
     const entered = await clack.password({
-      message: "Together API key (from https://api.together.ai/settings/api-keys):",
-      validate: (value) => (value.trim() ? undefined : "An API key is required"),
+      message: "Together API key (optional — Claude/Codex/Pi preset; Enter to skip):",
+      validate: () => undefined,
     });
     if (clack.isCancel(entered)) {
       clack.cancel("Cancelled.");
       return false;
     }
-    apiKey = entered.trim();
+    togetherKey = entered.trim();
   }
-  await setGlobalApiKey(home, apiKey);
+  await setGlobalApiKey(
+    home,
+    preferEnvRef(togetherKey, "TOGETHER_API_KEY", TOGETHER_API_KEY_ENV_REF),
+  );
+  if (togetherKey) {
+    clack.log.success("Together preset key saved.");
+  } else {
+    clack.log.info("Together key skipped.");
+  }
+
+  const existingOr = resolveStoredOpenRouterApiKey((await readGlobalConfig(home)).openrouterApiKey);
+  let openrouterKey = existingOr || process.env[OPENROUTER_API_KEY_ENV]?.trim() || "";
+  if (!openrouterKey) {
+    const enteredOr = await clack.password({
+      message: "OpenRouter API key (optional — `opencode --provider openrouter`; Enter to skip):",
+      validate: () => undefined,
+    });
+    if (clack.isCancel(enteredOr)) {
+      clack.cancel("Cancelled.");
+      return false;
+    }
+    openrouterKey = enteredOr.trim();
+  }
+  await setGlobalOpenRouterApiKey(
+    home,
+    preferEnvRef(openrouterKey, OPENROUTER_API_KEY_ENV, OPENROUTER_API_KEY_ENV_REF),
+  );
+  if (openrouterKey) {
+    clack.log.success("OpenRouter key saved.");
+  } else {
+    clack.log.info("OpenRouter key skipped.");
+  }
 
   // Exa powers the proxy's native web_search emulation for Claude Code. It's
-  // optional — without it, searches return a clear "EXA_API_KEY not set" error
-  // rather than failing silently — so allow skipping.
+  // optional — without it, searches return a clear "EXA_API_KEY not set" error.
   const existingExa = resolveStoredExaApiKey((await readGlobalConfig(home)).exaApiKey);
   let exaApiKey = existingExa || process.env.EXA_API_KEY || "";
   if (!exaApiKey) {
     const enteredExa = await clack.password({
-      message:
-        "Exa API key for web search (from https://exa.ai — press Enter to skip; web search will be disabled):",
-      validate: (value) => (value.trim() || value === "" ? undefined : undefined),
+      message: "Exa API key for web search (optional — Enter to skip; web search disabled):",
+      validate: () => undefined,
     });
     if (clack.isCancel(enteredExa)) {
       clack.cancel("Cancelled.");
@@ -89,17 +125,11 @@ export async function runConfigure(): Promise<boolean> {
     }
     exaApiKey = enteredExa.trim();
   }
-  // If the key came from the environment, store a reference rather than the
-  // literal, so we don't persist a secret that lives in .env.
-  const exaToStore =
-    exaApiKey && process.env.EXA_API_KEY && exaApiKey === process.env.EXA_API_KEY.trim()
-      ? EXA_API_KEY_ENV_REF
-      : exaApiKey;
-  await setGlobalExaApiKey(home, exaToStore);
+  await setGlobalExaApiKey(home, preferEnvRef(exaApiKey, "EXA_API_KEY", EXA_API_KEY_ENV_REF));
   if (exaApiKey) {
     clack.log.success("Exa web search enabled.");
   } else {
-    clack.log.info("Exa key skipped — web search will be unavailable in Claude Code.");
+    clack.log.info("Exa key skipped — web search unavailable in Claude Code proxy.");
   }
 
   const launchable = ALL_HARNESSES.filter(
@@ -107,15 +137,14 @@ export async function runConfigure(): Promise<boolean> {
   );
   if (launchable.length > 0) {
     clack.log.info(
-      `Ready to launch: ${launchable
-        .map((h) => HARNESS_LABEL[h])
-        .join(", ")}. Run \`togetherlink <harness>\` to start — nothing is written to disk.`,
+      `Ready: ${launchable.map((h) => HARNESS_LABEL[h]).join(", ")}. ` +
+        `Try \`togetherlink opencode\` (Ollama, no key) or a harness that matches a key you set.`,
     );
   }
 
   if (notImplemented.length > 0) {
     clack.log.info(
-      `${notImplemented.map((h) => HARNESS_LABEL[h]).join(" and ")} support is coming in a later phase (needs a local translation proxy).`,
+      `${notImplemented.map((h) => HARNESS_LABEL[h]).join(" and ")} support is coming later.`,
     );
   }
 
