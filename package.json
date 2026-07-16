@@ -1,0 +1,36 @@
+{
+  "name": "togetherlink",
+  "version": "0.5.26",
+  "private": true,
+  "description": "Use Together AI models in Claude Code, OpenCode, Codex, and Pi Code",
+  "license": "Apache-2.0",
+  "type": "module",
+  "scripts": {
+    "build": "pnpm -r build",
+    "build:bundle": "bash scripts/build-bundle.sh",
+    "build:site": "pnpm build:bundle && pnpm --dir site exec convex codegen --typecheck disable && pnpm --filter @togetherlink/site build",
+    "build:site:preview": "pnpm build:bundle && pnpm --filter @togetherlink/site build",
+    "bump-version": "bash scripts/bump-version.sh",
+    "dev": "pnpm -F @togetherlink/cli dev",
+    "dev:site": "pnpm --filter @togetherlink/site dev",
+    "format": "oxfmt --write .",
+    "format:check": "oxfmt --check .",
+    "hooks:install": "lefthook install",
+    "test": "pnpm -F @togetherlink/tests test",
+    "bench:proxy": "pnpm -F @togetherlink/tests bench:proxy",
+    "capture:proxy-fixtures": "pnpm -F @togetherlink/tests capture:proxy-fixtures",
+    "watch": "pnpm dev",
+    "typecheck": "pnpm -r typecheck"
+  },
+  "devDependencies": {
+    "@types/node": "^26.0.0",
+    "lefthook": "2.1.9",
+    "oxfmt": "0.57.0",
+    "turbo": "^2.10.1",
+    "typescript": "7.0.2"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "packageManager": "pnpm@11.9.0"
+}
