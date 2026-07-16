@@ -237,8 +237,7 @@ export class SessionRegistry {
       this.store.markSessionEnded(
         session.token,
         now,
-        session.externalSummary ??
-          "[togetherlink cost] session total: $0.0000 (0 in, 0 out)",
+        session.externalSummary ?? "[togetherlink cost] session total: $0.0000 (0 in, 0 out)",
         {
           promptTokens: session.promptTokens ?? 0,
           cachedTokens: session.cachedTokens ?? 0,

@@ -69,16 +69,16 @@ Same as Claude, but:
 
 ## Leak surfaces (ordered by severity)
 
-| Surface | Secret | Severity | Plan ref |
-|---|---|---|---|
-| `daemon.sqlite` `api_key` | Together key | **High** | M2 / ADR-0005 |
-| `daemon.sqlite` `auth_token` | Local proxy token | High | M2 |
-| `config.json` literal `apiKey` | Together key | High if used | Prefer env ref only |
-| Pi `models.json` + argv | Together key | Medium | Avoid file/argv secrets |
-| `--api-key` flag | Together key | Medium | History / `ps` |
-| Process env of child | Together or local token | Expected session-scoped | Clear on exit |
-| Logs / debug | Possible | Medium | Redaction (exists partially) |
-| Telemetry | Should not include secrets | Verify | keep canaries |
+| Surface                        | Secret                     | Severity                | Plan ref                     |
+| ------------------------------ | -------------------------- | ----------------------- | ---------------------------- |
+| `daemon.sqlite` `api_key`      | Together key               | **High**                | M2 / ADR-0005                |
+| `daemon.sqlite` `auth_token`   | Local proxy token          | High                    | M2                           |
+| `config.json` literal `apiKey` | Together key               | High if used            | Prefer env ref only          |
+| Pi `models.json` + argv        | Together key               | Medium                  | Avoid file/argv secrets      |
+| `--api-key` flag               | Together key               | Medium                  | History / `ps`               |
+| Process env of child           | Together or local token    | Expected session-scoped | Clear on exit                |
+| Logs / debug                   | Possible                   | Medium                  | Redaction (exists partially) |
+| Telemetry                      | Should not include secrets | Verify                  | keep canaries                |
 
 ## Target state (product REQUIREMENTS)
 

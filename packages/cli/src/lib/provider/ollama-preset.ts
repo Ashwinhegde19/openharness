@@ -36,9 +36,7 @@ export function buildOllamaProviderConfig(options?: {
 export const OLLAMA_PROVIDER_CONFIG: ProviderConfig = buildOllamaProviderConfig();
 
 export function ollamaEndpointConfig(baseURL?: string): ProviderEndpointConfig {
-  const config = buildOllamaProviderConfig(
-    baseURL !== undefined ? { baseURL } : undefined,
-  );
+  const config = buildOllamaProviderConfig(baseURL !== undefined ? { baseURL } : undefined);
   return {
     id: config.id,
     label: config.label,

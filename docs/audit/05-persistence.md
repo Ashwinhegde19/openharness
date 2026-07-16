@@ -4,30 +4,30 @@ Home root: `TOGETHERLINK_HOME` or `~/.togetherlink`.
 
 ## Classification legend
 
-- **S** secret  
-- **P** sensitive (private non-secret)  
-- **N** non-sensitive  
-- **I** integrity-critical  
+- **S** secret
+- **P** sensitive (private non-secret)
+- **N** non-sensitive
+- **I** integrity-critical
 
 ## Files and stores
 
-| Asset | Class | Notes |
-|---|---|---|
-| `config.json` → `apiKey` | **S** if literal; N if `{env:…}` only | Prefer env reference only |
-| `config.json` → `exaApiKey` | **S** / N same pattern | Optional |
-| `daemon.sqlite` → `api_key` | empty placeholder | **M2 done** — never writes real keys; legacy scrub + VACUUM |
-| `daemon.sqlite` → `auth_token` | always NULL | **M2 done** — never writes local proxy tokens |
-| `daemon.sqlite` → model ids, usage, pid, timestamps | N / P | OK to keep |
-| `daemon.sqlite` → `model_definition_json` | N | Includes public pricing |
-| local-proxy-token file | **S** | Session-scoped; restrict perms |
-| `install-id` | N | Telemetry |
-| `bin/togetherlink.js` | N | Install artifact |
-| codex-app registration / session lock | P (no API key) | **M2** redacts `apiKey`; rehydrates from env/global config on read |
-| temp `togetherlink-codex-catalog-*` | N | Model catalog only |
-| temp `togetherlink-pi-*` / `models.json` | **S** | Contains apiKey today |
-| OpenCode user config | N | Product claims no permanent write |
-| Claude `~/.claude/settings.json` | N | Not written by product |
-| Codex user config | P | May ensure generic defaults (`user-config.ts`) — review for mutation |
+| Asset                                               | Class                                 | Notes                                                                |
+| --------------------------------------------------- | ------------------------------------- | -------------------------------------------------------------------- |
+| `config.json` → `apiKey`                            | **S** if literal; N if `{env:…}` only | Prefer env reference only                                            |
+| `config.json` → `exaApiKey`                         | **S** / N same pattern                | Optional                                                             |
+| `daemon.sqlite` → `api_key`                         | empty placeholder                     | **M2 done** — never writes real keys; legacy scrub + VACUUM          |
+| `daemon.sqlite` → `auth_token`                      | always NULL                           | **M2 done** — never writes local proxy tokens                        |
+| `daemon.sqlite` → model ids, usage, pid, timestamps | N / P                                 | OK to keep                                                           |
+| `daemon.sqlite` → `model_definition_json`           | N                                     | Includes public pricing                                              |
+| local-proxy-token file                              | **S**                                 | Session-scoped; restrict perms                                       |
+| `install-id`                                        | N                                     | Telemetry                                                            |
+| `bin/togetherlink.js`                               | N                                     | Install artifact                                                     |
+| codex-app registration / session lock               | P (no API key)                        | **M2** redacts `apiKey`; rehydrates from env/global config on read   |
+| temp `togetherlink-codex-catalog-*`                 | N                                     | Model catalog only                                                   |
+| temp `togetherlink-pi-*` / `models.json`            | **S**                                 | Contains apiKey today                                                |
+| OpenCode user config                                | N                                     | Product claims no permanent write                                    |
+| Claude `~/.claude/settings.json`                    | N                                     | Not written by product                                               |
+| Codex user config                                   | P                                     | May ensure generic defaults (`user-config.ts`) — review for mutation |
 
 ## SQLite schema (sessions)
 

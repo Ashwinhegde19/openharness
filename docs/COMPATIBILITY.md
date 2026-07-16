@@ -61,40 +61,40 @@ The UI and docs must distinguish Inferred from Tested.
 
 ## 5. Capability dimensions
 
-| Capability | Values |
-|---|---|
-| Launch | pass / fail |
-| Basic text | pass / fail |
-| Streaming | pass / partial / fail |
-| Single tools | pass / partial / fail |
-| Parallel tools | pass / partial / fail |
-| Tool-result round trip | pass / partial / fail |
-| Vision | pass / partial / fail / not applicable |
-| Reasoning controls | pass / mapped / ignored / fail |
-| Structured output | pass / partial / fail |
-| Usage reporting | exact / partial / unavailable |
-| Context handling | tested limit / advertised / unknown |
-| Cancellation | pass / partial / fail |
-| Error mapping | pass / partial / fail |
-| Config preservation | pass / fail |
-| Cleanup | pass / partial / fail |
+| Capability             | Values                                 |
+| ---------------------- | -------------------------------------- |
+| Launch                 | pass / fail                            |
+| Basic text             | pass / fail                            |
+| Streaming              | pass / partial / fail                  |
+| Single tools           | pass / partial / fail                  |
+| Parallel tools         | pass / partial / fail                  |
+| Tool-result round trip | pass / partial / fail                  |
+| Vision                 | pass / partial / fail / not applicable |
+| Reasoning controls     | pass / mapped / ignored / fail         |
+| Structured output      | pass / partial / fail                  |
+| Usage reporting        | exact / partial / unavailable          |
+| Context handling       | tested limit / advertised / unknown    |
+| Cancellation           | pass / partial / fail                  |
+| Error mapping          | pass / partial / fail                  |
+| Config preservation    | pass / fail                            |
+| Cleanup                | pass / partial / fail                  |
 
 ## 6. Initial target matrix
 
 This is a planning target, not an implementation claim.
 
-| Harness | Provider | Model category | Target level | Route | Main risk |
-|---|---|---|---:|---|---|
-| OpenCode | Together AI | tested coding model | 3 | inline/direct | regression from baseline |
-| OpenCode | Ollama | tool-capable local coder | 3 | inline/direct | tool template and model quality |
-| OpenCode | OpenRouter | tool-capable coding model | 3-4 | inline/direct | provider/model variability |
-| OpenCode | Groq | supported tool model | 3 | inline/direct | unsupported request fields |
-| Claude Code | Together AI | tested coding model | 3 | Messages-to-Chat proxy | translation correctness |
-| Claude Code | OpenRouter | tool-capable coding model | 3 | Messages-to-Chat proxy | streaming and tools |
-| Claude Code | Ollama | local tool-capable coder | 2-3 | Messages-to-Chat proxy | model tool reliability |
-| Codex | Together AI | tested coding model | 3 | Responses-to-Chat proxy | Responses feature loss |
-| Codex | OpenRouter | supported coding model | 3 | Responses-to-Chat proxy | event mapping |
-| Codex | Groq | supported model | 2-3 | Responses-to-Chat proxy | fields and tool semantics |
+| Harness     | Provider    | Model category            | Target level | Route                   | Main risk                       |
+| ----------- | ----------- | ------------------------- | -----------: | ----------------------- | ------------------------------- |
+| OpenCode    | Together AI | tested coding model       |            3 | inline/direct           | regression from baseline        |
+| OpenCode    | Ollama      | tool-capable local coder  |            3 | inline/direct           | tool template and model quality |
+| OpenCode    | OpenRouter  | tool-capable coding model |          3-4 | inline/direct           | provider/model variability      |
+| OpenCode    | Groq        | supported tool model      |            3 | inline/direct           | unsupported request fields      |
+| Claude Code | Together AI | tested coding model       |            3 | Messages-to-Chat proxy  | translation correctness         |
+| Claude Code | OpenRouter  | tool-capable coding model |            3 | Messages-to-Chat proxy  | streaming and tools             |
+| Claude Code | Ollama      | local tool-capable coder  |          2-3 | Messages-to-Chat proxy  | model tool reliability          |
+| Codex       | Together AI | tested coding model       |            3 | Responses-to-Chat proxy | Responses feature loss          |
+| Codex       | OpenRouter  | supported coding model    |            3 | Responses-to-Chat proxy | event mapping                   |
+| Codex       | Groq        | supported model           |          2-3 | Responses-to-Chat proxy | fields and tool semantics       |
 
 ## 7. Harness acceptance checklist
 

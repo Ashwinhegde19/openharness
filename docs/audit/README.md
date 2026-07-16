@@ -7,18 +7,18 @@ See [../UPSTREAM.md](../UPSTREAM.md) (pinned TogetherLink commit).
 
 ## Deliverables
 
-| # | Deliverable | Document |
-|---|---|---|
-| 1 | Exact upstream commit | [../UPSTREAM.md](../UPSTREAM.md) |
-| 2 | Package / dependency map | [01-package-map.md](01-package-map.md) |
-| 3 | Together reference inventory | [02-together-inventory.md](02-together-inventory.md) |
-| 4 | Credential data flow | [03-credential-flow.md](03-credential-flow.md) |
-| 5 | Process / session flow | [04-process-session.md](04-process-session.md) |
-| 6 | Persistence classification | [05-persistence.md](05-persistence.md) |
-| 7 | Harness acceptance notes | [06-harnesses.md](06-harnesses.md) |
-| 8 | Protocol coverage | [07-protocol-coverage.md](07-protocol-coverage.md) |
-| 9 | Baseline test report | [08-baseline-tests.md](08-baseline-tests.md) |
-| 10 | Prioritized M1 issues | [09-m1-backlog.md](09-m1-backlog.md) |
+| #   | Deliverable                  | Document                                             |
+| --- | ---------------------------- | ---------------------------------------------------- |
+| 1   | Exact upstream commit        | [../UPSTREAM.md](../UPSTREAM.md)                     |
+| 2   | Package / dependency map     | [01-package-map.md](01-package-map.md)               |
+| 3   | Together reference inventory | [02-together-inventory.md](02-together-inventory.md) |
+| 4   | Credential data flow         | [03-credential-flow.md](03-credential-flow.md)       |
+| 5   | Process / session flow       | [04-process-session.md](04-process-session.md)       |
+| 6   | Persistence classification   | [05-persistence.md](05-persistence.md)               |
+| 7   | Harness acceptance notes     | [06-harnesses.md](06-harnesses.md)                   |
+| 8   | Protocol coverage            | [07-protocol-coverage.md](07-protocol-coverage.md)   |
+| 9   | Baseline test report         | [08-baseline-tests.md](08-baseline-tests.md)         |
+| 10  | Prioritized M1 issues        | [09-m1-backlog.md](09-m1-backlog.md)                 |
 
 ## Exit criteria (M0)
 

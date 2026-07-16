@@ -2,12 +2,12 @@
 
 ## Components
 
-| Process | How started | Lifetime |
-|---|---|---|
-| CLI parent | user runs `togetherlink <harness>` | until harness exits |
-| Daemon | CLI `ensureDaemon` spawns `--daemon` detached | outlives single session; shared |
-| Harness child | `spawn(claude|codex|opencode|pi)` | session |
-| Upstream | HTTPS to provider | per request |
+| Process       | How started                                   | Lifetime                        |
+| ------------- | --------------------------------------------- | ------------------------------- | -------- | ---- | ------- |
+| CLI parent    | user runs `togetherlink <harness>`            | until harness exits             |
+| Daemon        | CLI `ensureDaemon` spawns `--daemon` detached | outlives single session; shared |
+| Harness child | `spawn(claude                                 | codex                           | opencode | pi)` | session |
+| Upstream      | HTTPS to provider                             | per request                     |
 
 ## Daemon
 
@@ -60,13 +60,13 @@ No daemon, no CostTracker in daemon for OpenCode (self-report path exists concep
 
 ## Ownership / cleanup risks (for product RR-005)
 
-| Risk | Current behavior | Product target |
-|---|---|---|
-| Kill by name | not primary path | must never |
-| Stale PID file | cleared when probing | keep |
-| Fixed port 7878 | not fully dynamic | prefer dynamic ports (RR-004) |
+| Risk                       | Current behavior                           | Product target                             |
+| -------------------------- | ------------------------------------------ | ------------------------------------------ |
+| Kill by name               | not primary path                           | must never                                 |
+| Stale PID file             | cleared when probing                       | keep                                       |
+| Fixed port 7878            | not fully dynamic                          | prefer dynamic ports (RR-004)              |
 | SQLite restore after crash | restores active sessions **with api keys** | restore metadata only; secrets memory-only |
-| Ctrl+C | harness exit → deregister path | verify on all OS |
+| Ctrl+C                     | harness exit → deregister path             | verify on all OS                           |
 
 ## Session ID vs auth token
 

@@ -2,13 +2,13 @@
 
 ## Workspace
 
-| Path | Package name | Role |
-|---|---|---|
-| `/` | `togetherlink` (private) | Root workspace, scripts, turbo |
-| `packages/cli` | `@togetherlink/cli` | CLI binary, harnesses, daemon, proxies |
-| `packages/models` | `@togetherlink/models` | Together model catalog, pricing, base URL |
-| `packages/tests` | `@togetherlink/tests` | Vitest suite, fixtures, benches |
-| `site` | `@togetherlink/site` | Install site, telemetry API, dashboard |
+| Path              | Package name             | Role                                      |
+| ----------------- | ------------------------ | ----------------------------------------- |
+| `/`               | `togetherlink` (private) | Root workspace, scripts, turbo            |
+| `packages/cli`    | `@togetherlink/cli`      | CLI binary, harnesses, daemon, proxies    |
+| `packages/models` | `@togetherlink/models`   | Together model catalog, pricing, base URL |
+| `packages/tests`  | `@togetherlink/tests`    | Vitest suite, fixtures, benches           |
+| `site`            | `@togetherlink/site`     | Install site, telemetry API, dashboard    |
 
 Runtime: **Node ≥ 18**, package manager **pnpm@11.9.0**, optional **Bun** for installed bundle.
 
@@ -50,13 +50,13 @@ pnpm -F @togetherlink/cli typecheck
 
 ## Persistent local paths
 
-| Path | Purpose |
-|---|---|
-| `~/.togetherlink/` | Product home (`TOGETHERLINK_HOME` override) |
-| `~/.togetherlink/config.json` | Global API keys (Together, optional Exa) |
-| `~/.togetherlink/daemon.sqlite` | Session registry (includes secrets today) |
-| `~/.togetherlink/bin/` | Installed CLI bundle (autoupdate path) |
-| `~/.togetherlink/install-id` | Telemetry install id |
+| Path                            | Purpose                                     |
+| ------------------------------- | ------------------------------------------- |
+| `~/.togetherlink/`              | Product home (`TOGETHERLINK_HOME` override) |
+| `~/.togetherlink/config.json`   | Global API keys (Together, optional Exa)    |
+| `~/.togetherlink/daemon.sqlite` | Session registry (includes secrets today)   |
+| `~/.togetherlink/bin/`          | Installed CLI bundle (autoupdate path)      |
+| `~/.togetherlink/install-id`    | Telemetry install id                        |
 
 ## Site / release (out of M1 scope)
 

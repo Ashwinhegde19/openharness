@@ -105,11 +105,7 @@ Cross-cutting
 ### 6.1 Provider protocol
 
 ```ts
-export type ProviderProtocol =
-  | "openai-chat"
-  | "openai-responses"
-  | "anthropic-messages"
-  | "gemini";
+export type ProviderProtocol = "openai-chat" | "openai-responses" | "anthropic-messages" | "gemini";
 ```
 
 Version 1 primarily targets `openai-chat` upstream. The wider union avoids coupling the data model to one permanent protocol choice.
@@ -198,11 +194,7 @@ Model metadata is provider-scoped. The same underlying model may have different 
 ### 6.5 Harness adapter
 
 ```ts
-export type HarnessProtocol =
-  | "openai-chat"
-  | "openai-responses"
-  | "anthropic-messages"
-  | "gemini";
+export type HarnessProtocol = "openai-chat" | "openai-responses" | "anthropic-messages" | "gemini";
 
 export type IsolationStrategy =
   | "environment"

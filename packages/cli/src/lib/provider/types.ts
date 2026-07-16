@@ -6,11 +6,7 @@
  * persistent form. Session-scoped secrets live on {@link ProviderRuntime}.
  */
 
-export type ProviderProtocol =
-  | "openai-chat"
-  | "openai-responses"
-  | "anthropic-messages"
-  | "gemini";
+export type ProviderProtocol = "openai-chat" | "openai-responses" | "anthropic-messages" | "gemini";
 
 /**
  * How to build the upstream Authorization (or equivalent) header.

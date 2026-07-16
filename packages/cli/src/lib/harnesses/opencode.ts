@@ -57,10 +57,14 @@ function peelProductFlags(args: string[]): {
       }
       continue;
     }
-    if (arg === "--main" || arg === "--model" || arg === "-m" || arg.startsWith("--main=") || arg.startsWith("--model=")) {
-      const value = arg.includes("=")
-        ? arg.slice(arg.indexOf("=") + 1)
-        : args[++i];
+    if (
+      arg === "--main" ||
+      arg === "--model" ||
+      arg === "-m" ||
+      arg.startsWith("--main=") ||
+      arg.startsWith("--model=")
+    ) {
+      const value = arg.includes("=") ? arg.slice(arg.indexOf("=") + 1) : args[++i];
       if (value) {
         main = value;
       }

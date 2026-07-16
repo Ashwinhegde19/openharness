@@ -24,9 +24,7 @@ export function resolveProviderRuntime(
     apiKey,
     ...(base.headers ? { headers: base.headers } : {}),
     ...(base.queryParams ? { queryParams: base.queryParams } : {}),
-    ...(base.compatibilityPolicyId
-      ? { compatibilityPolicyId: base.compatibilityPolicyId }
-      : {}),
+    ...(base.compatibilityPolicyId ? { compatibilityPolicyId: base.compatibilityPolicyId } : {}),
   };
 }
 

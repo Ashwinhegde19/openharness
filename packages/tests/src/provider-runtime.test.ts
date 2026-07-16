@@ -19,7 +19,10 @@ import {
 } from "../../cli/src/lib/together-client.js";
 import { buildSession, type RegisterSessionRequest } from "../../cli/src/lib/daemon/state.js";
 import { buildOpencodeConfigJson } from "../../cli/src/lib/opencode/core.js";
-import { OPENCODE_MODEL_WHITELIST, OPENCODE_PROVIDER_ID } from "../../cli/src/lib/opencode/defaults.js";
+import {
+  OPENCODE_MODEL_WHITELIST,
+  OPENCODE_PROVIDER_ID,
+} from "../../cli/src/lib/opencode/defaults.js";
 import type { ModelDefinition } from "@togetherlink/models";
 
 const MODEL_DEF: ModelDefinition = {

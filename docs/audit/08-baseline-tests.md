@@ -7,32 +7,32 @@ Commands: `pnpm install && pnpm build && pnpm test`
 
 ## Build
 
-| Step | Result |
-|---|---|
-| `pnpm install` | Pass |
-| `pnpm build` (cli + models + site) | Pass |
-| CLI binary | `packages/cli/dist/bin/togetherlink.js` produced |
+| Step                               | Result                                           |
+| ---------------------------------- | ------------------------------------------------ |
+| `pnpm install`                     | Pass                                             |
+| `pnpm build` (cli + models + site) | Pass                                             |
+| CLI binary                         | `packages/cli/dist/bin/togetherlink.js` produced |
 
 ## Full suite (`pnpm test`)
 
-| Metric | Count |
-|---|---:|
-| Test files | 30 |
-| Passed files | 23 |
-| Failed files | 5 |
+| Metric        |                                                 Count |
+| ------------- | ----------------------------------------------------: |
+| Test files    |                                                    30 |
+| Passed files  |                                                    23 |
+| Failed files  |                                                     5 |
 | Skipped files | 2 (`LiveSmoke`, `livemodelscheck` without live flags) |
-| Passed tests | 204 |
-| Failed tests | 18 |
-| Skipped tests | 47 |
+| Passed tests  |                                                   204 |
+| Failed tests  |                                                    18 |
+| Skipped tests |                                                    47 |
 
 ### Failed files (environment / live)
 
 These are **live headless gauntlets** that require installed harness CLIs and a real `TOGETHER_API_KEY`. They are not treated as M1 code regressions on this machine:
 
-- `src/Claude.test.ts` (6) — needs `claude` + API key  
-- `src/Codex.test.ts` (6) — needs `codex` + API key  
-- `src/OpenCode.test.ts` (3) — needs `opencode` + API key  
-- `src/Pi.test.ts` (3) — needs `pi` + API key  
+- `src/Claude.test.ts` (6) — needs `claude` + API key
+- `src/Codex.test.ts` (6) — needs `codex` + API key
+- `src/OpenCode.test.ts` (3) — needs `opencode` + API key
+- `src/Pi.test.ts` (3) — needs `pi` + API key
 
 Also:
 
@@ -64,18 +64,18 @@ Use this offline set as the **M1 regression gate**. Re-enable live gauntlets in 
 
 ## Gaps vs product TEST-STRATEGY.md
 
-| Product requirement | Baseline today |
-|---|---|
-| Protocol contracts | Strong Claude/Codex proxy API tests |
+| Product requirement        | Baseline today                        |
+| -------------------------- | ------------------------------------- |
+| Protocol contracts         | Strong Claude/Codex proxy API tests   |
 | Config-integrity snapshots | Partial / not as formal product suite |
-| Canary secret DB scan | **Missing** — add in M2 |
-| Crash cleanup / PID reuse | Partial via daemon tests |
-| Cross-platform matrix | Not run here (Linux only) |
-| Live multi-provider | N/A (Together-only) |
+| Canary secret DB scan      | **Missing** — add in M2               |
+| Crash cleanup / PID reuse  | Partial via daemon tests              |
+| Cross-platform matrix      | Not run here (Linux only)             |
+| Live multi-provider        | N/A (Together-only)                   |
 
 ## Recommendation
 
-1. Document offline test command in CONTRIBUTING (later).  
-2. M1 CI: run offline core only.  
-3. Optional nightly: live gauntlet with secrets.  
+1. Document offline test command in CONTRIBUTING (later).
+2. M1 CI: run offline core only.
+3. Optional nightly: live gauntlet with secrets.
 4. Before claiming M1 done: offline core green + no new secret persistence.

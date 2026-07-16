@@ -41,5 +41,9 @@ export function getBuiltinProvider(
 /** Whether `id` names a built-in preset we ship. */
 export function isBuiltinProviderId(id: string): id is BuiltinProviderId {
   const normalized = id.trim().toLowerCase();
-  return normalized === TOGETHER_PROVIDER_ID || normalized === "togetherai" || normalized === OLLAMA_PROVIDER_ID;
+  return (
+    normalized === TOGETHER_PROVIDER_ID ||
+    normalized === "togetherai" ||
+    normalized === OLLAMA_PROVIDER_ID
+  );
 }

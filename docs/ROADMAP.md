@@ -12,18 +12,18 @@
 
 ## 2. Milestones
 
-| Milestone | Goal | Proof |
-|---|---|---|
-| M0 | Planning and audit | critical request, credential, config, and process paths documented |
-| M1 | Provider-neutral Together baseline | Together works through generic core |
-| M2 | Secret-safe runtime | no active key persisted in plaintext |
-| M3 | OpenCode + Ollama | local model without config mutation |
-| M4 | OpenCode + OpenRouter | cloud streaming and tools |
-| M5 | Claude generalization | non-Together coding task completes |
-| M6 | Codex generalization | Responses-to-Chat task completes |
-| M7 | Public alpha | external user completes quick start |
-| M8 | Beta hardening | cross-platform and full v1 safety |
-| M9 | Stable 1.0 | support policy and evidence-backed compatibility |
+| Milestone | Goal                               | Proof                                                              |
+| --------- | ---------------------------------- | ------------------------------------------------------------------ |
+| M0        | Planning and audit                 | critical request, credential, config, and process paths documented |
+| M1        | Provider-neutral Together baseline | Together works through generic core                                |
+| M2        | Secret-safe runtime                | no active key persisted in plaintext                               |
+| M3        | OpenCode + Ollama                  | local model without config mutation                                |
+| M4        | OpenCode + OpenRouter              | cloud streaming and tools                                          |
+| M5        | Claude generalization              | non-Together coding task completes                                 |
+| M6        | Codex generalization               | Responses-to-Chat task completes                                   |
+| M7        | Public alpha                       | external user completes quick start                                |
+| M8        | Beta hardening                     | cross-platform and full v1 safety                                  |
+| M9        | Stable 1.0                         | support policy and evidence-backed compatibility                   |
 
 ## 3. M0 - Planning and audit
 

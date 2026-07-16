@@ -63,9 +63,8 @@ export async function readAppRegistration(
     const parsed = JSON.parse(raw) as RegisterSessionRequest;
     // Prefer an in-file key only for legacy pre-M2 files; new writes store "".
     const resolvedKey =
-      (typeof parsed.apiKey === "string" && parsed.apiKey.trim()
-        ? parsed.apiKey.trim()
-        : "") || (await resolveTogetherApiKey({ home }));
+      (typeof parsed.apiKey === "string" && parsed.apiKey.trim() ? parsed.apiKey.trim() : "") ||
+      (await resolveTogetherApiKey({ home }));
     const candidate: RegisterSessionRequest = {
       ...parsed,
       apiKey: resolvedKey,

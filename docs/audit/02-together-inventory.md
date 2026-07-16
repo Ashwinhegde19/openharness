@@ -4,57 +4,59 @@ Classification of Together-specific coupling. **Do not bulk-rename** before M1 p
 
 ## A. Endpoint and auth (must become ProviderConfig)
 
-| Location | What | Class |
-|---|---|---|
-| `packages/models/src/index.ts` | `TOGETHER_BASE_URL = "https://api.together.ai/v1"` | endpoint |
-| `packages/cli/src/lib/together-core.ts` | re-exports base URL; `TOGETHER_API_KEY_ENV_REF` | auth/env |
+| Location                                  | What                                                        | Class           |
+| ----------------------------------------- | ----------------------------------------------------------- | --------------- |
+| `packages/models/src/index.ts`            | `TOGETHER_BASE_URL = "https://api.together.ai/v1"`          | endpoint        |
+| `packages/cli/src/lib/together-core.ts`   | re-exports base URL; `TOGETHER_API_KEY_ENV_REF`             | auth/env        |
 | `packages/cli/src/lib/together-client.ts` | `fetch(\`${TOGETHER_BASE_URL}/chat/completions\`)` + Bearer | upstream client |
-| `packages/cli/src/lib/global-config.ts` | `apiKey` resolution via `TOGETHER_API_KEY` | auth |
-| `packages/cli/src/lib/commands/global.ts` | configure prompt for Together key | branding + auth |
-| `packages/cli/src/lib/opencode/core.ts` | `@ai-sdk/togetherai`, provider name "Together AI" | provider preset |
-| `packages/cli/src/lib/harnesses/*` | error strings "No Together API key" | branding |
-| `packages/cli/src/lib/claude/vision.ts` | uses `TOGETHER_BASE_URL` for vision calls | endpoint |
+| `packages/cli/src/lib/global-config.ts`   | `apiKey` resolution via `TOGETHER_API_KEY`                  | auth            |
+| `packages/cli/src/lib/commands/global.ts` | configure prompt for Together key                           | branding + auth |
+| `packages/cli/src/lib/opencode/core.ts`   | `@ai-sdk/togetherai`, provider name "Together AI"           | provider preset |
+| `packages/cli/src/lib/harnesses/*`        | error strings "No Together API key"                         | branding        |
+| `packages/cli/src/lib/claude/vision.ts`   | uses `TOGETHER_BASE_URL` for vision calls                   | endpoint        |
 
 ## B. Model catalog and pricing (must become provider-scoped)
 
-| Location | What | Class |
-|---|---|---|
-| `packages/models/src/index.ts` | GLM/Kimi/MiniMax/Qwen/DeepSeek defs, costs, limits | model metadata |
-| `packages/cli/src/lib/claude/defaults.ts` | Claude aliases → Together models | model mapping |
-| `packages/cli/src/lib/codex/defaults.ts` | Codex model list from shared catalog | model mapping |
-| `packages/cli/src/lib/opencode/defaults.ts` | OpenCode model entries / whitelist | model mapping |
-| `packages/cli/src/lib/cost.ts` | Together pricing assumptions | pricing |
+| Location                                    | What                                               | Class          |
+| ------------------------------------------- | -------------------------------------------------- | -------------- |
+| `packages/models/src/index.ts`              | GLM/Kimi/MiniMax/Qwen/DeepSeek defs, costs, limits | model metadata |
+| `packages/cli/src/lib/claude/defaults.ts`   | Claude aliases → Together models                   | model mapping  |
+| `packages/cli/src/lib/codex/defaults.ts`    | Codex model list from shared catalog               | model mapping  |
+| `packages/cli/src/lib/opencode/defaults.ts` | OpenCode model entries / whitelist                 | model mapping  |
+| `packages/cli/src/lib/cost.ts`              | Together pricing assumptions                       | pricing        |
 
 ## C. Branding / package identity (rename last — M6+)
 
-| Location | What |
-|---|---|
-| package names `@togetherlink/*` | npm identity |
-| bin `togetherlink`, aliases `tclaude`… | CLI names |
-| `~/.togetherlink` home | paths |
-| env `TOGETHERLINK_*` | env prefix |
-| site assets / install origin | distribution |
-| banners "Routing … → Together AI" | UX strings |
-| telemetry events | product analytics |
+| Location                               | What              |
+| -------------------------------------- | ----------------- |
+| package names `@togetherlink/*`        | npm identity      |
+| bin `togetherlink`, aliases `tclaude`… | CLI names         |
+| `~/.togetherlink` home                 | paths             |
+| env `TOGETHERLINK_*`                   | env prefix        |
+| site assets / install origin           | distribution      |
+| banners "Routing … → Together AI"      | UX strings        |
+| telemetry events                       | product analytics |
 
 ## D. Reusable protocol / lifecycle (keep; generalize inputs)
 
-| Module | Role | Together coupling today |
-|---|---|---|
-| `claude/translate-*.ts`, `stream.ts` | Anthropic ↔ Chat | low (model ids/errors) |
-| `codex/translate-*.ts`, `stream.ts` | Responses ↔ Chat | low |
-| `daemon/*` | proxy + sessions | medium (stores Together key) |
-| `proxied-session.ts` | launch lifecycle | medium (apiKey field) |
-| `context-fit.ts` | context-length retry | medium (Together error shapes) |
-| `harness-types.ts`, `harness-registry.ts` | adapter pattern | low |
+| Module                                    | Role                 | Together coupling today        |
+| ----------------------------------------- | -------------------- | ------------------------------ |
+| `claude/translate-*.ts`, `stream.ts`      | Anthropic ↔ Chat     | low (model ids/errors)         |
+| `codex/translate-*.ts`, `stream.ts`       | Responses ↔ Chat     | low                            |
+| `daemon/*`                                | proxy + sessions     | medium (stores Together key)   |
+| `proxied-session.ts`                      | launch lifecycle     | medium (apiKey field)          |
+| `context-fit.ts`                          | context-length retry | medium (Together error shapes) |
+| `harness-types.ts`, `harness-registry.ts` | adapter pattern      | low                            |
 
 ## E. Environment variables (inventory)
 
 ### Provider / user secrets
+
 - `TOGETHER_API_KEY`
 - `EXA_API_KEY` (optional web search)
 
 ### Product control
+
 - `TOGETHERLINK_HOME`
 - `TOGETHERLINK_PORT` (default daemon **7878**)
 - `TOGETHERLINK_DEBUG`, `TOGETHERLINK_DEBUG_LOG`, `TOGETHERLINK_PERF`
@@ -72,4 +74,4 @@ Highest `together` string density (source/docs, excluding lockfile):
 - tests: `CodexProxyApi.test.ts`, `ClaudeApi.test.ts`
 - install/README/scripts
 
-**Inventory rule for M1:** parameterize A + make B a Together *preset*; leave C alone.
+**Inventory rule for M1:** parameterize A + make B a Together _preset_; leave C alone.

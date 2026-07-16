@@ -59,10 +59,7 @@ describe("Ollama model discovery", () => {
     const result = await discoverOllamaModels({ fetchImpl });
     expect(result.ok).toBe(true);
     if (result.ok) {
-      expect(result.models.map((m) => m.id)).toEqual([
-        "llama3.2:latest",
-        "qwen2.5-coder:7b",
-      ]);
+      expect(result.models.map((m) => m.id)).toEqual(["llama3.2:latest", "qwen2.5-coder:7b"]);
     }
   });
 
@@ -72,10 +69,10 @@ describe("Ollama model discovery", () => {
         return new Response("nope", { status: 404 });
       }
       if (url.endsWith("/api/tags")) {
-        return new Response(
-          JSON.stringify({ models: [{ name: "mistral:latest" }] }),
-          { status: 200, headers: { "content-type": "application/json" } },
-        );
+        return new Response(JSON.stringify({ models: [{ name: "mistral:latest" }] }), {
+          status: 200,
+          headers: { "content-type": "application/json" },
+        });
       }
       return new Response("missing", { status: 500 });
     }) as unknown as typeof fetch;
@@ -161,9 +158,9 @@ describe("OpenCode config for Ollama (session-only)", () => {
     const provider = buildOllamaProviderConfig({
       models: [ollamaModelFromId("llama3.2")],
     });
-    expect(() =>
-      buildOpencodeConfigJson({ provider, modelId: "not-pulled" }),
-    ).toThrow(/not available/i);
+    expect(() => buildOpencodeConfigJson({ provider, modelId: "not-pulled" })).toThrow(
+      /not available/i,
+    );
   });
 
   test("Together path still uses togetherai adapter (regression)", () => {

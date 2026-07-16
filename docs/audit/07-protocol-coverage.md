@@ -4,28 +4,28 @@ Canonical upstream today: **OpenAI Chat Completions** at Together.
 
 ## Paths
 
-| Harness inbound | Translation | Upstream | Modules |
-|---|---|---|---|
-| Anthropic Messages | Yes | Chat Completions | `claude/translate-request.ts`, `translate-response.ts`, `stream.ts`, `proxy.ts` |
-| OpenAI Responses | Yes | Chat Completions | `codex/translate-request.ts`, `translate-response.ts`, `stream.ts`, `proxy.ts` |
-| OpenAI Chat (OpenCode SDK) | Passthrough (SDK) | Chat Completions | OpenCode + `@ai-sdk/togetherai` |
-| Pi provider file | n/a (direct) | Provider-defined | `harnesses/pi.ts` |
+| Harness inbound            | Translation       | Upstream         | Modules                                                                         |
+| -------------------------- | ----------------- | ---------------- | ------------------------------------------------------------------------------- |
+| Anthropic Messages         | Yes               | Chat Completions | `claude/translate-request.ts`, `translate-response.ts`, `stream.ts`, `proxy.ts` |
+| OpenAI Responses           | Yes               | Chat Completions | `codex/translate-request.ts`, `translate-response.ts`, `stream.ts`, `proxy.ts`  |
+| OpenAI Chat (OpenCode SDK) | Passthrough (SDK) | Chat Completions | OpenCode + `@ai-sdk/togetherai`                                                 |
+| Pi provider file           | n/a (direct)      | Provider-defined | `harnesses/pi.ts`                                                               |
 
 ## Claude (Messages → Chat)
 
 Covered in implementation / tests (high level):
 
-| Area | Support level |
-|---|---|
-| System / user / assistant text | Implemented |
-| Tool definitions / tool_use / tool_result | Implemented |
-| Streaming text + tool args | Implemented (`claude/stream.ts` large) |
-| Token counting endpoint | Stub/handler in proxy |
-| Models list for Claude | Local synthetic `/v1/models` |
-| Vision / images | Special path (`vision.ts`, failover) |
-| Compaction | `compaction.ts` |
-| Context length exceeded | Shared `context-fit.ts` retry |
-| Errors | Anthropic-shaped via `together-call.ts` |
+| Area                                      | Support level                           |
+| ----------------------------------------- | --------------------------------------- |
+| System / user / assistant text            | Implemented                             |
+| Tool definitions / tool_use / tool_result | Implemented                             |
+| Streaming text + tool args                | Implemented (`claude/stream.ts` large)  |
+| Token counting endpoint                   | Stub/handler in proxy                   |
+| Models list for Claude                    | Local synthetic `/v1/models`            |
+| Vision / images                           | Special path (`vision.ts`, failover)    |
+| Compaction                                | `compaction.ts`                         |
+| Context length exceeded                   | Shared `context-fit.ts` retry           |
+| Errors                                    | Anthropic-shaped via `together-call.ts` |
 
 Likely lossy / limited:
 
@@ -35,14 +35,14 @@ Likely lossy / limited:
 
 ## Codex (Responses → Chat)
 
-| Area | Support level |
-|---|---|
-| Basic responses create | Implemented |
-| Streaming events | Implemented (`codex/stream.ts`) |
-| Tools | Implemented with mapping |
-| Model catalog injection | Temp JSON |
-| Errors | OpenAI-shaped (`writeOpenAIError`) |
-| Idle / turn timeouts | Env-tunable |
+| Area                    | Support level                      |
+| ----------------------- | ---------------------------------- |
+| Basic responses create  | Implemented                        |
+| Streaming events        | Implemented (`codex/stream.ts`)    |
+| Tools                   | Implemented with mapping           |
+| Model catalog injection | Temp JSON                          |
+| Errors                  | OpenAI-shaped (`writeOpenAIError`) |
+| Idle / turn timeouts    | Env-tunable                        |
 
 Likely lossy / limited:
 
