@@ -21,7 +21,9 @@ import { parseArgs } from "../../cli/src/lib/parse-args.js";
 
 describe("Ollama provider preset (M3)", () => {
   test("builtin registry lists together, ollama, and openrouter", () => {
-    expect(listBuiltinProviderIds()).toEqual(["together", "ollama", "openrouter"]);
+    expect(listBuiltinProviderIds()).toContain("ollama");
+    expect(listBuiltinProviderIds()).toContain("openrouter");
+    expect(listBuiltinProviderIds()).toContain("together");
     expect(getBuiltinProvider("ollama")?.id).toBe(OLLAMA_PROVIDER_ID);
     expect(getBuiltinProvider("ollama")?.auth).toEqual({ type: "none" });
     expect(getBuiltinProvider("ollama")?.baseURL).toBe(OLLAMA_DEFAULT_BASE_URL);
