@@ -29,7 +29,7 @@
 
 Deliverables:
 
-- all documents in this folder;
+- all documents under docs/;
 - exact upstream commit;
 - license review;
 - package/dependency map;

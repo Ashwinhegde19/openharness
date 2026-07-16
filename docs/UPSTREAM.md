@@ -7,9 +7,10 @@
 - License file: MIT (`LICENSE`); package.json fields currently say Apache-2.0 — reconcile before release
 - Role: implementation baseline for this product (ADR-0001)
 
-Planning docs remain at the repository root. Original TogetherLink CLI README:
+Planning docs live under [`docs/`](./). Original TogetherLink CLI README:
 
-- [docs/UPSTREAM-TOGETHERLINK-README.md](docs/UPSTREAM-TOGETHERLINK-README.md)
+- [UPSTREAM-TOGETHERLINK-README.md](UPSTREAM-TOGETHERLINK-README.md)
+- M0 audit: [audit/README.md](audit/README.md)
 
 ## Git remotes
 

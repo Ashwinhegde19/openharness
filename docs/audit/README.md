@@ -3,7 +3,7 @@
 Status: **complete for baseline pin**  
 Date: 2026-07-16  
 Upstream pin: `9f56ed93b4b0d73d7a96bc70574851e21a46cdf7` (TogetherLink v0.5.26)  
-See [../UPSTREAM.md](../UPSTREAM.md).
+See [../UPSTREAM.md](../UPSTREAM.md) (pinned TogetherLink commit).
 
 ## Deliverables
 
