@@ -25,6 +25,13 @@ Usage:
   togetherlink pi [...]          (alias: tpi)
   togetherlink opencode [...]    (alias: topencode)
 
+OpenCode providers (session-only; does not write ~/.config/opencode):
+  togetherlink opencode                                    # Together AI (default)
+  togetherlink opencode --provider ollama                  # local Ollama
+  togetherlink opencode --provider ollama --main llama3.2
+  togetherlink --provider ollama --main llama3.2 opencode  # flags before harness also work
+  togetherlink opencode --provider ollama --base-url http://127.0.0.1:11434/v1
+
 Extra args after codex/claude/pi/opencode are passed through.
 ChatGPT App support is alpha; run \`togetherlink chatgpt --restore\` (alias: codex-app) to restore the previous desktop config.
 

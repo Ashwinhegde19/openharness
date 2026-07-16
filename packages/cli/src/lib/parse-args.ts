@@ -5,6 +5,8 @@ const FLAG_ALIASES = {
   "--api-key": "apiKey",
   "--main": "main",
   "--model": "main",
+  "--provider": "provider",
+  "--base-url": "baseUrl",
   "--search": "search",
   "--slot": "slot",
 } as const satisfies Record<string, keyof HarnessContext>;

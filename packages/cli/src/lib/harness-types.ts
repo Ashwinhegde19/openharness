@@ -5,6 +5,13 @@ export type HarnessContext = {
   apiKey?: string;
   apiKeyFromFlag?: boolean;
   main?: string;
+  /**
+   * Built-in provider preset id (`together` default, `ollama` for local M3).
+   * Resolved by the harness before launch; not a permanent profile write.
+   */
+  provider?: string;
+  /** Optional provider base URL override (e.g. Ollama on a non-default host). */
+  baseUrl?: string;
   passthrough?: string[];
   json?: boolean;
   restore?: boolean;
