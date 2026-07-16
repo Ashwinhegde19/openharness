@@ -12,6 +12,7 @@ import {
 } from "./daemon/launch.js";
 import { sendTelemetryEvent, randomSessionId } from "./telemetry.js";
 import type { RegisterSessionRequest } from "./daemon/state.js";
+import { togetherEndpointConfig, type ProviderEndpointConfig } from "./provider/index.js";
 
 /**
  * The proxied-session lifecycle — the deep module behind
@@ -52,7 +53,12 @@ export type ProxiedSessionSpec = {
   /** The agent id ("claude" / "codex") — used for registration + telemetry. */
   agent: "claude" | "codex";
   apiKey: string;
-  /** Resolved model: the id Together expects + the human name for the banner. */
+  /**
+   * Non-secret provider endpoint for the daemon session. Defaults to the
+   * Together preset when omitted (M1: Together only).
+   */
+  provider?: ProviderEndpointConfig;
+  /** Resolved model: the id the upstream expects + the human name for the banner. */
   modelId: string;
   targetModelId: string;
   modelName: string;
@@ -108,6 +114,7 @@ export async function runProxiedSession(spec: ProxiedSessionSpec): Promise<Proxi
     authToken,
     agent: spec.agent,
     apiKey: spec.apiKey,
+    provider: spec.provider ?? togetherEndpointConfig(),
     modelLabel: spec.modelName,
     modelId: spec.registrationModelId ?? spec.modelId,
     targetModelId: spec.targetModelId,

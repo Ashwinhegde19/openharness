@@ -17,6 +17,7 @@ import { callTogetherWithNativeTools } from "./together-call.js";
 import { recordUsage } from "./usage.js";
 import { streamResponseFromTogether } from "./stream.js";
 import type { ResponsesRequest, ResponsesTool } from "./wire-types.js";
+import type { ProviderAuth } from "../provider/types.js";
 
 export type CodexProxyOptions = {
   apiKey: string;
@@ -25,6 +26,12 @@ export type CodexProxyOptions = {
   modelName: string;
   modelDefinition: ModelDefinition;
   authToken: string;
+  /** Upstream base URL (defaults to Together when omitted). */
+  baseURL?: string | undefined;
+  /** Upstream auth scheme (defaults to bearer). */
+  auth?: ProviderAuth | undefined;
+  headers?: Record<string, string> | undefined;
+  queryParams?: Record<string, string> | undefined;
   debug?: boolean | undefined;
   costTracker?: CostTracker | undefined;
   perfSink?: ProxyPerfSink | undefined;

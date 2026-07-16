@@ -25,16 +25,23 @@ import type {
   AnthropicMessagesRequest,
   AnthropicTool,
 } from "./wire-types.js";
+import type { ProviderAuth } from "../provider/types.js";
 
 export type ClaudeProxyOptions = {
   apiKey: string;
   /** Claude-facing model alias, e.g. together-glm-5-2. */
   modelId: string;
-  /** Together API model id, e.g. zai-org/GLM-5.2. */
+  /** Upstream API model id, e.g. zai-org/GLM-5.2. */
   targetModelId: string;
   modelName: string;
   modelDefinition: ModelDefinition;
   authToken: string;
+  /** Upstream base URL (defaults to Together when omitted). */
+  baseURL?: string | undefined;
+  /** Upstream auth scheme (defaults to bearer). */
+  auth?: ProviderAuth | undefined;
+  headers?: Record<string, string> | undefined;
+  queryParams?: Record<string, string> | undefined;
   claudeCodeMaxOutputTokens?: number | undefined;
   claudeCodeMaxOutputTokensUserSet?: boolean | undefined;
   debug?: boolean | undefined;

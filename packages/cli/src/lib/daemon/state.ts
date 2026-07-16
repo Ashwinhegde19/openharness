@@ -11,6 +11,11 @@ import {
   type SessionStore,
   type StoredSession,
 } from "./storage.js";
+import {
+  resolveProviderRuntime,
+  type ProviderEndpointConfig,
+  type ProviderRuntime,
+} from "../provider/index.js";
 
 const DEFAULT_NO_PID_SESSION_IDLE_TTL_MS = 24 * 60 * 60 * 1000;
 const DEFAULT_MAX_NO_PID_SESSIONS = 50;
@@ -69,9 +74,14 @@ export type SessionState = {
   endedAt?: number;
   /** Display label for local session status, e.g. "GLM 5.2". */
   modelLabel: string;
-  /** Real Together API key the daemon uses upstream (proxied) or that the
-   *  self-reporting agent used direct. Never returned by any read endpoint. */
+  /** Resolved upstream API key (proxied) or that the self-reporting agent used
+   *  direct. Never returned by any read endpoint. Together by default (M1). */
   apiKey: string;
+  /**
+   * In-memory provider runtime (endpoint + key). Defaults to Together preset
+   * when registration omits `provider`. Not returned by public read endpoints.
+   */
+  provider: ProviderRuntime;
   modelDefinition: ModelDefinition;
   costTracker: CostTracker;
   debug?: boolean;
@@ -124,6 +134,11 @@ export type RegisterSessionRequest = {
   agent?: AgentId;
   pid?: number;
   apiKey: string;
+  /**
+   * Non-secret provider endpoint. Omitted registrations default to the
+   * Together preset so older launchers keep working.
+   */
+  provider?: ProviderEndpointConfig;
   modelLabel: string;
   modelDefinition: ModelDefinition;
   /** Proxied-agent model alias/target for proxy routing. */
@@ -362,6 +377,7 @@ export function buildSession(req: RegisterSessionRequest): SessionState {
   const agent: AgentId = req.agent ?? "claude";
   const costTracker = new CostTracker(req.modelDefinition);
   const now = Date.now();
+  const provider = resolveProviderRuntime(req.provider, req.apiKey);
   const state: SessionState = {
     token: req.token,
     agent,
@@ -370,6 +386,7 @@ export function buildSession(req: RegisterSessionRequest): SessionState {
     lastSeenPersistedAt: now,
     modelLabel: req.modelLabel,
     apiKey: req.apiKey,
+    provider,
     modelDefinition: req.modelDefinition,
     costTracker,
     ...(typeof req.pid === "number" ? { pid: req.pid } : {}),
@@ -377,7 +394,11 @@ export function buildSession(req: RegisterSessionRequest): SessionState {
   };
   if (isProxiedAgent(agent)) {
     state.options = {
-      apiKey: req.apiKey,
+      apiKey: provider.apiKey,
+      baseURL: provider.baseURL,
+      auth: provider.auth,
+      ...(provider.headers ? { headers: provider.headers } : {}),
+      ...(provider.queryParams ? { queryParams: provider.queryParams } : {}),
       modelId: req.modelId ?? req.modelLabel,
       targetModelId: req.targetModelId ?? req.modelDefinition.id,
       modelName: req.modelName ?? req.modelLabel,

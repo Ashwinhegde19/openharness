@@ -13,6 +13,7 @@ import {
   registerDaemonSession,
 } from "./daemon/launch.js";
 import type { RegisterSessionRequest } from "./daemon/state.js";
+import { togetherEndpointConfig } from "./provider/index.js";
 import type { HarnessContext, HarnessResult } from "./harness-types.js";
 import { sendTelemetryEvent } from "./telemetry.js";
 import { resolveTogetherApiKey } from "./together-core.js";
@@ -86,6 +87,7 @@ export async function runCodexAppCommand(ctx: HarnessContext): Promise<HarnessRe
     authToken,
     agent: "codex-app",
     apiKey,
+    provider: togetherEndpointConfig(),
     modelLabel: `${selectedModel.definition.name} (ChatGPT App alpha)`,
     modelId: selectedModel.definition.id,
     targetModelId: selectedModel.definition.id,
