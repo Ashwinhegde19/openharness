@@ -16,8 +16,24 @@ export const TOGETHER_COMPATIBILITY_POLICY: ProviderCompatibilityPolicy = {
   responseUsageMode: "standard",
 };
 
+/**
+ * Ollama OpenAI-compatible chat policy. Local models vary widely; we do not
+ * strip fields aggressively and leave tool/stream capability to discovery.
+ */
+export const OLLAMA_COMPATIBILITY_POLICY: ProviderCompatibilityPolicy = {
+  id: "ollama-openai-chat",
+  version: "1.0.0",
+  endpointPath: "/chat/completions",
+  tokenLimitField: "max_tokens",
+  supportsStreamUsage: true,
+  supportsStrictTools: false,
+  supportsParallelTools: true,
+  responseUsageMode: "standard",
+};
+
 const POLICIES: Record<string, ProviderCompatibilityPolicy> = {
   [TOGETHER_COMPATIBILITY_POLICY.id]: TOGETHER_COMPATIBILITY_POLICY,
+  [OLLAMA_COMPATIBILITY_POLICY.id]: OLLAMA_COMPATIBILITY_POLICY,
 };
 
 /** Look up a versioned policy by id; unknown ids return undefined. */
@@ -25,7 +41,7 @@ export function getCompatibilityPolicy(id: string): ProviderCompatibilityPolicy 
   return POLICIES[id];
 }
 
-/** Together policy is the default until other presets land (M3+). */
+/** Together policy remains the product default preset. */
 export function defaultCompatibilityPolicy(): ProviderCompatibilityPolicy {
   return TOGETHER_COMPATIBILITY_POLICY;
 }

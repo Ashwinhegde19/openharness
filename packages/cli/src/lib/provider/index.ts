@@ -13,6 +13,7 @@ export type {
 export {
   defaultCompatibilityPolicy,
   getCompatibilityPolicy,
+  OLLAMA_COMPATIBILITY_POLICY,
   TOGETHER_COMPATIBILITY_POLICY,
 } from "./policy.js";
 
@@ -26,6 +27,25 @@ export {
   togetherProviderRuntime,
   togetherVisionProviderModels,
 } from "./together-preset.js";
+
+export {
+  OLLAMA_DEFAULT_BASE_URL,
+  OLLAMA_PROVIDER_CONFIG,
+  OLLAMA_PROVIDER_ID,
+  buildOllamaProviderConfig,
+  normalizeOllamaModelId,
+  ollamaEndpointConfig,
+  ollamaModelFromId,
+} from "./ollama-preset.js";
+
+export { discoverOllamaModels, type OllamaDiscoveryResult } from "./ollama-discovery.js";
+
+export {
+  getBuiltinProvider,
+  isBuiltinProviderId,
+  listBuiltinProviderIds,
+  type BuiltinProviderId,
+} from "./registry.js";
 
 export {
   buildAuthHeaders,
