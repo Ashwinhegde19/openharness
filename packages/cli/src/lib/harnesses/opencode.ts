@@ -12,11 +12,17 @@ import { HARNESS } from "../harness.js";
 import type { HarnessContext, HarnessResult } from "../harness-types.js";
 import {
   OLLAMA_PROVIDER_ID,
+  OPENROUTER_API_KEY_ENV,
+  OPENROUTER_DEFAULT_MODEL,
+  OPENROUTER_PROVIDER_ID,
   TOGETHER_PROVIDER_ID,
   buildOllamaProviderConfig,
+  buildOpenRouterProviderConfig,
   discoverOllamaModels,
+  discoverOpenRouterModels,
   getBuiltinProvider,
   isBuiltinProviderId,
+  mergeOpenRouterCatalog,
   ollamaModelFromId,
   type ProviderConfig,
 } from "../provider/index.js";
@@ -111,11 +117,14 @@ function opencodeArgsWithoutModelOverrides(args: string[]): string[] {
 async function resolveProviderForLaunch(ctx: HarnessContext): Promise<ProviderConfig> {
   const providerId = (ctx.provider ?? TOGETHER_PROVIDER_ID).trim().toLowerCase();
   if (!isBuiltinProviderId(providerId) && providerId !== "togetherai") {
-    throw new Error(`Unknown provider "${ctx.provider}". Supported: together, ollama.`);
+    throw new Error(`Unknown provider "${ctx.provider}". Supported: together, ollama, openrouter.`);
   }
 
   if (providerId === OLLAMA_PROVIDER_ID) {
     return resolveOllamaProvider(ctx);
+  }
+  if (providerId === OPENROUTER_PROVIDER_ID) {
+    return resolveOpenRouterProvider(ctx);
   }
 
   const together = getBuiltinProvider(TOGETHER_PROVIDER_ID);
@@ -133,8 +142,6 @@ async function resolveOllamaProvider(ctx: HarnessContext): Promise<ProviderConfi
 
   const requested = ctx.main?.trim();
   if (!discovery.ok) {
-    // Allow an explicit --main to proceed with a static single-model catalog
-    // when discovery fails but the user knows the model id (offline dry-run).
     if (requested) {
       process.stderr.write(
         `togetherlink ▸ Warning: ${discovery.error} Using --main ${requested} without discovery.\n`,
@@ -149,7 +156,6 @@ async function resolveOllamaProvider(ctx: HarnessContext): Promise<ProviderConfi
 
   let models = discovery.models;
   if (requested && !models.some((m) => m.id === requested)) {
-    // User asked for a tag that may still be pullable / aliased.
     models = [ollamaModelFromId(requested), ...models];
     process.stderr.write(
       `togetherlink ▸ Model "${requested}" was not in Ollama's catalog; ` +
@@ -163,6 +169,48 @@ async function resolveOllamaProvider(ctx: HarnessContext): Promise<ProviderConfi
   });
 }
 
+async function resolveOpenRouterProvider(ctx: HarnessContext): Promise<ProviderConfig> {
+  const apiKey = await resolveOpenRouterApiKey(ctx);
+  if (!apiKey) {
+    throw new Error(
+      "No OpenRouter API key found. Pass --api-key or set OPENROUTER_API_KEY " +
+        "(https://openrouter.ai/keys).",
+    );
+  }
+
+  const baseURL = ctx.baseUrl?.trim();
+  const discovery = await discoverOpenRouterModels({
+    apiKey,
+    ...(baseURL ? { baseURL } : {}),
+  });
+
+  const requested = ctx.main?.trim();
+  if (!discovery.ok) {
+    process.stderr.write(
+      `togetherlink ▸ Warning: ${discovery.error} Using curated OpenRouter catalog.\n`,
+    );
+    return buildOpenRouterProviderConfig({
+      baseURL: discovery.baseURL,
+      models: mergeOpenRouterCatalog({ requested }),
+    });
+  }
+
+  return buildOpenRouterProviderConfig({
+    baseURL: discovery.baseURL,
+    models: mergeOpenRouterCatalog({
+      discovered: discovery.models,
+      requested,
+    }),
+  });
+}
+
+async function resolveOpenRouterApiKey(ctx: HarnessContext): Promise<string> {
+  if (ctx.apiKey?.trim()) {
+    return ctx.apiKey.trim();
+  }
+  return process.env[OPENROUTER_API_KEY_ENV]?.trim() ?? "";
+}
+
 function defaultModelForProvider(provider: ProviderConfig, requested?: string): string {
   if (requested?.trim()) {
     return requested.trim();
@@ -170,16 +218,59 @@ function defaultModelForProvider(provider: ProviderConfig, requested?: string): 
   if (provider.id === TOGETHER_PROVIDER_ID) {
     return OPENCODE_DEFAULT_MODEL;
   }
+  if (provider.id === OPENROUTER_PROVIDER_ID) {
+    const preferred = provider.models.find((m) => m.id === OPENROUTER_DEFAULT_MODEL);
+    if (preferred) {
+      return preferred.id;
+    }
+  }
   const first = provider.models[0]?.id;
   if (!first) {
     throw new Error(
       `No models available for provider "${provider.id}". ` +
         (provider.id === OLLAMA_PROVIDER_ID
           ? "Pull one with `ollama pull llama3.2` or pass --main <model>."
-          : "Pass --main <model>."),
+          : "Pass --main <model> (OpenRouter uses namespaced ids like openai/gpt-4o-mini)."),
     );
   }
   return first;
+}
+
+async function resolveLaunchApiKey(
+  provider: ProviderConfig,
+  ctx: HarnessContext,
+): Promise<{ apiKey?: string; apiKeyEnv?: string }> {
+  if (provider.auth.type === "none") {
+    return {};
+  }
+
+  if (provider.id === OPENROUTER_PROVIDER_ID) {
+    const apiKey = await resolveOpenRouterApiKey(ctx);
+    if (!apiKey) {
+      throw new Error(
+        "No OpenRouter API key found. Pass --api-key or set OPENROUTER_API_KEY " +
+          "(https://openrouter.ai/keys).",
+      );
+    }
+    return { apiKey, apiKeyEnv: OPENROUTER_API_KEY_ENV };
+  }
+
+  // Together (default) — global config + TOGETHER_API_KEY.
+  const apiKey = await resolveTogetherApiKey({
+    apiKey: ctx.apiKey,
+    home: ctx.home,
+  });
+  if (!apiKey) {
+    throw new Error(
+      "No Together API key found. Pass --api-key or set TOGETHER_API_KEY " +
+        "(or use --provider ollama / --provider openrouter).",
+    );
+  }
+  const apiKeyEnv =
+    provider.auth.type === "bearer" || provider.auth.type === "header"
+      ? provider.auth.apiKeyEnv
+      : undefined;
+  return { apiKey, ...(apiKeyEnv !== undefined ? { apiKeyEnv } : {}) };
 }
 
 export default defineHarness({
@@ -199,26 +290,7 @@ export default defineHarness({
 
     const provider = await resolveProviderForLaunch(effective);
     const modelId = defaultModelForProvider(provider, effective.main);
-
-    let apiKey: string | undefined;
-    let apiKeyEnv: string | undefined;
-    if (provider.auth.type === "none") {
-      apiKey = undefined;
-    } else {
-      apiKey = await resolveTogetherApiKey({
-        apiKey: effective.apiKey,
-        home: effective.home,
-      });
-      if (!apiKey) {
-        throw new Error(
-          "No Together API key found. Pass --api-key or set TOGETHER_API_KEY " +
-            "(or use --provider ollama for local models).",
-        );
-      }
-      if (provider.auth.type === "bearer" || provider.auth.type === "header") {
-        apiKeyEnv = provider.auth.apiKeyEnv;
-      }
-    }
+    const { apiKey, apiKeyEnv } = await resolveLaunchApiKey(provider, effective);
 
     const configJson = buildOpencodeConfigJson({ modelId, provider });
     const env = buildOpencodeEnv({
@@ -230,6 +302,13 @@ export default defineHarness({
     // Session-only guarantee: we never write OpenCode's user config paths.
     if (!isSessionOnlyOpencodeLaunch(env)) {
       throw new Error("Internal error: OpenCode launch missing OPENCODE_CONFIG_CONTENT.");
+    }
+
+    if (provider.id === OPENROUTER_PROVIDER_ID) {
+      process.stderr.write(
+        `togetherlink ▸ Cloud destination: OpenRouter (${provider.baseURL}). ` +
+          `Prompts leave this machine.\n`,
+      );
     }
 
     process.stderr.write(

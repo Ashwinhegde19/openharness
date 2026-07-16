@@ -29,6 +29,8 @@ OpenCode providers (session-only; does not write ~/.config/opencode):
   togetherlink opencode                                    # Together AI (default)
   togetherlink opencode --provider ollama                  # local Ollama
   togetherlink opencode --provider ollama --main llama3.2
+  togetherlink opencode --provider openrouter              # OpenRouter (OPENROUTER_API_KEY)
+  togetherlink opencode --provider openrouter --main openai/gpt-4o-mini
   togetherlink --provider ollama --main llama3.2 opencode  # flags before harness also work
   togetherlink opencode --provider ollama --base-url http://127.0.0.1:11434/v1
 
