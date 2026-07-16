@@ -5,11 +5,7 @@ import { parseArgs } from "../lib/parse-args.js";
 import { printHelp, runConfigure } from "../lib/commands/global.js";
 import { dispatchHarnessCommand } from "../lib/commands/harness.js";
 import { isHarnessCommand, resolveHarnessInvocation } from "../lib/commands/harness-invocation.js";
-import {
-  readGlobalConfig,
-  resolveStoredExaApiKey,
-  resolveStoredApiKey,
-} from "../lib/global-config.js";
+import { readGlobalConfig, resolveStoredExaApiKey } from "../lib/global-config.js";
 import { maybeSelfUpdate } from "../lib/autoupdate.js";
 import { getInstallId, sendTelemetryEvent } from "../lib/telemetry.js";
 import { VERSION } from "../lib/version.js";
@@ -72,52 +68,24 @@ async function loadStoredExaKey(): Promise<void> {
   }
 }
 
-async function hasTogetherApiKey(): Promise<boolean> {
-  try {
-    const home = process.env.HOME;
-    if (!home) {
-      return Boolean(process.env.TOGETHER_API_KEY?.trim());
-    }
-    const existing = resolveStoredApiKey((await readGlobalConfig(home)).apiKey);
-    return Boolean(existing || process.env.TOGETHER_API_KEY?.trim());
-  } catch {
-    return Boolean(process.env.TOGETHER_API_KEY?.trim());
-  }
-}
-
-async function ensureConfiguredForInteractiveLaunch(): Promise<boolean> {
-  if (await hasTogetherApiKey()) {
-    return true;
-  }
-  if (!isInteractive()) {
-    return false;
-  }
-
-  const configured = await runConfigure();
-  await loadStoredExaKey();
-  return configured && (await hasTogetherApiKey());
-}
-
 async function runInteractiveLauncher(): Promise<void> {
   if (!isInteractive()) {
     printHelp();
     return;
   }
 
-  if (!(await ensureConfiguredForInteractiveLaunch())) {
-    return;
-  }
-
+  // No product-level Together key gate: credentials are resolved per provider
+  // at launch time (Ollama needs none; OpenRouter/Together only when selected).
   const clack = await import("@clack/prompts");
   const choice = await clack.select({
     message: "What do you want to run?",
     options: [
-      { value: "codex", label: "Codex", hint: "tcodex" },
-      { value: "claude", label: "Claude Code", hint: "tclaude" },
-      { value: "pi", label: "Pi Code", hint: "tpi" },
-      { value: "opencode", label: "OpenCode", hint: "topencode" },
-      { value: "chatgpt", label: "ChatGPT Desktop", hint: "chatgpt" },
-      { value: "configure", label: "Configure", hint: "API keys and detected tools" },
+      { value: "opencode", label: "OpenCode", hint: "topencode · default Ollama" },
+      { value: "codex", label: "Codex", hint: "tcodex · Together preset" },
+      { value: "claude", label: "Claude Code", hint: "tclaude · Together preset" },
+      { value: "pi", label: "Pi Code", hint: "tpi · Together preset" },
+      { value: "chatgpt", label: "ChatGPT Desktop", hint: "chatgpt · Together preset" },
+      { value: "configure", label: "Configure", hint: "optional provider keys" },
     ],
   });
   if (clack.isCancel(choice)) {
@@ -245,11 +213,7 @@ async function main() {
   }
 
   if (command === "codex-app") {
-    if (!parsed.flags.restore && !(await ensureConfiguredForInteractiveLaunch())) {
-      throw new Error(
-        "No Together API key found. Run `togetherlink configure` or set TOGETHER_API_KEY.",
-      );
-    }
+    // Key check lives inside runCodexAppCommand (Together preset only).
     const { runCodexAppCommand } = await import("../lib/codex-app.js");
     const result = await runCodexAppCommand({ home: os.homedir(), ...parsed.flags });
     if (result.message) {
@@ -262,21 +226,6 @@ async function main() {
   }
 
   const invocation = resolveHarnessInvocation(parsed.positional, parsed.flags);
-
-  // First-run key setup only matters for the harness-launching commands.
-  if (
-    (invocation.command === "claude" ||
-      invocation.command === "codex" ||
-      invocation.command === "opencode" ||
-      invocation.command === "pi") &&
-    invocation.command !== undefined
-  ) {
-    if (!(await ensureConfiguredForInteractiveLaunch())) {
-      throw new Error(
-        "No Together API key found. Run `togetherlink configure` or set TOGETHER_API_KEY.",
-      );
-    }
-  }
 
   if (isHarnessCommand(invocation.command)) {
     void sendTelemetryEvent({ event: "cli_started", agent: invocation.command });
