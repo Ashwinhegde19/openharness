@@ -1,5 +1,10 @@
 import { createHash } from "node:crypto";
-import { TOGETHER_BASE_URL, VISION_MODELS, VISION_PROMPT } from "@togetherlink/models";
+import { VISION_MODELS, VISION_PROMPT } from "@togetherlink/models";
+import {
+  chatCompletionsUrl,
+  upstreamRequestHeaders,
+  type UpstreamClientOptions,
+} from "../together-client.js";
 
 /**
  * Image interception for the Claude proxy. GLM-5.2 is text-only, so when Claude
@@ -13,7 +18,8 @@ import { TOGETHER_BASE_URL, VISION_MODELS, VISION_PROMPT } from "@togetherlink/m
  * manifest) so they stay in sync with the OpenCode `@vision` subagent. The
  * models are fixed here — not user-configurable — with automatic failover if
  * the primary errors. Reasoning is disabled because image description is a
- * perception task, not a reasoning one.
+ * perception task, not a reasoning one. Upstream URL/auth follow
+ * {@link VisionRequestOptions} (Together by default).
  */
 
 export type ImageBlock = {
@@ -31,10 +37,7 @@ export type UrlBlock = {
   url: string;
 };
 
-export type VisionRequestOptions = {
-  apiKey: string;
-  debug?: boolean | undefined;
-};
+export type VisionRequestOptions = UpstreamClientOptions;
 
 /** Whether a content block is an image we should intercept. */
 export function isImageBlock(block: unknown): block is ImageBlock {
@@ -83,12 +86,9 @@ async function callVisionModel(
   };
 
   try {
-    const response = await fetch(`${TOGETHER_BASE_URL}/chat/completions`, {
+    const response = await fetch(chatCompletionsUrl(options), {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${options.apiKey}`,
-        "Content-Type": "application/json",
-      },
+      headers: upstreamRequestHeaders(options),
       body: JSON.stringify(body),
       ...(signal ? { signal } : {}),
     });

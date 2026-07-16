@@ -8,17 +8,22 @@ import {
   newContextFitState,
 } from "./context-fit.js";
 import type { ContextTrimTelemetryInfo } from "./telemetry.js";
+import { buildAuthHeaders } from "./provider/runtime.js";
+import type { UpstreamClientOptions } from "./provider/types.js";
 
 /**
- * The deep Together HTTP client — one place for the POST /chat/completions
+ * The deep upstream HTTP client — one place for the POST /chat/completions
  * retry loop that used to be copy-pasted three times (claude/together-call.ts,
  * claude/stream.ts:postTogetherStream, codex/together-call.ts). Carved out so
  * `together-core.ts`'s name finally earns its keep: the retry contract
  * (429/503 + Retry-After + exponential backoff, serialize-once) lives here
  * behind a small interface, testable through one seam instead of three.
  *
+ * Base URL, auth scheme, and extra headers/query params come from
+ * {@link UpstreamClientOptions}; the default preset is Together AI (M1).
+ *
  * On top of the transient-fault retry, the client also owns the shared
- * *reactive context-fit* retry: when Together rejects a request with
+ * *reactive context-fit* retry: when the upstream rejects a request with
  * `context_length_exceeded`, `fetchWithContextFit` mutates the (already
  * OpenAI-normalized) payload via `applyContextFit` and re-posts until it fits.
  * Both harnesses (Claude + Codex, stream + non-stream) inherit it for free —
@@ -37,10 +42,9 @@ const RETRYABLE_STATUSES = new Set([429, 503]);
 
 export const MAX_RETRIES = 3;
 
-export type TogetherClientOptions = {
-  apiKey: string;
-  debug?: boolean | undefined;
-};
+/** @deprecated Prefer {@link UpstreamClientOptions}; alias kept for call sites. */
+export type TogetherClientOptions = UpstreamClientOptions;
+export type { UpstreamClientOptions };
 
 /**
  * Enables the reactive context-fit retry. When present, the client repairs a
@@ -68,7 +72,7 @@ export type ContextFitConfig = {
  */
 export async function postChatCompletion(
   payload: Record<string, unknown>,
-  options: TogetherClientOptions,
+  options: UpstreamClientOptions,
   signal?: AbortSignal,
   fit?: ContextFitConfig,
 ): Promise<Response> {
@@ -79,27 +83,24 @@ export async function postChatCompletion(
   return fetchWithContextFit(payload, fit, doFetch);
 }
 
-/** One transient-retry attempt-set against Together, sending `body` verbatim. */
+/** One transient-retry attempt-set against upstream, sending `body` verbatim. */
 async function postChatCompletionOnce(
   body: string,
-  options: TogetherClientOptions,
+  options: UpstreamClientOptions,
   signal?: AbortSignal,
 ): Promise<Response> {
   for (let attempt = 0; attempt <= MAX_RETRIES; attempt += 1) {
     let response: Response;
     try {
-      response = await fetch(`${TOGETHER_BASE_URL}/chat/completions`, {
+      response = await fetch(chatCompletionsUrl(options), {
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${options.apiKey}`,
-          "Content-Type": "application/json",
-        },
+        headers: upstreamRequestHeaders(options),
         body,
         ...(signal ? { signal } : {}),
       });
     } catch (err) {
       // Network-level failure (DNS, connection reset, timeout). The request
-      // never reached Together, so it's safe to retry. After MAX_RETRIES,
+      // never reached the provider, so it's safe to retry. After MAX_RETRIES,
       // synthesize a 503 Response so the caller's error mapping sees a
       // consistent shape.
       if (attempt < MAX_RETRIES) {
@@ -118,7 +119,7 @@ async function postChatCompletionOnce(
     await sleep(parseRetryAfter(response.headers.get("retry-after")) ?? backoffMs(attempt));
   }
   // Unreachable: the loop returns on every path. Defensive fallback.
-  return syntheticOverloadedResponse("Together request failed after retries.");
+  return syntheticOverloadedResponse("Upstream request failed after retries.");
 }
 
 /**
@@ -133,7 +134,7 @@ async function postChatCompletionOnce(
  */
 export async function postChatCompletionStream(
   payload: Record<string, unknown>,
-  options: TogetherClientOptions,
+  options: UpstreamClientOptions,
   signal?: AbortSignal,
   body?: string,
   fit?: ContextFitConfig,
@@ -147,25 +148,49 @@ export async function postChatCompletionStream(
 
 function streamFetchOnce(
   body: string,
-  options: TogetherClientOptions,
+  options: UpstreamClientOptions,
   signal?: AbortSignal,
 ): Promise<Response> {
-  return fetch(`${TOGETHER_BASE_URL}/chat/completions`, {
+  return fetch(chatCompletionsUrl(options), {
     method: "POST",
-    headers: {
-      Authorization: `Bearer ${options.apiKey}`,
-      "Content-Type": "application/json",
-    },
+    headers: upstreamRequestHeaders(options),
     body,
     ...(signal ? { signal } : {}),
   });
 }
 
+/** Resolve the chat-completions URL from client options (Together by default). */
+export function chatCompletionsUrl(options: UpstreamClientOptions): string {
+  const base = (options.baseURL ?? TOGETHER_BASE_URL).replace(/\/+$/, "");
+  const path = "/chat/completions";
+  if (!options.queryParams || Object.keys(options.queryParams).length === 0) {
+    return `${base}${path}`;
+  }
+  const qs = new URLSearchParams(options.queryParams).toString();
+  return `${base}${path}?${qs}`;
+}
+
+/** Content-Type + auth + optional static headers for an upstream request. */
+export function upstreamRequestHeaders(options: UpstreamClientOptions): Record<string, string> {
+  const auth =
+    options.auth ??
+    ({
+      type: "bearer",
+      apiKeyEnv: "TOGETHER_API_KEY",
+      required: true,
+    } as const);
+  return {
+    "Content-Type": "application/json",
+    ...buildAuthHeaders(auth, options.apiKey),
+    ...options.headers,
+  };
+}
+
 /**
- * The shared reactive context-fit loop. Posts, and while Together returns a
+ * The shared reactive context-fit loop. Posts, and while upstream returns a
  * context-length 400, mutates the payload via `applyContextFit` (max_tokens →
- * strip old images → trim text → drop oldest turns) and re-posts, using
- * Together's real reported token count each time so it converges.
+ * strip old images → trim text → drop oldest turns) and re-posts, using the
+ * provider's real reported token count each time so it converges.
  *
  * Invariants:
  *  - Never reads the body of an OK response — live SSE streams pass through
