@@ -1,9 +1,12 @@
 import { TOGETHER_API_KEY_ENV_REF } from "../together-core.js";
 import {
+  TOGETHER_PROVIDER_CONFIG,
+  type ProviderConfig,
+} from "../provider/index.js";
+import {
   OPENCODE_PROVIDER_ID,
   OPENCODE_DEFAULT_MODEL,
   OPENCODE_MODEL_ENTRIES,
-  OPENCODE_MODEL_WHITELIST,
   OPENCODE_VISION_MODEL_SELECTOR,
   OPENCODE_BUILD_PROMPT,
   OPENCODE_VISION_AGENT_PROMPT,
@@ -36,7 +39,7 @@ type OpencodeConfig = {
 type OpencodeProviderConfig = {
   npm: string;
   name: string;
-  options: { apiKey: string };
+  options: { apiKey: string; baseURL?: string };
   models?: Record<string, unknown>;
   /**
    * Restricts the provider so ONLY these model ids appear in /models
@@ -48,65 +51,77 @@ type OpencodeProviderConfig = {
   whitelist?: string[];
 };
 
+/** Env-ref string for a provider auth scheme (`{env:NAME}`). */
+function apiKeyEnvRefFromProvider(provider: ProviderConfig): string {
+  if (provider.auth.type === "bearer" || provider.auth.type === "header") {
+    return `{env:${provider.auth.apiKeyEnv}}`;
+  }
+  return TOGETHER_API_KEY_ENV_REF;
+}
+
 /**
  * Builds the inline OpenCode config passed via `OPENCODE_CONFIG_CONTENT`.
- * Registers Together as a provider (first-party `@ai-sdk/togetherai` adapter,
- * which already knows Together's base URL) and defaults the model to GLM 5.2
- * with its full capability/cost/limit metadata. The key is resolved at runtime
- * via `{env:TOGETHER_API_KEY}` so no credential is written to disk (no
- * auth.json). The `build` agent's system prompt is overridden to drop OpenCode
- * self-branding, and a `vision` subagent is added on a vision-capable Together
- * model so pasted images can be described (GLM-5.2 is text-only — this is the
- * OpenCode-native equivalent of the Claude proxy's image interception).
+ *
+ * Provider block is driven by {@link ProviderConfig} (Together preset by
+ * default). For the Together preset we keep the first-party
+ * `@ai-sdk/togetherai` adapter (it already knows Together's base URL). Model
+ * entry metadata still comes from the curated OpenCode catalog so display tips
+ * and modalities stay identical to pre-M1 behavior; the whitelist is the
+ * provider's model id list.
+ *
  * Highest precedence for settings, with no OpenCode config files written.
  */
 export function buildOpencodeConfigJson({
   modelId = OPENCODE_DEFAULT_MODEL,
-  apiKeyEnvRef = TOGETHER_API_KEY_ENV_REF,
+  provider = TOGETHER_PROVIDER_CONFIG,
+  apiKeyEnvRef,
   buildPrompt = OPENCODE_BUILD_PROMPT,
   visionPrompt = OPENCODE_VISION_AGENT_PROMPT,
+  opencodeProviderId = OPENCODE_PROVIDER_ID,
+  opencodeNpm = "@ai-sdk/togetherai",
 }: {
   modelId?: string;
+  provider?: ProviderConfig;
   apiKeyEnvRef?: string;
   buildPrompt?: string;
   visionPrompt?: string;
+  /** OpenCode-facing provider id (Together uses `togetherai`). */
+  opencodeProviderId?: string;
+  /** OpenCode npm package for the provider adapter. */
+  opencodeNpm?: string;
 } = {}): OpencodeConfig {
+  const resolvedKeyRef = apiKeyEnvRef ?? apiKeyEnvRefFromProvider(provider);
   // Register every curated flagship (the full set /models shows) with their
   // real metadata + tip-bearing display names. The `@vision` subagent's model
   // (Kimi-K2.7-Code) is part of this set, so it's covered too.
   const models = { ...OPENCODE_MODEL_ENTRIES };
+  const whitelist = provider.models.map((model) => model.id);
 
-  const provider: OpencodeProviderConfig = {
-    npm: "@ai-sdk/togetherai",
+  const providerBlock: OpencodeProviderConfig = {
+    npm: opencodeNpm,
     // Provider label: OpenCode appends this provider `name` to every model
-    // line in the /models picker (e.g. "GLM 5.2 · default  Together AI"). Kept
-    // as the full brand name; the model display names are kept short so the
-    // full suffix still fits without hitting the picker's truncation width
-    // (opencode #20968).
-    name: "Together AI",
-    options: { apiKey: apiKeyEnvRef },
+    // line in the /models picker (e.g. "GLM 5.2 · default  Together AI").
+    name: provider.label,
+    options: { apiKey: resolvedKeyRef },
     models,
-    // Restrict /models to exactly the curated set. Without this, OpenCode also
-    // shows Together's full catalog (hundreds of models) because the `models`
-    // block merges onto the provider's models.dev catalog rather than replacing
-    // it (opencode PR #3416 added whitelist/blacklist filtering).
-    whitelist: OPENCODE_MODEL_WHITELIST,
+    // Restrict /models to exactly the curated set from the provider preset.
+    whitelist,
   };
 
   return {
     $schema: "https://opencode.ai/config.json",
     provider: {
-      [OPENCODE_PROVIDER_ID]: provider,
+      [opencodeProviderId]: providerBlock,
     },
     // Slash form: provider/model. The selected model is the primary; sub-agents
     // without an explicit model inherit it automatically. The `vision` subagent
     // explicitly pins a vision-capable Together model (Kimi-K2.7-Code) so a
     // text-only primary can still describe pasted images. To add more
     // sub-agents later, add entries under `agent`.
-    model: `${OPENCODE_PROVIDER_ID}/${modelId}`,
-    // Only load our Together provider; ignore every other provider (Anthropic,
-    // OpenAI, Gemini, Bedrock, Zen…) so /models stays to the curated set.
-    enabled_providers: [OPENCODE_PROVIDER_ID],
+    model: `${opencodeProviderId}/${modelId}`,
+    // Only load our configured provider; ignore every other provider so /models
+    // stays to the curated set.
+    enabled_providers: [opencodeProviderId],
     // Belt-and-suspenders: also explicitly disable the Zen gateway (provider id
     // "opencode", the `opencode/*` namespace) — issue #6979 confirms the id is
     // "opencode", not "zen". disabled_providers takes priority over
@@ -134,19 +149,22 @@ export function buildOpencodeConfigJson({
 
 /**
  * Env for the spawned `opencode` process: inline settings config (highest
- * precedence, never persisted) plus the resolved Together key so
- * `{env:TOGETHER_API_KEY}` substitution resolves inside the config.
+ * precedence, never persisted) plus the resolved provider key so
+ * `{env:…}` substitution resolves inside the config.
  */
 export function buildOpencodeEnv({
   apiKey,
   configJson,
+  apiKeyEnv = "TOGETHER_API_KEY",
 }: {
   apiKey: string;
   configJson: OpencodeConfig;
+  /** Env var name that holds the resolved key for OpenCode `{env:…}` refs. */
+  apiKeyEnv?: string;
 }): NodeJS.ProcessEnv {
   return {
     ...process.env,
     OPENCODE_CONFIG_CONTENT: JSON.stringify(configJson),
-    TOGETHER_API_KEY: apiKey,
+    [apiKeyEnv]: apiKey,
   };
 }
