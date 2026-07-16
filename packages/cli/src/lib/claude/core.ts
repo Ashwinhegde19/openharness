@@ -5,8 +5,9 @@ import {
   resolveClaudeModel,
   type ClaudeModelSelection,
 } from "./defaults.js";
-import {} from "../daemon/launch.js";
 import { runProxiedSession, type ProxiedSessionResult } from "../proxied-session.js";
+import { togetherEndpointConfig, type ProviderEndpointConfig } from "../provider/index.js";
+import type { ModelDefinition } from "@togetherlink/models";
 
 const CONFLICTING_ENV_KEYS = [
   "ANTHROPIC_API_KEY",
@@ -34,8 +35,18 @@ const CONFLICTING_ENV_KEYS = [
 const DEFAULT_CLAUDE_CODE_MAX_OUTPUT_TOKENS = 32_000;
 
 export type ClaudeLaunchOptions = {
+  /** Upstream API key (or placeholder for no-auth providers). */
   apiKey: string;
+  /** Claude-facing model alias (ANTHROPIC_MODEL). */
   modelId?: string;
+  /** Upstream model id for the provider API. */
+  targetModelId?: string;
+  modelName?: string;
+  modelDefinition?: ModelDefinition;
+  /** Non-secret provider endpoint; defaults to Together. */
+  provider?: ProviderEndpointConfig;
+  /** Human label for banners (e.g. "OpenRouter"). */
+  providerLabel?: string;
   args?: string[];
 };
 
@@ -45,15 +56,19 @@ export type ClaudeLaunchResult = {
 };
 
 export function buildClaudeEnv({
-  apiKey,
   modelId,
+  modelName,
   proxyUrl,
   authToken,
-}: ClaudeLaunchOptions & {
+  providerLabel = "Together AI",
+  modelDefinition,
+}: {
   modelId: string;
   modelName: string;
   proxyUrl: string;
   authToken: string;
+  providerLabel?: string;
+  modelDefinition?: ModelDefinition;
 }): NodeJS.ProcessEnv {
   const env = { ...process.env };
   for (const key of CONFLICTING_ENV_KEYS) {
@@ -70,50 +85,51 @@ export function buildClaudeEnv({
   if (env.CLAUDE_CODE_MAX_OUTPUT_TOKENS === undefined) {
     env.CLAUDE_CODE_MAX_OUTPUT_TOKENS = String(DEFAULT_CLAUDE_CODE_MAX_OUTPUT_TOKENS);
   }
-  applyClaudeModelMenuEnv(env, modelId);
+  applyClaudeModelMenuEnv(env, modelId, providerLabel, modelDefinition);
 
-  // Disable Claude Code's periodic "How is Claude doing this session?" survey.
-  // It's an internal TUI prompt (not a request the proxy could intercept), and
-  // its rating rides on Anthropic's telemetry channel — which bypasses our proxy
-  // entirely, so it can't be captured. Default to off; only respect an explicit
-  // user opt-in (e.g. "1" re-enables). Uses the targeted kill switch rather than
-  // DISABLE_TELEMETRY so we don't also suppress error reporting / auto-updater.
   if (env.CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY === undefined) {
     env.CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY = "1";
   }
-
-  // Disable the `/feedback` slash command. `/feedback` posts a transcript +
-  // report straight to a first-party Anthropic endpoint (api.anthropic.com,
-  // landing in their `claude_cli_feedback` table) — it does NOT route through
-  // ANTHROPIC_BASE_URL / our proxy, so we can neither capture nor honor it. The
-  // binary even tags third-party providers as a reason feedback is unavailable.
-  // Disable it so users aren't offered a feedback channel that silently reports
-  // to Anthropic instead of to togetherlink. The dedicated kill switch (not
-  // DISABLE_FEEDBACK_COMMAND's sibling DISABLE_TELEMETRY) leaves bug reports /
-  // diagnostics untouched. Default off; respect an explicit "0"/"" opt-in.
-  // See TODO.md "Custom `/togetherlink-feedback` command" for the replacement.
   if (env.DISABLE_FEEDBACK_COMMAND === undefined) {
     env.DISABLE_FEEDBACK_COMMAND = "1";
   }
   return env;
 }
 
-function applyClaudeModelMenuEnv(env: NodeJS.ProcessEnv, selectedAlias: string): void {
+function applyClaudeModelMenuEnv(
+  env: NodeJS.ProcessEnv,
+  selectedAlias: string,
+  providerLabel: string,
+  modelDefinition?: ModelDefinition,
+): void {
+  // Together catalog path: full multi-tier menu. Non-Together: single selected model.
+  if (modelDefinition && !modelDefinition.anthropicAlias) {
+    const selection: ClaudeModelSelection = {
+      alias: selectedAlias,
+      definition: modelDefinition,
+    };
+    setTierModelEnv(env, "OPUS", selection, providerLabel);
+    setTierModelEnv(env, "SONNET", selection, providerLabel);
+    setTierModelEnv(env, "HAIKU", selection, providerLabel);
+    env.ANTHROPIC_CUSTOM_MODEL_OPTION = selectedAlias;
+    env.ANTHROPIC_CUSTOM_MODEL_OPTION_NAME = modelDefinition.name;
+    env.ANTHROPIC_CUSTOM_MODEL_OPTION_DESCRIPTION = `Local Anthropic-to-${providerLabel} proxy`;
+    env.ANTHROPIC_CUSTOM_MODEL_OPTION_SUPPORTED_CAPABILITIES = CLAUDE_MODEL_CAPABILITIES;
+    return;
+  }
+
   const selected = resolveClaudeModel(selectedAlias);
   const defaultModel = CLAUDE_SUPPORTED_MODELS[0] ?? selected;
   const secondaryModel =
     CLAUDE_SUPPORTED_MODELS.find((model) => model.alias !== defaultModel.alias) ?? selected;
 
-  setTierModelEnv(env, "OPUS", defaultModel);
-  setTierModelEnv(env, "SONNET", secondaryModel);
-  setTierModelEnv(env, "HAIKU", CLAUDE_HAIKU_MODEL_SELECTION);
+  setTierModelEnv(env, "OPUS", defaultModel, providerLabel);
+  setTierModelEnv(env, "SONNET", secondaryModel, providerLabel);
+  setTierModelEnv(env, "HAIKU", CLAUDE_HAIKU_MODEL_SELECTION, providerLabel);
 
-  // Claude Code currently exposes a single generic custom-model slot in
-  // addition to the three tier slots. Point that at the selected backend so a
-  // `--main together-kimi-k2-7-code` launch also marks Kimi as the custom row.
   env.ANTHROPIC_CUSTOM_MODEL_OPTION = selected.alias;
   env.ANTHROPIC_CUSTOM_MODEL_OPTION_NAME = selected.definition.name;
-  env.ANTHROPIC_CUSTOM_MODEL_OPTION_DESCRIPTION = "Local Anthropic-to-Together proxy";
+  env.ANTHROPIC_CUSTOM_MODEL_OPTION_DESCRIPTION = `Local Anthropic-to-${providerLabel} proxy`;
   env.ANTHROPIC_CUSTOM_MODEL_OPTION_SUPPORTED_CAPABILITIES = CLAUDE_MODEL_CAPABILITIES;
 }
 
@@ -121,23 +137,40 @@ function setTierModelEnv(
   env: NodeJS.ProcessEnv,
   tier: "OPUS" | "SONNET" | "HAIKU",
   model: ClaudeModelSelection,
+  providerLabel: string,
 ): void {
   const prefix = `ANTHROPIC_DEFAULT_${tier}_MODEL`;
   env[prefix] = model.alias;
   env[`${prefix}_NAME`] = model.definition.name;
   env[`${prefix}_DESCRIPTION`] =
-    `Together AI (${model.definition.name}) via togetherlink — not Anthropic`;
+    `${providerLabel} (${model.definition.name}) via togetherlink — not Anthropic`;
 }
 
+/**
+ * Launch Claude Code against a local Anthropic→Chat proxy that forwards to the
+ * resolved provider (Together by default; OpenRouter/Ollama via --provider).
+ */
 export async function runClaudeTogether(options: ClaudeLaunchOptions): Promise<ClaudeLaunchResult> {
-  const selectedModel = resolveClaudeModel(options.modelId);
+  const providerLabel = options.providerLabel ?? "Together AI";
+  const selectedModel = options.modelDefinition
+    ? {
+        alias: options.modelId ?? options.modelDefinition.id,
+        definition: options.modelDefinition,
+      }
+    : resolveClaudeModel(options.modelId);
+
+  const targetModelId = options.targetModelId ?? selectedModel.definition.id;
+  const modelName = options.modelName ?? selectedModel.definition.name;
+  const provider: ProviderEndpointConfig = options.provider ?? togetherEndpointConfig();
+
   const result: ProxiedSessionResult = await runProxiedSession({
     agent: "claude",
     apiKey: options.apiKey,
+    provider,
     modelId: selectedModel.alias,
     registrationModelId: selectedModel.alias,
-    targetModelId: selectedModel.definition.id,
-    modelName: selectedModel.definition.name,
+    targetModelId,
+    modelName,
     modelDefinition: selectedModel.definition,
     extraRegistration: {
       claudeCodeMaxOutputTokens: claudeCodeMaxOutputTokensFromEnv(
@@ -148,10 +181,17 @@ export async function runClaudeTogether(options: ClaudeLaunchOptions): Promise<C
     args: options.args ?? [],
     binary: "claude",
     keepaliveLabel: "Claude session",
-    banner: (modelName) =>
-      `togetherlink ▸ Routing Claude Code → Together AI (${modelName}). Not Anthropic.\n`,
-    buildEnv: ({ proxyUrl, authToken, modelId, modelName }) =>
-      buildClaudeEnv({ ...options, modelId, modelName, proxyUrl, authToken }),
+    banner: (name) =>
+      `togetherlink ▸ Routing Claude Code → ${providerLabel} (${name}). Not Anthropic.\n`,
+    buildEnv: ({ proxyUrl, authToken, modelId }) =>
+      buildClaudeEnv({
+        modelId,
+        modelName,
+        proxyUrl,
+        authToken,
+        providerLabel,
+        modelDefinition: selectedModel.definition,
+      }),
     buildArgs: ({ args }) => [
       ...claudeArgsWithoutModelOverrides(args),
       ...claudeCacheFriendlyArgs(args),

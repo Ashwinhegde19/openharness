@@ -35,6 +35,17 @@ export function resolveTargetModel(
   requestedModel: string | undefined,
   options: ClaudeModelOptions,
 ): ResolvedClaudeModel {
+  // Prefer the session's registered model (works for Together and non-Together
+  // providers). Catalog match is only for Claude Code switching among Together
+  // aliases mid-session via the model menu.
+  if (
+    !requestedModel ||
+    requestedModel === options.modelId ||
+    requestedModel === options.targetModelId ||
+    requestedModel === options.modelDefinition.id
+  ) {
+    return { alias: options.modelId, definition: options.modelDefinition };
+  }
   const supported = CLAUDE_SUPPORTED_MODELS.find(
     (model) => model.alias === requestedModel || model.definition.id === requestedModel,
   );
