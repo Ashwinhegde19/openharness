@@ -2,15 +2,21 @@
 
 > Working title. The final product name is intentionally undecided.
 
-This repository contains the production planning documents for a session-scoped compatibility launcher that connects supported coding harnesses to supported model providers without permanently modifying the harnesses' normal configuration.
+This repository contains:
+
+1. **Planning documents** for a session-scoped compatibility launcher that connects supported coding harnesses to supported model providers without permanently modifying the harnesses' normal configuration.
+2. **Implementation baseline** imported from [TogetherLink](https://github.com/Nutlope/togetherlink) (see [UPSTREAM.md](UPSTREAM.md) and [docs/UPSTREAM-TOGETHERLINK-README.md](docs/UPSTREAM-TOGETHERLINK-README.md)).
+
+Code status: TogetherLink monorepo at a pinned commit; provider-neutral refactor has not started (M0/M1).
 
 ## Document status
 
 - Status: Planning baseline
 - Version: 0.1
 - Last updated: 2026-07-15
-- Implementation baseline: TogetherLink fork
-- Code status: Planning only
+- Implementation baseline: TogetherLink (see UPSTREAM.md)
+- Code layout: monorepo packages/ at repository root
+- Code status: Baseline imported from TogetherLink; refactor not started
 
 ## Reading order
 
@@ -25,7 +31,15 @@ This repository contains the production planning documents for a session-scoped 
 9. [GLOSSARY.md](GLOSSARY.md) - shared terminology.
 10. [REPOSITORY-AUDIT.md](REPOSITORY-AUDIT.md) - TogetherLink-specific audit baseline and required deliverables.
 
+## Codebase
+
+- [UPSTREAM.md](UPSTREAM.md) - pinned TogetherLink commit and import notes
+- [docs/UPSTREAM-TOGETHERLINK-README.md](docs/UPSTREAM-TOGETHERLINK-README.md) - original TogetherLink install/dev README
+- `packages/cli`, `packages/models`, `packages/tests` - implementation baseline
+- `site/` - upstream marketing/install site (not required for core CLI work)
+
 ## Diagrams
+
 
 - [System context](diagrams/system-context.md)
 - [Claude Code request sequence](diagrams/claude-sequence.md)
