@@ -1,4 +1,4 @@
-import { mkdtemp, writeFile } from "node:fs/promises";
+import { mkdtemp, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
 import { GLM_5_2 } from "@togetherlink/models";
@@ -14,13 +14,14 @@ import { startTestDaemon, type TestDaemon } from "./daemon-session.js";
 import type { TestContext } from "./types.js";
 
 const TOKEN = "togetherlink-local-app-registration-test";
+const FAKE_KEY = "fake-key-never-sent-upstream";
 
 function registration(): RegisterSessionRequest {
   return {
     token: TOKEN,
     authToken: TOKEN,
     agent: "codex-app",
-    apiKey: "fake-key-never-sent-upstream",
+    apiKey: FAKE_KEY,
     modelLabel: `${GLM_5_2.name} (Codex App alpha)`,
     modelId: GLM_5_2.id,
     targetModelId: GLM_5_2.id,
@@ -31,16 +32,42 @@ function registration(): RegisterSessionRequest {
 
 describe("app registration file", () => {
   let home: string;
+  const prevKey = process.env.TOGETHER_API_KEY;
 
   beforeAll(async () => {
     const context = await createTestContext();
     home = await mkdtemp(path.join(context.tmpDir, "app-reg-"));
+    process.env.TOGETHER_API_KEY = FAKE_KEY;
   });
 
-  test("round-trips a registration", async () => {
+  afterAll(() => {
+    if (prevKey === undefined) {
+      delete process.env.TOGETHER_API_KEY;
+    } else {
+      process.env.TOGETHER_API_KEY = prevKey;
+    }
+  });
+
+  test("round-trips non-secret fields and rehydrates the API key from env", async () => {
     await writeAppRegistration(registration(), home);
+    const onDisk = JSON.parse(await readFile(appRegistrationPath(home), "utf8")) as {
+      apiKey?: string;
+      authToken?: string;
+    };
+    expect(onDisk.apiKey).toBe("");
+    expect(onDisk.authToken).toBeUndefined();
+    expect(JSON.stringify(onDisk)).not.toContain(FAKE_KEY);
+
     const restored = await readAppRegistration(home);
-    expect(restored).toEqual(registration());
+    // authToken is not persisted; buildSession falls back to token.
+    expect(restored).toMatchObject({
+      token: TOKEN,
+      agent: "codex-app",
+      apiKey: FAKE_KEY,
+      modelId: GLM_5_2.id,
+      targetModelId: GLM_5_2.id,
+      modelName: GLM_5_2.name,
+    });
   });
 
   test("clear removes the file", async () => {
@@ -70,8 +97,10 @@ describe("app registration file", () => {
 describe("daemon lazy codex-app session restore", () => {
   let context: TestContext;
   let daemon: TestDaemon;
+  const prevKey = process.env.TOGETHER_API_KEY;
 
   beforeAll(async () => {
+    process.env.TOGETHER_API_KEY = FAKE_KEY;
     context = await createTestContext();
     daemon = await startTestDaemon(context);
   }, 30_000);
@@ -79,6 +108,11 @@ describe("daemon lazy codex-app session restore", () => {
   afterAll(async () => {
     await daemon?.stop();
     await cleanupTmpDir(context);
+    if (prevKey === undefined) {
+      delete process.env.TOGETHER_API_KEY;
+    } else {
+      process.env.TOGETHER_API_KEY = prevKey;
+    }
   });
 
   test("re-registers the persisted codex-app session on a token miss instead of 401ing", async () => {
