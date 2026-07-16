@@ -20,8 +20,8 @@ import { OPENCODE_PROVIDER_ID } from "../../cli/src/lib/opencode/defaults.js";
 import { parseArgs } from "../../cli/src/lib/parse-args.js";
 
 describe("Ollama provider preset (M3)", () => {
-  test("builtin registry lists together and ollama", () => {
-    expect(listBuiltinProviderIds()).toEqual(["together", "ollama"]);
+  test("builtin registry lists together, ollama, and openrouter", () => {
+    expect(listBuiltinProviderIds()).toEqual(["together", "ollama", "openrouter"]);
     expect(getBuiltinProvider("ollama")?.id).toBe(OLLAMA_PROVIDER_ID);
     expect(getBuiltinProvider("ollama")?.auth).toEqual({ type: "none" });
     expect(getBuiltinProvider("ollama")?.baseURL).toBe(OLLAMA_DEFAULT_BASE_URL);
