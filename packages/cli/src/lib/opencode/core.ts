@@ -1,6 +1,7 @@
 import { TOGETHER_API_KEY_ENV_REF } from "../together-core.js";
 import {
   OLLAMA_PROVIDER_ID,
+  OPENROUTER_PROVIDER_ID,
   TOGETHER_PROVIDER_CONFIG,
   TOGETHER_PROVIDER_ID,
   type ProviderConfig,
@@ -36,7 +37,12 @@ export type OpencodeConfig = {
 type OpencodeProviderConfig = {
   npm: string;
   name: string;
-  options: { apiKey?: string; baseURL?: string };
+  options: {
+    apiKey?: string;
+    baseURL?: string;
+    /** Extra request headers (e.g. OpenRouter HTTP-Referer / X-Title). */
+    headers?: Record<string, string>;
+  };
   models?: Record<string, unknown>;
   /**
    * Restricts the provider so ONLY these model ids appear in /models
@@ -72,6 +78,9 @@ export function opencodeProviderIdFor(provider: ProviderConfig): string {
   if (provider.id === OLLAMA_PROVIDER_ID) {
     return OLLAMA_PROVIDER_ID;
   }
+  if (provider.id === OPENROUTER_PROVIDER_ID) {
+    return OPENROUTER_PROVIDER_ID;
+  }
   return provider.id;
 }
 
@@ -80,7 +89,7 @@ export function opencodeNpmFor(provider: ProviderConfig): string {
   if (provider.id === TOGETHER_PROVIDER_ID) {
     return "@ai-sdk/togetherai";
   }
-  // Ollama and future OpenAI-compatible presets.
+  // Ollama, OpenRouter, and other OpenAI-compatible presets.
   return "@ai-sdk/openai-compatible";
 }
 
@@ -187,6 +196,9 @@ export function buildOpencodeConfigJson({
   // Together's first-party adapter knows its URL; openai-compatible needs baseURL.
   if (provider.id !== TOGETHER_PROVIDER_ID) {
     options.baseURL = provider.baseURL;
+  }
+  if (provider.headers && Object.keys(provider.headers).length > 0) {
+    options.headers = { ...provider.headers };
   }
 
   const providerBlock: OpencodeProviderConfig = {
