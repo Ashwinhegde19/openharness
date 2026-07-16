@@ -37,7 +37,11 @@ See [../UPSTREAM.md](../UPSTREAM.md) (pinned TogetherLink commit).
 
 ## M3 status
 
-**Done** (OpenCode + Ollama). Built-in `ollama` preset, local discovery, session-only OpenCode config via `@ai-sdk/openai-compatible`. See `packages/cli/src/lib/provider/ollama-*.ts` and `packages/tests/src/ollama-provider.test.ts`. Next: **M4** OpenCode + OpenRouter.
+**Done** (OpenCode + Ollama). Built-in `ollama` preset, local discovery, session-only OpenCode config via `@ai-sdk/openai-compatible`. See `packages/cli/src/lib/provider/ollama-*.ts` and `packages/tests/src/ollama-provider.test.ts`.
+
+## M4 status
+
+**Done** (OpenCode + OpenRouter). Bearer auth, attribution headers, namespaced model ids, discovery + curated fallback, cloud destination warning. See `packages/cli/src/lib/provider/openrouter-*.ts` and `packages/tests/src/openrouter-provider.test.ts`. Next: **M5** Claude generalization.
 
 ## Important confirmed findings
 

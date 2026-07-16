@@ -130,21 +130,33 @@ togetherlink --provider ollama --main llama3.2 opencode
 
 ## 7. M4 - OpenCode + OpenRouter
 
+Status: **implemented** (2026-07-16) — see `packages/cli/src/lib/provider/openrouter-*.ts` and `harnesses/opencode.ts`.
+
 Work:
 
-- bearer auth;
-- provider headers;
-- namespaced IDs;
-- discovery fallback;
-- cloud destination warning;
-- auth/rate errors;
-- optional pricing.
+- [x] bearer auth (`OPENROUTER_API_KEY`);
+- [x] provider headers (`HTTP-Referer`, `X-Title`);
+- [x] namespaced IDs (`org/model`);
+- [x] discovery with curated fallback;
+- [x] cloud destination warning on launch;
+- [x] auth/rate-limit discovery errors;
+- [x] optional pricing from discovery;
+- [x] session-only OpenCode config (no permanent write).
 
 Exit:
 
-- text, stream, and tool round trip pass for one model;
-- redaction passes;
-- compatibility entry published.
+- [x] unit coverage for preset, discovery, merge, OpenCode config;
+- [ ] live text/stream/tool round trip for one model (needs `OPENROUTER_API_KEY` + opencode);
+- [x] redaction path inherits M2 (keys not in SQLite);
+- [ ] formal compatibility matrix entry (publish with alpha).
+
+### Usage
+
+```bash
+export OPENROUTER_API_KEY=sk-or-...
+togetherlink opencode --provider openrouter
+togetherlink opencode --provider openrouter --main openai/gpt-4o-mini
+```
 
 ## 8. M5 - Claude generalization
 
