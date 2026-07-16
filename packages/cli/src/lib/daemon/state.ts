@@ -221,57 +221,40 @@ export class SessionRegistry {
     return true;
   }
 
+  /**
+   * Open the session store and seal any "active" rows left from a previous
+   * process. M2 never persists API keys or local proxy auth tokens, so a
+   * credentialed session cannot be transparently resumed after daemon restart
+   * (ARCHITECTURE §12.3). Non-secret usage totals are preserved on the ended
+   * row. Returns 0 — no live sessions are rehydrated from disk.
+   */
   async restorePersisted(): Promise<number> {
     this.store = await createSessionStore();
     const persisted = this.store.restoreActiveSessions();
-    let restored = 0;
     const now = Date.now();
+    let sealed = 0;
     for (const session of persisted) {
-      if (session.pid !== undefined && !isProcessAlive(session.pid)) {
-        this.store.markSessionEnded(
-          session.token,
-          now,
+      this.store.markSessionEnded(
+        session.token,
+        now,
+        session.externalSummary ??
           "[togetherlink cost] session total: $0.0000 (0 in, 0 out)",
-          { promptTokens: 0, cachedTokens: 0, completionTokens: 0, costUsd: 0 },
-        );
-        continue;
-      }
-      const lastSeenAt = session.lastSeenAt ?? session.startedAt;
-      if (session.pid === undefined && isNoPidSessionIdle(lastSeenAt, now)) {
-        this.store.markSessionEnded(
-          session.token,
-          now,
-          session.externalSummary ?? "[togetherlink cost] session total: $0.0000 (0 in, 0 out)",
-          {
-            promptTokens: session.promptTokens ?? 0,
-            cachedTokens: session.cachedTokens ?? 0,
-            completionTokens: session.completionTokens ?? 0,
-            costUsd: session.costUsd ?? 0,
-          },
-        );
-        continue;
-      }
-      const state = buildSession(session);
-      state.startedAt = session.startedAt;
-      state.lastSeenAt = lastSeenAt;
-      state.lastSeenPersistedAt = lastSeenAt;
-      if (session.externalSummary !== undefined) {
-        state.externalSummary = session.externalSummary;
-      }
-      state.costTracker.hydrateUsage(
         {
           promptTokens: session.promptTokens ?? 0,
           cachedTokens: session.cachedTokens ?? 0,
           completionTokens: session.completionTokens ?? 0,
           costUsd: session.costUsd ?? 0,
         },
-        session.externalSummary,
       );
-      this.map.set(state.token, state);
-      restored += 1;
+      sealed += 1;
     }
-    restored -= this.enforceNoPidSessionLimit(now);
-    return restored;
+    if (sealed > 0) {
+      process.stderr.write(
+        `[togetherlink daemon] Sealed ${sealed} session(s) after restart — ` +
+          `API keys are not persisted; re-launch the harness to continue.\n`,
+      );
+    }
+    return 0;
   }
 
   /**
@@ -470,13 +453,12 @@ function roundPerfMs(value: number): number {
 }
 
 function toPersistedSession(state: SessionState): PersistedSession {
+  // M2: secrets stay in memory only. storage.upsertSession also redacts, but
+  // strip here so no secret crosses the persistence boundary in the type flow.
   const base: PersistedSession = {
     token: state.token,
     agent: state.agent,
-    apiKey: state.apiKey,
-    ...(state.options?.authToken !== undefined && state.options.authToken !== state.token
-      ? { authToken: state.options.authToken }
-      : {}),
+    apiKey: "",
     modelLabel: state.modelLabel,
     modelDefinition: state.modelDefinition,
     startedAt: state.startedAt,
