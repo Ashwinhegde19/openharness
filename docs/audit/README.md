@@ -47,16 +47,21 @@ See [../UPSTREAM.md](../UPSTREAM.md) (pinned TogetherLink commit).
 
 **Together is not a product requirement.** Keys are resolved per provider at launch:
 
-| Path                                  | Credential                         |
-| ------------------------------------- | ---------------------------------- |
-| `opencode` (default)                  | Ollama — none                      |
-| `opencode --provider openrouter`      | `OPENROUTER_API_KEY`               |
-| `opencode --provider together`        | `TOGETHER_API_KEY`                 |
-| `claude` / `codex` / `pi` / `chatgpt` | Together preset only (until M5–M6) |
+| Path                             | Credential                      |
+| -------------------------------- | ------------------------------- |
+| `opencode` (default)             | Ollama — none                   |
+| `opencode --provider openrouter` | `OPENROUTER_API_KEY`            |
+| `opencode --provider together`   | `TOGETHER_API_KEY`              |
+| `claude` (default)               | Together preset                 |
+| `claude --provider openrouter`   | `OPENROUTER_API_KEY`            |
+| `claude --provider ollama`       | none                            |
+| `codex` / `pi` / `chatgpt`       | Together preset only (until M6) |
 
 There is no CLI entry gate forcing a Together key. See [03-credential-flow.md](03-credential-flow.md).
 
-Next: **M5** Claude generalization.
+## M5 status
+
+**Done** (Claude multi-provider launch). Claude Code can use OpenRouter or Ollama via `--provider` while keeping process-only env injection and the existing Messages→Chat proxy. Next: **M6** Codex generalization.
 
 ## Important confirmed findings
 

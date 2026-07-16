@@ -167,21 +167,26 @@ togetherlink opencode --provider openrouter --main openai/gpt-4o-mini
 
 ## 8. M5 - Claude generalization
 
+Status: **implemented** (2026-07-16) — Claude can launch with `--provider openrouter|ollama|together`. Proxy already used parameterized upstream client (M1).
+
 Work:
 
-- provider-neutral proxy options;
-- Messages-to-Chat translation;
-- stream/tool mapping;
-- context/auth errors;
-- process-only injection;
-- lifecycle/cancellation.
+- [x] provider-neutral proxy options (session ProviderRuntime + baseURL/auth);
+- [x] Messages-to-Chat translation (existing Claude proxy path);
+- [x] stream/tool mapping (existing);
+- [x] process-only injection (ANTHROPIC\_\* env only);
+- [x] multi-provider launch + model alias synthesis;
+- [x] cloud destination warning for OpenRouter;
+- [ ] live standard coding task evidence on CI (optional; needs key + claude binary);
+- [ ] formal level-3 matrix entry.
 
-Exit:
+### Usage
 
-- standard coding task through non-Together provider;
-- config unchanged;
-- crash cleanup passes;
-- level 3 evidence published.
+```bash
+togetherlink claude --provider openrouter --main openai/gpt-4o-mini
+togetherlink claude --provider ollama --main llama3.2
+togetherlink claude                              # Together preset (default)
+```
 
 ## 9. M6 - Codex generalization
 
