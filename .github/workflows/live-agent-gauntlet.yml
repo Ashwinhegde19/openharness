@@ -48,29 +48,43 @@ jobs:
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@v4
 
       - name: Set up Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
-          node-version: "24"
+          node-version: "22"
 
       - name: Set up pnpm
-        uses: pnpm/action-setup@v6
+        uses: pnpm/action-setup@v4
         with:
           version: "11.9.0"
 
-      - name: Verify Together secret
+      # Live gauntlet needs a real Together key. Without the secret, skip cleanly
+      # (do not fail the push) so public forks and early setup stay green.
+      - name: Check Together secret
+        id: secret
         run: |
           if [ -z "$TOGETHER_API_KEY" ]; then
-            echo "TOGETHER_API_KEY repository secret is required for live inference tests." >&2
-            exit 1
+            echo "present=false" >> "$GITHUB_OUTPUT"
+            {
+              echo "### Live Agent Gauntlet skipped"
+              echo ""
+              echo "Repository secret \`TOGETHER_API_KEY\` is not configured."
+              echo "Add it under **Settings → Secrets and variables → Actions** to enable live harness tests."
+              echo "Offline checks run in the separate **CI** workflow."
+            } >> "$GITHUB_STEP_SUMMARY"
+            echo "TOGETHER_API_KEY not configured — skipping live inference gauntlet."
+          else
+            echo "present=true" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Install workspace dependencies
+        if: steps.secret.outputs.present == 'true'
         run: pnpm install --frozen-lockfile --config.confirmModulesPurge=false
 
       - name: Restore Turborepo cache
+        if: steps.secret.outputs.present == 'true'
         uses: actions/cache/restore@v4
         with:
           path: .turbo/cache
@@ -80,15 +94,19 @@ jobs:
             turbo-${{ runner.os }}-
 
       - name: Verify TypeScript native compiler
+        if: steps.secret.outputs.present == 'true'
         run: node_modules/.bin/tsc --version
 
       - name: Check formatting
+        if: steps.secret.outputs.present == 'true'
         run: pnpm format:check
 
       - name: Typecheck workspace
+        if: steps.secret.outputs.present == 'true'
         run: pnpm typecheck
 
       - name: Install coding-agent CLIs
+        if: steps.secret.outputs.present == 'true'
         run: |
           case "$HARNESS" in
             all)
@@ -130,12 +148,15 @@ jobs:
           esac
 
       - name: Build togetherlink CLI
+        if: steps.secret.outputs.present == 'true'
         run: pnpm exec turbo run build --filter @togetherlink/models --filter @togetherlink/cli
 
       - name: Typecheck live tests
+        if: steps.secret.outputs.present == 'true'
         run: node_modules/.bin/tsc -p packages/tests/tsconfig.json --noEmit
 
       - name: Run live agent gauntlet
+        if: steps.secret.outputs.present == 'true'
         run: |
           case "$HARNESS" in
             all)
@@ -163,19 +184,19 @@ jobs:
           esac
 
       - name: Stop togetherlink daemon
-        if: always()
+        if: always() && steps.secret.outputs.present == 'true'
         run: node packages/cli/dist/bin/togetherlink.js daemon stop || true
 
       - name: Save Turborepo cache
-        if: always()
+        if: always() && steps.secret.outputs.present == 'true'
         uses: actions/cache/save@v4
         with:
           path: .turbo/cache
           key: turbo-${{ runner.os }}-${{ github.ref_name }}-${{ github.run_id }}-${{ github.run_attempt }}
 
       - name: Upload live test artifacts
-        if: always()
-        uses: actions/upload-artifact@v7
+        if: always() && steps.secret.outputs.present == 'true'
+        uses: actions/upload-artifact@v4
         with:
           name: live-agent-gauntlet-artifacts
           path: packages/tests/artifacts/
