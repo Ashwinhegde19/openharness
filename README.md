@@ -2,7 +2,7 @@
 
 > Working title. The final product name is intentionally undecided.
 
-This folder contains the production planning documents for a session-scoped compatibility launcher that connects supported coding harnesses to supported model providers without permanently modifying the harnesses' normal configuration.
+This repository contains the production planning documents for a session-scoped compatibility launcher that connects supported coding harnesses to supported model providers without permanently modifying the harnesses' normal configuration.
 
 ## Document status
 
