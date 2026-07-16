@@ -31,9 +31,25 @@ export const OLLAMA_COMPATIBILITY_POLICY: ProviderCompatibilityPolicy = {
   responseUsageMode: "standard",
 };
 
+/**
+ * OpenRouter OpenAI-compatible chat policy. Namespaced model ids
+ * (`provider/model`); tools and streaming generally supported.
+ */
+export const OPENROUTER_COMPATIBILITY_POLICY: ProviderCompatibilityPolicy = {
+  id: "openrouter-openai-chat",
+  version: "1.0.0",
+  endpointPath: "/chat/completions",
+  tokenLimitField: "max_tokens",
+  supportsStreamUsage: true,
+  supportsStrictTools: false,
+  supportsParallelTools: true,
+  responseUsageMode: "standard",
+};
+
 const POLICIES: Record<string, ProviderCompatibilityPolicy> = {
   [TOGETHER_COMPATIBILITY_POLICY.id]: TOGETHER_COMPATIBILITY_POLICY,
   [OLLAMA_COMPATIBILITY_POLICY.id]: OLLAMA_COMPATIBILITY_POLICY,
+  [OPENROUTER_COMPATIBILITY_POLICY.id]: OPENROUTER_COMPATIBILITY_POLICY,
 };
 
 /** Look up a versioned policy by id; unknown ids return undefined. */
