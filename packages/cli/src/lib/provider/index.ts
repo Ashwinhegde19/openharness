@@ -74,3 +74,5 @@ export {
   toUpstreamClientOptions,
   upstreamOptionsFromProxy,
 } from "./runtime.js";
+
+export { claudeAliasForUpstreamId, modelDefinitionFromProviderModel } from "./model-definition.js";
