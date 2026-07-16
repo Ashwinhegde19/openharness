@@ -114,10 +114,13 @@ function opencodeArgsWithoutModelOverrides(args: string[]): string[] {
   return sanitized;
 }
 
+/** OpenCode default when --provider is omitted: local Ollama (no API key). */
+export const OPENCODE_DEFAULT_PROVIDER_ID = OLLAMA_PROVIDER_ID;
+
 async function resolveProviderForLaunch(ctx: HarnessContext): Promise<ProviderConfig> {
-  const providerId = (ctx.provider ?? TOGETHER_PROVIDER_ID).trim().toLowerCase();
+  const providerId = (ctx.provider ?? OPENCODE_DEFAULT_PROVIDER_ID).trim().toLowerCase();
   if (!isBuiltinProviderId(providerId) && providerId !== "togetherai") {
-    throw new Error(`Unknown provider "${ctx.provider}". Supported: together, ollama, openrouter.`);
+    throw new Error(`Unknown provider "${ctx.provider}". Supported: ollama, openrouter, together.`);
   }
 
   if (providerId === OLLAMA_PROVIDER_ID) {
@@ -208,7 +211,20 @@ async function resolveOpenRouterApiKey(ctx: HarnessContext): Promise<string> {
   if (ctx.apiKey?.trim()) {
     return ctx.apiKey.trim();
   }
-  return process.env[OPENROUTER_API_KEY_ENV]?.trim() ?? "";
+  const fromEnv = process.env[OPENROUTER_API_KEY_ENV]?.trim();
+  if (fromEnv) {
+    return fromEnv;
+  }
+  if (ctx.home) {
+    const { readGlobalConfig, resolveStoredOpenRouterApiKey } = await import("../global-config.js");
+    const stored = resolveStoredOpenRouterApiKey(
+      (await readGlobalConfig(ctx.home)).openrouterApiKey,
+    );
+    if (stored) {
+      return stored;
+    }
+  }
+  return "";
 }
 
 function defaultModelForProvider(provider: ProviderConfig, requested?: string): string {
@@ -255,15 +271,16 @@ async function resolveLaunchApiKey(
     return { apiKey, apiKeyEnv: OPENROUTER_API_KEY_ENV };
   }
 
-  // Together (default) — global config + TOGETHER_API_KEY.
+  // Together preset only — not required for the product or other providers.
   const apiKey = await resolveTogetherApiKey({
     apiKey: ctx.apiKey,
     home: ctx.home,
   });
   if (!apiKey) {
     throw new Error(
-      "No Together API key found. Pass --api-key or set TOGETHER_API_KEY " +
-        "(or use --provider ollama / --provider openrouter).",
+      "OpenCode Together preset needs a key. Pass --api-key, set TOGETHER_API_KEY, " +
+        "or run `togetherlink configure`. For local models use the default " +
+        "`--provider ollama` (no key); for OpenRouter use `--provider openrouter`.",
     );
   }
   const apiKeyEnv =

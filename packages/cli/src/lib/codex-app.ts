@@ -69,7 +69,9 @@ export async function runCodexAppCommand(ctx: HarnessContext): Promise<HarnessRe
   });
   if (!apiKey) {
     throw new Error(
-      "No Together API key found. Pass --api-key, run `togetherlink configure`, or set TOGETHER_API_KEY.",
+      "ChatGPT Desktop integration currently uses the Together provider preset and needs a key. " +
+        "Pass --api-key, set TOGETHER_API_KEY, or run `togetherlink configure`. " +
+        "For local models without a cloud key: `togetherlink opencode` (Ollama).",
     );
   }
 

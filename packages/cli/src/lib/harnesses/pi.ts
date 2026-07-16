@@ -80,7 +80,11 @@ export default defineHarness({
       home: ctx.home,
     });
     if (!apiKey) {
-      throw new Error("No Together API key found. Pass --api-key or set TOGETHER_API_KEY.");
+      throw new Error(
+        "Pi currently uses the Together provider preset and needs a key. " +
+          "Pass --api-key, set TOGETHER_API_KEY, or run `togetherlink configure`. " +
+          "For local models without a cloud key: `togetherlink opencode` (Ollama).",
+      );
     }
 
     const agentDir = mkdtempSync(join(tmpdir(), "togetherlink-pi-"));
