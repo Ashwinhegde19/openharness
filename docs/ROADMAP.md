@@ -50,19 +50,23 @@ Exit:
 
 ## 4. M1 - Provider-neutral Together
 
+Status: **implemented** (2026-07-16) — see `packages/cli/src/lib/provider/` and `docs/audit/09-m1-backlog.md`.
+
 Work:
 
-- ProviderConfig, ProviderAuth, ProviderModel, ProviderCompatibilityPolicy;
-- parameterized upstream client;
-- provider runtime threaded through CLI, session, daemon, proxy, client;
-- Together represented as preset;
-- regression tests preserved.
+- [x] ProviderConfig, ProviderAuth, ProviderModel, ProviderCompatibilityPolicy;
+- [x] parameterized upstream client;
+- [x] provider runtime threaded through CLI, session, daemon, proxy, client;
+- [x] Together represented as preset;
+- [x] regression tests preserved (`provider-runtime.test.ts` + offline core).
 
 Exit:
 
-- Together is data, not a hard-coded core assumption;
-- baseline tests pass;
-- no new provider required yet.
+- [x] Together is data, not a hard-coded core assumption (defaults still Together);
+- [x] baseline offline tests pass;
+- [x] no new provider required yet.
+
+Next: **M2** secret-safe runtime (remove plaintext keys from SQLite / persistence).
 
 ## 5. M2 - Secret-safe runtime
 

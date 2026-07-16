@@ -11,7 +11,7 @@ Session-scoped compatibility launcher that connects supported coding harnesses t
 - Last updated: 2026-07-16
 - Implementation baseline: TogetherLink (see [docs/UPSTREAM.md](docs/UPSTREAM.md))
 - Code layout: monorepo `packages/` at repository root
-- Code status: Baseline imported; provider-neutral refactor not started (M0 complete)
+- Code status: M0 complete; **M1 provider-neutral runtime landed** (Together remains the only preset; no rebrand)
 
 ## Documentation
 

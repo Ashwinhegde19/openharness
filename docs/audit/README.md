@@ -27,6 +27,10 @@ See [../UPSTREAM.md](../UPSTREAM.md) (pinned TogetherLink commit).
 - [x] Credential and persistence assumptions mapped against real code
 - [x] First implementation PR bounded (see 09-m1-backlog.md)
 
+## M1 status
+
+**Done** (provider-neutral Together baseline). Details and file map: [09-m1-backlog.md](09-m1-backlog.md). Next milestone: **M2** secret-safe runtime.
+
 ## Important confirmed findings
 
 1. **SQLite persists plaintext `api_key` and `auth_token`** in `~/.togetherlink/daemon.sqlite` (`packages/cli/src/lib/daemon/storage.ts`). Conflicts with SR-001 / ADR-0005 — primary M2 work.

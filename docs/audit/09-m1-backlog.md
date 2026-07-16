@@ -60,12 +60,12 @@ Proxy handlers call generic upstream client. Banners still say Together until re
 
 Checklist:
 
-- [ ] Types + Together preset data
-- [ ] Upstream client parameterized
-- [ ] Daemon/session carry provider runtime
-- [ ] Existing unit/proxy tests pass
-- [ ] Docs: note progress in ROADMAP / this audit
-- [ ] No package rename
+- [x] Types + Together preset data — `packages/cli/src/lib/provider/`
+- [x] Upstream client parameterized — `together-client.ts` accepts baseURL/auth/headers/queryParams
+- [x] Daemon/session carry provider runtime — `RegisterSessionRequest.provider`, `SessionState.provider`, proxy options
+- [x] Existing unit/proxy tests pass — plus `packages/tests/src/provider-runtime.test.ts`
+- [x] Docs: note progress in ROADMAP / this audit
+- [x] No package rename
 
 ## Explicit non-goals for first PR
 
@@ -74,3 +74,18 @@ Checklist:
 - Adding second provider
 - Fixing Pi secret-on-argv (track under M2/Pi hardening)
 - Site/telemetry rebrand
+
+## Implementation notes (2026-07-16)
+
+| Item | Location |
+|---|---|
+| ProviderConfig / Auth / Model / Runtime types | `packages/cli/src/lib/provider/types.ts` |
+| Together preset + model mapping | `packages/cli/src/lib/provider/together-preset.ts` |
+| Compatibility policy stub | `packages/cli/src/lib/provider/policy.ts` |
+| Runtime helpers | `packages/cli/src/lib/provider/runtime.ts` |
+| Parameterized client | `packages/cli/src/lib/together-client.ts` |
+| Session threading | `daemon/state.ts`, `proxied-session.ts`, `codex-app.ts` |
+| OpenCode data-driven provider block | `opencode/core.ts` (still Together preset) |
+| Proxy options carry upstream fields | `claude/proxy.ts`, `codex/proxy.ts`, `claude/vision.ts` |
+
+Together remains the default when `provider` is omitted (old launchers / restored sessions).
