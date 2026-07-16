@@ -66,25 +66,32 @@ Exit:
 - [x] baseline offline tests pass;
 - [x] no new provider required yet.
 
-Next: **M2** secret-safe runtime (remove plaintext keys from SQLite / persistence).
+M1 complete → **M2 secret-safe runtime landed** (2026-07-16).
 
 ## 5. M2 - Secret-safe runtime
 
+Status: **implemented** (2026-07-16) — see `packages/cli/src/lib/daemon/storage.ts`, `app-registration.ts`, and `packages/tests/src/secret-persistence.test.ts`.
+
 Work:
 
-- remove active keys/local tokens from persistent storage;
-- in-memory secret structure;
-- schema migration;
-- redaction;
-- secure temp files;
-- loopback auth;
-- stale-session behavior.
+- [x] remove active keys/local tokens from SQLite session rows;
+- [x] in-memory secrets only on `SessionState` / proxy options;
+- [x] schema epoch `user_version = 2` + scrub/VACUUM of legacy secrets;
+- [x] redacted codex-app registration (API key re-resolved from env/config);
+- [x] daemon restart seals active rows (no secret resume);
+- [x] canary persistence tests;
+- [ ] secure temp files (Pi models.json) — track for follow-up / Pi hardening;
+- [x] loopback auth unchanged (local-proxy-token file, mode 0600).
 
 Exit:
 
-- canary absent from databases, logs, config, and cleaned temp paths;
-- security tests pass;
-- restart behavior documented.
+- [x] canary absent from SQLite and app registration JSON;
+- [x] security canary tests pass;
+- [x] restart behavior documented (below + audit).
+
+### Daemon restart (normative)
+
+After a daemon process restart, credentialed proxied sessions **cannot** be transparently resumed. Active SQLite rows are sealed (marked ended) with usage totals preserved. Operators must re-launch the harness (or re-run `togetherlink codex-app` with a resolvable `TOGETHER_API_KEY` / global config).
 
 ## 6. M3 - OpenCode + Ollama
 

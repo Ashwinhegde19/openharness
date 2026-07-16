@@ -15,14 +15,14 @@ Home root: `TOGETHERLINK_HOME` or `~/.togetherlink`.
 |---|---|---|
 | `config.json` → `apiKey` | **S** if literal; N if `{env:…}` only | Prefer env reference only |
 | `config.json` → `exaApiKey` | **S** / N same pattern | Optional |
-| `daemon.sqlite` → `api_key` | **S** | **Must remove for M2** |
-| `daemon.sqlite` → `auth_token` | **S** | **Must remove for M2** |
+| `daemon.sqlite` → `api_key` | empty placeholder | **M2 done** — never writes real keys; legacy scrub + VACUUM |
+| `daemon.sqlite` → `auth_token` | always NULL | **M2 done** — never writes local proxy tokens |
 | `daemon.sqlite` → model ids, usage, pid, timestamps | N / P | OK to keep |
 | `daemon.sqlite` → `model_definition_json` | N | Includes public pricing |
 | local-proxy-token file | **S** | Session-scoped; restrict perms |
 | `install-id` | N | Telemetry |
 | `bin/togetherlink.js` | N | Install artifact |
-| codex-app registration / session lock | P | Paths under home |
+| codex-app registration / session lock | P (no API key) | **M2** redacts `apiKey`; rehydrates from env/global config on read |
 | temp `togetherlink-codex-catalog-*` | N | Model catalog only |
 | temp `togetherlink-pi-*` / `models.json` | **S** | Contains apiKey today |
 | OpenCode user config | N | Product claims no permanent write |
@@ -55,13 +55,14 @@ updated_at INTEGER NOT NULL
 
 File mode: attempts `chmod 0o600` on DB.
 
-## M2 migration sketch
+## M2 migration (landed)
 
-1. Stop writing `api_key` / `auth_token` columns (or write empty + refuse restore of secrets).
-2. Keep in-memory `SessionState` secrets only.
-3. On daemon restart: active proxied sessions cannot resume auth; mark stale and clean ports/pids safely.
-4. Canary tests scan DB after session for secret absence.
-5. Document rotation if users ran versions that persisted keys.
+1. **Writes:** `api_key` always `""`, `auth_token` always `NULL` (`withoutPersistedSecrets` + `sessionParams`).
+2. **Memory:** `SessionState.apiKey` / proxy options still hold the live key for the process lifetime only.
+3. **Restart:** `SessionRegistry.restorePersisted` seals all active rows and returns `0` live sessions; stderr explains re-launch.
+4. **Legacy DB:** on open, scrub any non-empty secret columns and `VACUUM` when secrets were found; `PRAGMA user_version = 2`.
+5. **Canary:** `packages/tests/src/secret-persistence.test.ts`.
+6. **Operators who ran pre-M2:** keys may have been on disk; M2 scrub clears columns on next daemon start. Rotate keys if the machine was untrusted while pre-M2 ran.
 
 ## Logging defaults
 

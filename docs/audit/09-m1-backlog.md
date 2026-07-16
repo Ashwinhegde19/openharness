@@ -42,11 +42,11 @@ Proxy handlers call generic upstream client. Banners still say Together until re
 - Manual smoke optional with `TOGETHER_API_KEY`
 - No new plaintext secret fields
 
-### M2 (next milestone, not M1)
-- Remove `api_key` / `auth_token` from SQLite
-- Prefer env-ref-only config writes
-- Canary persistence tests
-- Document daemon restart = no secret resume
+### M2 (landed 2026-07-16)
+- [x] Remove `api_key` / `auth_token` from SQLite writes + scrub legacy
+- [x] Canary persistence tests (`secret-persistence.test.ts`)
+- [x] Document daemon restart = no secret resume
+- [ ] Prefer env-ref-only global config writes (partial — still allows literal in `configure`)
 
 ### M3+
 - Ollama + OpenCode

@@ -29,7 +29,11 @@ See [../UPSTREAM.md](../UPSTREAM.md) (pinned TogetherLink commit).
 
 ## M1 status
 
-**Done** (provider-neutral Together baseline). Details and file map: [09-m1-backlog.md](09-m1-backlog.md). Next milestone: **M2** secret-safe runtime.
+**Done** (provider-neutral Together baseline). Details and file map: [09-m1-backlog.md](09-m1-backlog.md).
+
+## M2 status
+
+**Done** (secret-safe runtime). SQLite and codex-app registration no longer store active API keys; daemon restart seals sessions. See [05-persistence.md](05-persistence.md) and `packages/tests/src/secret-persistence.test.ts`. Next: **M3** OpenCode + Ollama.
 
 ## Important confirmed findings
 
