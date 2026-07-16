@@ -37,6 +37,7 @@ Code status: TogetherLink monorepo at a pinned commit; provider-neutral refactor
 - [docs/UPSTREAM-TOGETHERLINK-README.md](docs/UPSTREAM-TOGETHERLINK-README.md) - original TogetherLink install/dev README
 - `packages/cli`, `packages/models`, `packages/tests` - implementation baseline
 - `site/` - upstream marketing/install site (not required for core CLI work)
+- [audit/](audit/README.md) - M0 repository audit deliverables and M1 backlog
 
 ## Diagrams
 

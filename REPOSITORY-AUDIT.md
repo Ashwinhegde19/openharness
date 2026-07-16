@@ -6,6 +6,8 @@ This document records known architecture observations that motivate the provider
 
 File paths and behavior must be revalidated before coding.
 
+**M0 status (2026-07-16):** Audit completed against pin `9f56ed93b4b0d73d7a96bc70574851e21a46cdf7`. Full deliverables live under [audit/](audit/README.md).
+
 ## 2. Known observations
 
 ### 2.1 Harness implementations
