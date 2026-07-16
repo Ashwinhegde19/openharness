@@ -7,6 +7,16 @@ import { togetherlinkHome } from "../paths.js";
 
 const DATABASE_FILE = "daemon.sqlite";
 
+/**
+ * Schema epoch for session persistence (M2).
+ * v2: active API keys and local proxy auth tokens are never stored in SQLite.
+ * Columns remain for backward-compatible reads; values are always empty/null.
+ */
+export const SESSION_SCHEMA_VERSION = 2;
+
+/** Placeholder written to the legacy `api_key` column (never a real secret). */
+export const PERSISTED_API_KEY_PLACEHOLDER = "";
+
 type SqliteDatabase = {
   exec(sql: string): void;
   prepare(sql: string): {
@@ -78,14 +88,14 @@ export function resolveSessionDatabasePath(home = togetherlinkHome()): string {
 }
 
 async function openSqlite(file: string): Promise<SqliteDatabase | undefined> {
-  const dynamicImport = new Function("specifier", "return import(specifier)") as (
-    specifier: string,
-  ) => Promise<unknown>;
   const preferBun = typeof (globalThis as { Bun?: unknown }).Bun !== "undefined";
   const attempts = preferBun ? ["bun:sqlite", "node:sqlite"] : ["node:sqlite", "bun:sqlite"];
   for (const specifier of attempts) {
     try {
-      const mod = (await dynamicImport(specifier)) as Record<string, unknown>;
+      const mod = await importSqliteModule(specifier);
+      if (!mod) {
+        continue;
+      }
       if (specifier === "bun:sqlite" && typeof mod.Database === "function") {
         return new BunSqliteDatabase(new (mod.Database as new (path: string) => unknown)(file));
       }
@@ -100,6 +110,26 @@ async function openSqlite(file: string): Promise<SqliteDatabase | undefined> {
     }
   }
   return undefined;
+}
+
+/**
+ * Load a sqlite module. Prefer native dynamic `import()` (works under Vitest
+ * and modern Node); fall back to an indirect import for environments that
+ * rewrite static analysis of import specifiers.
+ */
+async function importSqliteModule(specifier: string): Promise<Record<string, unknown> | undefined> {
+  try {
+    return (await import(specifier)) as Record<string, unknown>;
+  } catch {
+    try {
+      const dynamicImport = new Function("specifier", "return import(specifier)") as (
+        specifier: string,
+      ) => Promise<unknown>;
+      return (await dynamicImport(specifier)) as Record<string, unknown>;
+    } catch {
+      return undefined;
+    }
+  }
 }
 
 class BunSqliteDatabase implements SqliteDatabase {
@@ -235,6 +265,8 @@ class SqliteSessionStore implements SessionStore {
   }
 
   upsertSession(session: SessionPersistInput): void {
+    // M2: never write active provider keys or local proxy auth tokens to disk.
+    // The api_key / auth_token columns remain for schema compatibility only.
     this.db
       .prepare(`
         INSERT INTO sessions (
@@ -268,7 +300,7 @@ class SqliteSessionStore implements SessionStore {
           external_summary = excluded.external_summary,
           updated_at = excluded.updated_at
       `)
-      .run(...sessionParams(session, Date.now()));
+      .run(...sessionParams(withoutPersistedSecrets(session), Date.now()));
   }
 
   markSessionEnded(
@@ -373,6 +405,51 @@ class SqliteSessionStore implements SessionStore {
     this.addColumnIfMissing("sessions", "last_seen_at", "INTEGER");
     this.addColumnIfMissing("sessions", "claude_code_max_output_tokens", "INTEGER");
     this.addColumnIfMissing("sessions", "claude_code_max_output_tokens_user_set", "INTEGER");
+    // M2: clear secret columns (idempotent). VACUUM when any secret was present
+    // (schema upgrade or a pre-M2 / hand-edited row) so free-page leftovers are
+    // rewritten away from daemon.sqlite.
+    this.scrubPersistedSecrets();
+    this.db.exec(`PRAGMA user_version = ${SESSION_SCHEMA_VERSION}`);
+  }
+
+  /**
+   * Clear legacy secret columns in place (idempotent). VACUUM rewrites the file
+   * when secrets were found so they are not recoverable via a raw byte scan.
+   */
+  private scrubPersistedSecrets(): void {
+    let hadSecrets = false;
+    try {
+      const row = this.db
+        .prepare(
+          `
+        SELECT 1 AS found FROM sessions
+        WHERE api_key != ? OR auth_token IS NOT NULL
+        LIMIT 1
+      `,
+        )
+        .get(PERSISTED_API_KEY_PLACEHOLDER);
+      hadSecrets = row !== undefined && row !== null;
+    } catch {
+      hadSecrets = false;
+    }
+    this.db
+      .prepare(
+        `
+      UPDATE sessions
+      SET api_key = ?,
+          auth_token = NULL
+      WHERE api_key != ?
+         OR auth_token IS NOT NULL
+    `,
+      )
+      .run(PERSISTED_API_KEY_PLACEHOLDER, PERSISTED_API_KEY_PLACEHOLDER);
+    if (hadSecrets) {
+      try {
+        this.db.exec("VACUUM");
+      } catch {
+        // VACUUM may fail on some embedded builds; columns are still cleared.
+      }
+    }
   }
 
   private addColumnIfMissing(table: string, column: string, type: string): void {
@@ -416,6 +493,20 @@ class MemorySessionStore implements SessionStore {
   close(): void {}
 }
 
+/**
+ * Strip secrets before any persistence path. In-memory SessionState still
+ * holds the real key; only the disk mirror is redacted (M2 / SR-001).
+ */
+export function withoutPersistedSecrets<T extends { apiKey: string; authToken?: string }>(
+  session: T,
+): T {
+  return {
+    ...session,
+    apiKey: PERSISTED_API_KEY_PLACEHOLDER,
+    authToken: undefined,
+  };
+}
+
 function sessionParams(session: SessionPersistInput, updatedAt: number): unknown[] {
   return [
     session.token,
@@ -425,8 +516,9 @@ function sessionParams(session: SessionPersistInput, updatedAt: number): unknown
     session.lastSeenAt,
     session.endedAt ?? null,
     session.modelLabel,
-    session.apiKey,
-    session.authToken ?? null,
+    // Always empty — never trust callers to pass a redacted key.
+    PERSISTED_API_KEY_PLACEHOLDER,
+    null,
     session.modelId ?? null,
     session.targetModelId ?? null,
     session.modelName ?? null,
@@ -474,12 +566,12 @@ type SessionRow = {
 };
 
 function rowToSessionBase(row: SessionRow): StoredSession {
+  // M2: ignore any residual secret columns — restore never rehydrates keys.
   return {
     token: row.token,
     agent: row.agent as AgentId,
     ...(typeof row.pid === "number" ? { pid: row.pid } : {}),
-    apiKey: row.api_key,
-    ...(row.auth_token ? { authToken: row.auth_token } : {}),
+    apiKey: PERSISTED_API_KEY_PLACEHOLDER,
     modelLabel: row.model_label,
     modelDefinition: parseJson(row.model_definition_json, {}) as StoredSession["modelDefinition"],
     ...(row.model_id ? { modelId: row.model_id } : {}),
