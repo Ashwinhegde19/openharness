@@ -11,7 +11,7 @@ Session-scoped compatibility launcher that connects supported coding harnesses t
 - Last updated: 2026-07-16
 - Implementation baseline: TogetherLink (see [docs/UPSTREAM.md](docs/UPSTREAM.md))
 - Code layout: monorepo `packages/` at repository root
-- Code status: M0–M4 landed — Together, secret-safe persistence, OpenCode + Ollama/OpenRouter (no rebrand yet)
+- Code status: M0–M4 landed — provider-neutral OpenCode (Ollama default, OpenRouter, Together optional); Claude/Codex/Pi still Together-preset until M5–M6; secret-safe persistence; no rebrand yet
 
 ## Documentation
 
@@ -73,6 +73,22 @@ pnpm test
 ## Core product promise
 
 > Run a supported model provider through a supported coding harness for an isolated session while preserving the user's normal harness configuration.
+
+**Together AI is not required.** It is one optional provider preset (still used by Claude/Codex/Pi until those paths are generalized). OpenCode defaults to local **Ollama** with no API key.
+
+```bash
+# No cloud key
+togetherlink opencode                          # Ollama
+togetherlink opencode --provider ollama --main llama3.2
+
+# Optional cloud providers
+export OPENROUTER_API_KEY=...
+togetherlink opencode --provider openrouter
+
+export TOGETHER_API_KEY=...
+togetherlink opencode --provider together
+togetherlink claude                            # Together preset (key required)
+```
 
 Compatibility is measured and published by capability level — not claimed for every combination.
 

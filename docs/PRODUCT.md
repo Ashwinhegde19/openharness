@@ -15,7 +15,9 @@ The product provides a session-scoped launcher and compatibility layer. The user
 - a coding harness;
 - a provider;
 - a model;
-- credentials or an environment-variable reference.
+- credentials or an environment-variable reference **only when that provider requires them**.
+
+Together AI is **not** the product identity. It is one optional provider preset (the implementation baseline was forked from TogetherLink). Local no-auth providers such as Ollama must work without any cloud API key.
 
 The product chooses the safest supported launch strategy:
 

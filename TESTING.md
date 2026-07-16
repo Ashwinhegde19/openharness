@@ -431,7 +431,7 @@ Claude also includes its Haiku-tier backend if it is not already in `SELECTABLE_
 
 ## GitHub Live Workflow
 
-`.github/workflows/live-agent-gauntlet.yml` runs the same real-inference suite on a daily schedule, on pushes to `main` that touch integration code, and by manual dispatch. It requires a repository secret named `TOGETHER_API_KEY`.
+`.github/workflows/live-agent-gauntlet.yml` runs real-inference tests against the Together preset when the repository secret `TOGETHER_API_KEY` is configured. If the secret is missing, the live workflow **skips successfully** (does not fail the push). Offline unit/proxy tests run in the separate **CI** workflow and need no cloud key. OpenCode + Ollama paths also need no Together key.
 
 The workflow installs the real agent CLIs explicitly:
 

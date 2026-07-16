@@ -68,6 +68,13 @@ Exit:
 
 M1 complete → **M2 secret-safe runtime landed** (2026-07-16).
 
+### Credential model (product)
+
+- **No global Together API key requirement** to run the CLI or OpenCode.
+- OpenCode **defaults to Ollama** (no key). OpenRouter / Together are opt-in via `--provider`.
+- Claude / Codex / Pi / ChatGPT Desktop still use the **Together preset** until M5–M6; those paths request a Together key only at launch.
+- `configure` is optional multi-provider setup (all prompts skippable).
+
 ## 5. M2 - Secret-safe runtime
 
 Status: **implemented** (2026-07-16) — see `packages/cli/src/lib/daemon/storage.ts`, `app-registration.ts`, and `packages/tests/src/secret-persistence.test.ts`.

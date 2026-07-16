@@ -29,3 +29,5 @@ git log --oneline HEAD..upstream/main | head
 ```
 
 Do not bulk-rename branding until provider-neutral architecture is stable (see ROADMAP M1–M6).
+
+**Upstream vs this product:** TogetherLink required a Together API key for interactive use. This product does **not** — credentials are per provider at launch. Together remains available as a preset for regression and for harnesses not yet generalized (Claude/Codex/Pi).

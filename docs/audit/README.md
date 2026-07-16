@@ -41,7 +41,22 @@ See [../UPSTREAM.md](../UPSTREAM.md) (pinned TogetherLink commit).
 
 ## M4 status
 
-**Done** (OpenCode + OpenRouter). Bearer auth, attribution headers, namespaced model ids, discovery + curated fallback, cloud destination warning. See `packages/cli/src/lib/provider/openrouter-*.ts` and `packages/tests/src/openrouter-provider.test.ts`. Next: **M5** Claude generalization.
+**Done** (OpenCode + OpenRouter). Bearer auth, attribution headers, namespaced model ids, discovery + curated fallback, cloud destination warning. See `packages/cli/src/lib/provider/openrouter-*.ts` and `packages/tests/src/openrouter-provider.test.ts`.
+
+## Credential model (post M3/M4)
+
+**Together is not a product requirement.** Keys are resolved per provider at launch:
+
+| Path                                  | Credential                         |
+| ------------------------------------- | ---------------------------------- |
+| `opencode` (default)                  | Ollama — none                      |
+| `opencode --provider openrouter`      | `OPENROUTER_API_KEY`               |
+| `opencode --provider together`        | `TOGETHER_API_KEY`                 |
+| `claude` / `codex` / `pi` / `chatgpt` | Together preset only (until M5–M6) |
+
+There is no CLI entry gate forcing a Together key. See [03-credential-flow.md](03-credential-flow.md).
+
+Next: **M5** Claude generalization.
 
 ## Important confirmed findings
 

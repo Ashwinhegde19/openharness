@@ -1,6 +1,8 @@
 # Together reference inventory
 
-Classification of Together-specific coupling. **Do not bulk-rename** before M1 provider-neutral types work.
+Classification of Together-specific coupling. **Do not bulk-rename** before provider-neutral architecture is stable.
+
+**Product note:** Together is an **optional provider preset**, not a product identity. The CLI does not require `TOGETHER_API_KEY` to start or to run OpenCode+Ollama. Together keys are only needed for the Together preset paths (Claude/Codex/Pi today; OpenCode `--provider together`).
 
 ## A. Endpoint and auth (must become ProviderConfig)
 
