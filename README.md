@@ -11,7 +11,7 @@ Session-scoped compatibility launcher that connects supported coding harnesses t
 - Last updated: 2026-07-16
 - Implementation baseline: TogetherLink (see [docs/UPSTREAM.md](docs/UPSTREAM.md))
 - Code layout: monorepo `packages/` at repository root
-- Code status: M0–M2 landed — provider-neutral Together baseline + secret-safe session persistence (no rebrand yet)
+- Code status: M0–M3 landed — Together baseline, secret-safe persistence, OpenCode + Ollama (no rebrand yet)
 
 ## Documentation
 

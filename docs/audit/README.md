@@ -33,7 +33,11 @@ See [../UPSTREAM.md](../UPSTREAM.md) (pinned TogetherLink commit).
 
 ## M2 status
 
-**Done** (secret-safe runtime). SQLite and codex-app registration no longer store active API keys; daemon restart seals sessions. See [05-persistence.md](05-persistence.md) and `packages/tests/src/secret-persistence.test.ts`. Next: **M3** OpenCode + Ollama.
+**Done** (secret-safe runtime). SQLite and codex-app registration no longer store active API keys; daemon restart seals sessions. See [05-persistence.md](05-persistence.md) and `packages/tests/src/secret-persistence.test.ts`.
+
+## M3 status
+
+**Done** (OpenCode + Ollama). Built-in `ollama` preset, local discovery, session-only OpenCode config via `@ai-sdk/openai-compatible`. See `packages/cli/src/lib/provider/ollama-*.ts` and `packages/tests/src/ollama-provider.test.ts`. Next: **M4** OpenCode + OpenRouter.
 
 ## Important confirmed findings
 

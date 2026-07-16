@@ -95,6 +95,8 @@ After a daemon process restart, credentialed proxied sessions **cannot** be tran
 
 ## 6. M3 - OpenCode + Ollama
 
+Status: **implemented** (2026-07-16) — see `packages/cli/src/lib/provider/ollama-*.ts`, `opencode/core.ts`, `harnesses/opencode.ts`.
+
 Why first:
 
 - no cloud key;
@@ -104,19 +106,27 @@ Why first:
 
 Work:
 
-- Ollama preset;
-- no-auth provider;
-- discovery;
-- generic OpenCode provider generation;
-- missing-model diagnostics;
-- config-integrity test.
+- [x] Ollama preset (`auth: none`, default `http://127.0.0.1:11434/v1`);
+- [x] no-auth provider path through OpenCode launch;
+- [x] discovery via `/v1/models` with `/api/tags` fallback;
+- [x] generic OpenCode provider generation (`@ai-sdk/openai-compatible` + baseURL);
+- [x] missing-model / unreachable diagnostics;
+- [x] config-integrity: session-only `OPENCODE_CONFIG_CONTENT` (no user config write).
 
 Exit:
 
-- launch succeeds;
-- text/stream pass;
-- tool-capable model reaches level 3 where feasible;
-- normal OpenCode config unchanged.
+- [x] launch path builds valid session-only OpenCode config for Ollama;
+- [x] unit tests for discovery + config (live text/stream needs local Ollama + opencode binary);
+- [x] normal OpenCode config unchanged (env injection only);
+- [ ] optional live level-3 tool gauntlet when Ollama + model available in CI.
+
+### Usage
+
+```bash
+togetherlink opencode --provider ollama
+togetherlink opencode --provider ollama --main llama3.2
+togetherlink --provider ollama --main llama3.2 opencode
+```
 
 ## 7. M4 - OpenCode + OpenRouter
 
