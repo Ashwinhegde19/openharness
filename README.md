@@ -11,11 +11,15 @@ Session-scoped compatibility launcher that connects supported coding harnesses t
 - Last updated: 2026-07-16
 - Implementation baseline: TogetherLink (see [docs/UPSTREAM.md](docs/UPSTREAM.md))
 - Code layout: monorepo `packages/` at repository root
-- Code status: M0–M6 landed — OpenCode/Claude/Codex multi-provider (Ollama/OpenRouter/Together); Pi still Together-preset; secret-safe persistence; no rebrand yet
+- Code status: **M0–M6 done**; **M7 (public alpha) not started** — see [docs/STATUS.md](docs/STATUS.md)
 
 ## Documentation
 
 All product planning, ADRs, diagrams, and audit notes live under [`docs/`](docs/).
+
+### Status tracking
+
+**[docs/STATUS.md](docs/STATUS.md)** — milestone checklist (what is done, open debt, harness×provider matrix). Update this when landing work.
 
 ### Reading order
 

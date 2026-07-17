@@ -24,4 +24,4 @@ docs/
 └── audit/                    # M0 deliverables + M1 backlog
 ```
 
-Start at the [repository README](../README.md) for reading order, or jump to [audit/README.md](audit/README.md) for M0 findings.
+Start at the [repository README](../README.md) for reading order, or jump to [STATUS.md](STATUS.md) for the milestone checklist, or [audit/README.md](audit/README.md) for M0 findings.
