@@ -25,7 +25,7 @@ const SEVERITY_RANK: Record<DoctorSeverity, number> = {
   error: 3,
 };
 
-const PRODUCT_NAME = "openharness";
+const PRODUCT_NAME = "togetherlink";
 
 export type DoctorOptions = {
   /** Emit the structured report as JSON. */

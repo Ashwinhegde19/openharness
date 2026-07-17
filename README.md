@@ -1,6 +1,6 @@
 # Universal Harness Provider Layer
 
-> Working title. The final product name is intentionally undecided.
+> Working title. The final product name is intentionally undecided. The repository is `openharness`; the installed CLI binary is `togetherlink` (rename deferred to post-M7 per the debt list in `docs/STATUS.md`).
 
 Session-scoped compatibility launcher that connects supported coding harnesses to supported model providers without permanently modifying the harnesses' normal configuration.
 
@@ -74,6 +74,28 @@ pnpm -F @togetherlink/cli build
 pnpm test
 ```
 
+## Quick start (no API key required)
+
+The lowest-friction first run uses **OpenCode + local Ollama** — no provider
+account, no API key, and no permanent change to your OpenCode config.
+
+```bash
+# 1. Install a harness + a local model runtime
+npm install -g opencode-ai@latest
+ollama serve                 # start the local model server
+ollama pull llama3.2         # fetch a model
+
+# 2. Build and run this launcher
+pnpm install
+pnpm -F @togetherlink/cli build
+node packages/cli/dist/bin/togetherlink.js opencode
+```
+
+Before launching, run `togetherlink doctor` to confirm the harness is on your
+PATH and Ollama is reachable, and `togetherlink dry-run opencode` to preview the
+exact (redacted) launch plan. Cloud providers (Together, OpenRouter) are opt-in
+via `--provider` and only need a key when you select them.
+
 ## Core product promise
 
 > Run a supported model provider through a supported coding harness for an isolated session while preserving the user's normal harness configuration.
@@ -81,8 +103,14 @@ pnpm test
 **Together AI is not required.** It is one optional provider preset (still used by Claude/Codex/Pi until those paths are generalized). OpenCode defaults to local **Ollama** with no API key.
 
 ```bash
-# No cloud key
-togetherlink opencode                          # Ollama
+# Diagnose your setup (harnesses, Ollama reachability, optional keys)
+togetherlink doctor
+
+# Preview a launch plan without spawning anything (redacted)
+togetherlink dry-run opencode --provider ollama --main llama3.2
+
+# No cloud key — first run
+togetherlink opencode                          # Ollama (default)
 togetherlink opencode --provider ollama --main llama3.2
 
 # Optional cloud providers

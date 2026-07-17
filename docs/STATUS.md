@@ -1,6 +1,6 @@
 # Project status checklist
 
-**Last updated:** 2026-07-16  
+**Last updated:** 2026-07-17  
 **Branch:** `main` (public: https://github.com/Ashwinhegde19/openharness)  
 **Baseline:** TogetherLink fork pin `9f56ed93` (v0.5.26) — implementation baseline only, not product identity.
 
@@ -19,11 +19,11 @@ Use this file to track how far the roadmap has been implemented. Detailed work i
 | **M4**    | OpenCode + OpenRouter              | ✅ **Done** (live gauntlet / matrix entry optional) |
 | **M5**    | Claude multi-provider              | ✅ **Done** (live evidence / matrix optional)       |
 | **M6**    | Codex multi-provider               | ✅ **Done** (live evidence / matrix optional)       |
-| **M7**    | Public alpha                       | ⬜ **Not started** ← **current frontier**           |
+| **M7**    | Public alpha                       | 🔧 **In progress** ← **current frontier**          |
 | **M8**    | Beta hardening                     | ⬜ Not started                                      |
 | **M9**    | Stable 1.0                         | ⬜ Not started                                      |
 
-**Progress:** **M0–M6 complete** (implementation + offline tests). **M7 not done.**
+**Progress:** **M0–M6 complete** (implementation + offline tests). **M7 in progress** (packaging, diagnostics, community process landed; alpha gates + external verification remaining).
 
 ---
 
@@ -106,39 +106,39 @@ Use this file to track how far the roadmap has been implemented. Detailed work i
 
 ---
 
-## M7 — Public alpha ⬜ **NEXT**
+## M7 — Public alpha ⬜ **In progress**
 
-Not started. Track here as work lands:
+Work landed for alpha packaging, diagnostics, and community process:
 
 ### Product / packaging
 
-- [ ] Temporary publishable product name (or keep working title + document it)
-- [ ] Install path + quick start that does **not** require Together
-- [ ] Release artifacts (version, changelog, install script review)
+- [x] Temporary publishable product name — keeping working title `togetherlink`; repo is `openharness` (rename deferred to post-M7 per debt list)
+- [x] Install path + quick start that does **not** require Together (`togetherlink opencode` → local Ollama)
+- [ ] Release artifacts: version present in `package.json`; install script + changelog still pending
 
 ### UX / diagnostics
 
-- [ ] `doctor` command polish
-- [ ] `dry-run` rendering of launch plan (redacted)
-- [ ] Clear first-run path: OpenCode+Ollama without keys
+- [x] `doctor` command — harness detection, Ollama reachability, optional key presence, first-run recommendation
+- [x] `dry-run` rendering of launch plan (redacted, no spawn)
+- [x] Clear first-run path: OpenCode + Ollama without keys (see README quick start)
 
 ### Community / process
 
-- [ ] Issue templates
-- [ ] Contribution guide
-- [ ] Security contact / disclosure notes
+- [x] Issue templates (bug / feature / harness+provider support)
+- [x] Contribution guide (`CONTRIBUTING.md`)
+- [x] Security contact / disclosure notes (`.github/SECURITY.md` + `docs/SECURITY.md`)
 
 ### Compatibility / CI
 
-- [ ] Machine-readable compatibility matrix (even if small)
-- [ ] Document what is unit-tested vs live-tested
-- [ ] Alpha gates from [RELEASE-PLAN.md](./RELEASE-PLAN.md) § Alpha 1
+- [x] Machine-readable compatibility matrix (`docs/compatibility-matrix.json`)
+- [x] Documented what is unit-tested vs live-tested (see `docs/COMPATIBILITY.md` + matrix `tested` field)
+- [ ] Alpha gates from [RELEASE-PLAN.md](./RELEASE-PLAN.md) § Alpha 1 — run by maintainer before tagging alpha
 
 ### Exit criteria (from roadmap)
 
-- [ ] External user completes setup without editing harness config
-- [ ] Alpha gates pass
-- [ ] No open critical/high on shipped path
+- [ ] External user completes setup without editing harness config (awaiting external tester)
+- [ ] Alpha gates pass (see above)
+- [ ] No open critical/high on shipped path (true for implemented paths; Pi/ChatGPT alpha carries known limits)
 
 ---
 
