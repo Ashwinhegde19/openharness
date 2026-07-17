@@ -30,14 +30,16 @@ Usage:
   togetherlink whoami
   togetherlink opencode [...]         # default provider: Ollama (no API key)
   togetherlink claude [...]           # default Together preset
-  togetherlink codex [...]            # Together preset today
-  togetherlink pi [...]
+  togetherlink codex [...]            # default Together preset
+  togetherlink pi [...]               # Together preset today
   togetherlink chatgpt [--model <model>] [--restore]  (alpha · Together preset)
 
-Claude providers (local Anthropic→Chat proxy; no ~/.claude mutation):
+Claude / Codex providers (local protocol proxy; no permanent harness config mutation):
   togetherlink claude                                      # Together (default)
   togetherlink claude --provider openrouter --main openai/gpt-4o-mini
   togetherlink claude --provider ollama --main llama3.2
+  togetherlink codex --provider openrouter --main openai/gpt-4o-mini
+  togetherlink codex --provider ollama --main llama3.2
 
 OpenCode providers (session-only; does not write ~/.config/opencode):
   togetherlink opencode                                    # Ollama (default, no key)
