@@ -47,7 +47,7 @@ const fs = require('node:fs');
 const version = '${VERSION}';
 const manifest = {
   version,
-  url: 'https://togetherlink.vercel.app/togetherlink.js',
+  url: process.env.OPENHARNESS_BUNDLE_URL || 'https://togetherlink.vercel.app/togetherlink.js',
   publishedAt: new Date().toISOString(),
 };
 const json = JSON.stringify(manifest, null, 2) + '\n';

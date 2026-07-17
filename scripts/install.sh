@@ -13,7 +13,7 @@
 
 set -euo pipefail
 
-ORIGIN="${TOGETHERLINK_ORIGIN:-https://togetherlink.vercel.app}"
+ORIGIN="${OPENHARNESS_ORIGIN:-${TOGETHERLINK_ORIGIN:-https://togetherlink.vercel.app}}"
 INSTALL_DIR="${TOGETHERLINK_HOME:-$HOME/.togetherlink}"
 BIN_DIR="$INSTALL_DIR/bin"
 
@@ -23,6 +23,16 @@ ok()   { printf "  \033[32m✓\033[0m %s\n" "$1"; }
 err()  { printf "  \033[31m✗ %s\033[0m\n" "$1" >&2; }
 
 bold "Installing togetherlink…"
+
+# This repository is the `openharness` fork. The upstream default ORIGIN points
+# at TogetherLink's hosted bundle, which is NOT this fork's build. Until a hosted
+# bundle is published for the fork, build from source (see README "Quick start")
+# or set OPENHARNESS_ORIGIN to your own hosted bundle.
+if [ "$ORIGIN" = "https://togetherlink.vercel.app" ]; then
+  info "Note: this fork (openharness) has no published hosted bundle yet."
+  info "For the alpha, build from source — see README 'Quick start'."
+  info "Set OPENHARNESS_ORIGIN to point at your own hosted bundle when available."
+fi
 
 # --- 1. Ensure Bun is present (install it for the user if not) ----------------
 if command -v bun >/dev/null 2>&1; then
