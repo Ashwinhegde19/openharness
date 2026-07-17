@@ -114,7 +114,7 @@ Work landed for alpha packaging, diagnostics, and community process:
 
 - [x] Temporary publishable product name — keeping working title `togetherlink`; repo is `openharness` (rename deferred to post-M7 per debt list)
 - [x] Install path + quick start that does **not** require Together (`togetherlink opencode` → local Ollama)
-- [ ] Release artifacts: version present in `package.json`; install script + changelog still pending
+- [x] Release artifacts: `CHANGELOG.md` added; license reconciled to MIT (matches `LICENSE`); install script reviewed (hosted bundle/origin not yet published for the fork — source build is the alpha install path)
 
 ### UX / diagnostics
 
@@ -178,7 +178,7 @@ Legend: ✅ launch path implemented (offline unit-tested). Live E2E with real bi
 | Item                                              | Severity      | Notes                                  |
 | ------------------------------------------------- | ------------- | -------------------------------------- |
 | Pi secret on disk/argv                            | Medium        | M2 follow-up                           |
-| License MIT vs package.json Apache-2.0            | Medium        | Reconcile before public stable         |
+| License: `LICENSE` is MIT; `package.json` now MIT | Resolved      | Reconciled in M7 (package.json license set to MIT) |
 | Branding still `togetherlink`                     | Low for alpha | Rename after architecture stable (M7+) |
 | Live multi-provider CI evidence                   | Medium        | Needs secrets + harness binaries       |
 | Compatibility matrix not published                | Medium        | Alpha exit                             |
