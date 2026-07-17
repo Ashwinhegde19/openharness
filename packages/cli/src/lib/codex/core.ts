@@ -4,13 +4,21 @@ import { join } from "node:path";
 import { codexModelCatalogJson } from "./catalog.js";
 import { CODEX_AUTH_ENV, CODEX_PROVIDER_ID, resolveCodexModel } from "./defaults.js";
 import { codexArgsIgnoreUserConfig, ensureCodexGenericUserDefaults } from "./user-config.js";
-import {} from "../daemon/launch.js";
 import { runProxiedSession, type ProxiedSessionResult } from "../proxied-session.js";
+import { togetherEndpointConfig, type ProviderEndpointConfig } from "../provider/index.js";
+import type { ModelDefinition } from "@togetherlink/models";
 
 export type CodexLaunchOptions = {
   apiKey: string;
   home: string;
   modelId?: string;
+  targetModelId?: string;
+  modelName?: string;
+  modelDefinition?: ModelDefinition;
+  /** Catalog entries for the session (defaults to Together curated set). */
+  catalogModels?: Array<{ id: string; definition: ModelDefinition }>;
+  provider?: ProviderEndpointConfig;
+  providerLabel?: string;
   args?: string[];
 };
 
@@ -27,22 +35,39 @@ export async function runCodexTogether(options: CodexLaunchOptions): Promise<Cod
     await ensureCodexGenericUserDefaults(options.home);
   }
 
-  const selectedModel = resolveCodexModel(options.modelId);
+  const selectedModel = options.modelDefinition
+    ? {
+        id: options.targetModelId ?? options.modelDefinition.id,
+        definition: options.modelDefinition,
+      }
+    : resolveCodexModel(options.modelId);
+
+  const targetModelId = options.targetModelId ?? selectedModel.definition.id;
+  const modelName = options.modelName ?? selectedModel.definition.name;
+  const providerLabel = options.providerLabel ?? "Together AI";
+  const provider = options.provider ?? togetherEndpointConfig();
+  const catalogModels =
+    options.catalogModels ??
+    ([{ id: selectedModel.id, definition: selectedModel.definition }] as Array<{
+      id: string;
+      definition: ModelDefinition;
+    }>);
+
   let catalog: { path: string; cleanup: () => void } | undefined;
   const result: ProxiedSessionResult = await runProxiedSession({
     agent: "codex",
     apiKey: options.apiKey,
-    modelId: selectedModel.definition.id,
-    targetModelId: selectedModel.definition.id,
-    modelName: selectedModel.definition.name,
+    provider,
+    modelId: targetModelId,
+    targetModelId,
+    modelName,
     modelDefinition: selectedModel.definition,
     args,
     binary: "codex",
     keepaliveLabel: "Codex session",
-    banner: (modelName) =>
-      `togetherlink ▸ Routing Codex → Together AI (${modelName}). Not OpenAI.\n`,
+    banner: (name) => `togetherlink ▸ Routing Codex → ${providerLabel} (${name}). Not OpenAI.\n`,
     beforeSpawn: () => {
-      catalog = writeCodexModelCatalog();
+      catalog = writeCodexModelCatalog(catalogModels, providerLabel);
       return catalog;
     },
     buildEnv: ({ authToken }) => buildCodexEnv(authToken),
@@ -53,6 +78,7 @@ export async function runCodexTogether(options: CodexLaunchOptions): Promise<Cod
         authToken,
         modelId,
         (beforeSpawnResult as { path: string; cleanup: () => void } | undefined)?.path ?? "",
+        providerLabel,
       ),
     ],
     afterDeregister: () => catalog?.cleanup(),
@@ -72,6 +98,7 @@ function codexConfigArgs(
   authToken: string,
   modelId: string,
   catalogPath: string,
+  providerLabel: string,
 ): string[] {
   void authToken;
   return [
@@ -82,7 +109,7 @@ function codexConfigArgs(
     "-c",
     `model_catalog_json="${catalogPath}"`,
     "-c",
-    `model_providers.${CODEX_PROVIDER_ID}.name="Togetherlink"`,
+    `model_providers.${CODEX_PROVIDER_ID}.name="${providerLabel.replace(/"/g, "")}"`,
     "-c",
     `model_providers.${CODEX_PROVIDER_ID}.base_url="${proxyUrl}/v1"`,
     "-c",
@@ -92,10 +119,13 @@ function codexConfigArgs(
   ];
 }
 
-function writeCodexModelCatalog(): { path: string; cleanup: () => void } {
+function writeCodexModelCatalog(
+  models: Array<{ id: string; definition: ModelDefinition }>,
+  providerLabel: string,
+): { path: string; cleanup: () => void } {
   const dir = mkdtempSync(join(tmpdir(), "togetherlink-codex-catalog-"));
   const path = join(dir, "models.json");
-  writeFileSync(path, codexModelCatalogJson(), "utf8");
+  writeFileSync(path, codexModelCatalogJson({ models, providerLabel }), "utf8");
   return {
     path,
     cleanup: () => {
