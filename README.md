@@ -11,7 +11,7 @@ Session-scoped compatibility launcher that connects supported coding harnesses t
 - Last updated: 2026-07-16
 - Implementation baseline: TogetherLink (see [docs/UPSTREAM.md](docs/UPSTREAM.md))
 - Code layout: monorepo `packages/` at repository root
-- Code status: M0–M5 landed — OpenCode multi-provider; Claude multi-provider (Together default, OpenRouter/Ollama via `--provider`); Codex/Pi still Together-preset until M6; secret-safe persistence; no rebrand yet
+- Code status: M0–M6 landed — OpenCode/Claude/Codex multi-provider (Ollama/OpenRouter/Together); Pi still Together-preset; secret-safe persistence; no rebrand yet
 
 ## Documentation
 
@@ -90,6 +90,8 @@ togetherlink opencode --provider together
 togetherlink claude                            # Together preset (default)
 togetherlink claude --provider openrouter --main openai/gpt-4o-mini
 togetherlink claude --provider ollama --main llama3.2
+togetherlink codex --provider openrouter --main openai/gpt-4o-mini
+togetherlink codex --provider ollama --main llama3.2
 ```
 
 Compatibility is measured and published by capability level — not claimed for every combination.

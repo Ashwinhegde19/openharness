@@ -47,21 +47,28 @@ See [../UPSTREAM.md](../UPSTREAM.md) (pinned TogetherLink commit).
 
 **Together is not a product requirement.** Keys are resolved per provider at launch:
 
-| Path                             | Credential                      |
-| -------------------------------- | ------------------------------- |
-| `opencode` (default)             | Ollama — none                   |
-| `opencode --provider openrouter` | `OPENROUTER_API_KEY`            |
-| `opencode --provider together`   | `TOGETHER_API_KEY`              |
-| `claude` (default)               | Together preset                 |
-| `claude --provider openrouter`   | `OPENROUTER_API_KEY`            |
-| `claude --provider ollama`       | none                            |
-| `codex` / `pi` / `chatgpt`       | Together preset only (until M6) |
+| Path                             | Credential           |
+| -------------------------------- | -------------------- |
+| `opencode` (default)             | Ollama — none        |
+| `opencode --provider openrouter` | `OPENROUTER_API_KEY` |
+| `opencode --provider together`   | `TOGETHER_API_KEY`   |
+| `claude` (default)               | Together preset      |
+| `claude --provider openrouter`   | `OPENROUTER_API_KEY` |
+| `claude --provider ollama`       | none                 |
+| `codex` (default)                | Together preset      |
+| `codex --provider openrouter`    | `OPENROUTER_API_KEY` |
+| `codex --provider ollama`        | none                 |
+| `pi` / `chatgpt`                 | Together preset only |
 
 There is no CLI entry gate forcing a Together key. See [03-credential-flow.md](03-credential-flow.md).
 
 ## M5 status
 
-**Done** (Claude multi-provider launch). Claude Code can use OpenRouter or Ollama via `--provider` while keeping process-only env injection and the existing Messages→Chat proxy. Next: **M6** Codex generalization.
+**Done** (Claude multi-provider launch). Claude Code can use OpenRouter or Ollama via `--provider` while keeping process-only env injection and the existing Messages→Chat proxy.
+
+## M6 status
+
+**Done** (Codex multi-provider launch). Codex can use OpenRouter or Ollama via `--provider` with a session-local model catalog and the existing Responses→Chat proxy. Next: **M7** public alpha polish (or Pi generalization as post-1.0).
 
 ## Important confirmed findings
 

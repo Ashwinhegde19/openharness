@@ -190,20 +190,25 @@ togetherlink claude                              # Together preset (default)
 
 ## 9. M6 - Codex generalization
 
+Status: **implemented** (2026-07-16) — Codex can launch with `--provider openrouter|ollama|together`. Responses→Chat proxy uses parameterized upstream client (M1).
+
 Work:
 
-- isolated Codex plan;
-- Responses-to-Chat translation;
-- tool mapping;
-- unsupported Responses features;
-- model selection;
-- cleanup/integrity.
+- [x] isolated session catalog for selected provider models;
+- [x] Responses-to-Chat translation (existing Codex proxy);
+- [x] tool mapping (existing);
+- [x] multi-provider launch + model catalog synthesis;
+- [x] provider-scoped credentials / cloud warning;
+- [ ] live standard coding task evidence on CI (optional);
+- [ ] formal level 2/3 matrix entry.
 
-Exit:
+### Usage
 
-- standard coding task through Chat provider;
-- loss behavior explicit;
-- level 2 or 3 based on evidence.
+```bash
+togetherlink codex --provider openrouter --main openai/gpt-4o-mini
+togetherlink codex --provider ollama --main llama3.2
+togetherlink codex                              # Together preset (default)
+```
 
 ## 10. M7 - Public alpha
 
