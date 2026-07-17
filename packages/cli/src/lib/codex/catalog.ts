@@ -34,19 +34,28 @@ const CODEX_MODEL_MESSAGES = {
   },
 };
 
-export function codexModelCatalog(): { models: Array<Record<string, unknown>> } {
+export function codexModelCatalog(options?: {
+  models?: ReadonlyArray<{ id: string; definition: ModelDefinition }>;
+  providerLabel?: string;
+}): { models: Array<Record<string, unknown>> } {
+  const models = options?.models ?? CODEX_SUPPORTED_MODELS;
+  const providerLabel = options?.providerLabel ?? "Together AI";
   return {
-    models: CODEX_SUPPORTED_MODELS.map((model, index) => toCodexModelCatalogEntry(model, index)),
+    models: models.map((model, index) => toCodexModelCatalogEntry(model, index, providerLabel)),
   };
 }
 
-export function codexModelCatalogJson(): string {
-  return JSON.stringify(codexModelCatalog());
+export function codexModelCatalogJson(options?: {
+  models?: ReadonlyArray<{ id: string; definition: ModelDefinition }>;
+  providerLabel?: string;
+}): string {
+  return JSON.stringify(codexModelCatalog(options));
 }
 
 export function toCodexModelCatalogEntry(
   model: { id: string; definition: ModelDefinition },
   priority = 50,
+  providerLabel = "Together AI",
 ): Record<string, unknown> {
   const reasoningLevels = model.definition.reasoning
     ? [
@@ -58,7 +67,7 @@ export function toCodexModelCatalogEntry(
   return {
     slug: model.id,
     display_name: model.definition.name,
-    description: `Together AI model via togetherlink (${model.definition.id})`,
+    description: `${providerLabel} model via togetherlink (${model.definition.id})`,
     default_reasoning_level: model.definition.reasoning ? "medium" : "none",
     supported_reasoning_levels: reasoningLevels,
     shell_type: "shell_command",
