@@ -1,0 +1,40 @@
+name: Bug report
+description: Report a defect in launch, provider routing, or diagnostics
+labels: [bug]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: A clear description of the bug and what you expected to happen.
+    validations:
+      required: true
+  - type: input
+    id: harness
+    attributes:
+      label: Harness
+      placeholder: opencode / claude / codex / pi / chatgpt-desktop
+  - type: input
+    id: provider
+    attributes:
+      label: Provider
+      placeholder: together / ollama / openrouter
+  - type: input
+    id: command
+    attributes:
+      label: Command run
+      placeholder: togetherlink opencode --provider ollama --main llama3.2
+  - type: textarea
+    id: env
+    attributes:
+      label: Environment
+      description: OS + architecture, relevant binary versions (e.g. `opencode --version`), and product version (`togetherlink --version`).
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant output
+      description: >
+        Redact any keys, tokens, or endpoints. Output from `togetherlink doctor`
+        and `togetherlink dry-run <command>` is very helpful for triage.

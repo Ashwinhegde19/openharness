@@ -1,0 +1,39 @@
+name: New harness or provider support
+description: Request support for a new coding harness or model provider
+labels: [support-request]
+body:
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What are you requesting?
+      options:
+        - New harness (e.g. Gemini CLI, Kilo Code)
+        - New provider (e.g. Groq, native Anthropic)
+        - New model on an existing provider
+    validations:
+      required: true
+  - type: input
+    id: target
+    attributes:
+      label: Harness or provider name
+    validations:
+      required: true
+  - type: textarea
+    id: protocol
+    attributes:
+      label: Protocol / integration notes
+      description: >
+        OpenAI-compatible chat? Anthropic Messages? Responses API? Local binary
+        path and how it is configured? Link any relevant docs.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: >
+        What must work for this to be considered supported (basic text,
+        streaming, agent tools, vision, reasoning controls, usage reporting)?
+        Keep it scoped to one combination at a time.
+    validations:
+      required: true

@@ -1,0 +1,45 @@
+{
+  "name": "togetherlink compatibility matrix",
+  "schemaVersion": "1.0.0",
+  "source": "docs/STATUS.md (M0–M6 complete; M7 public alpha in progress)",
+  "legend": {
+    "status": {
+      "implemented": "launch path implemented and offline unit-tested",
+      "alpha": "implemented but marked alpha (limited testing / hardening pending)",
+      "none": "not supported"
+    },
+    "tested": {
+      "unit": "covered by offline unit tests in packages/tests",
+      "live-optional": "live E2E with real binaries/keys is optional CI work (skips cleanly without keys)"
+    }
+  },
+  "harnesses": ["opencode", "claude", "codex", "pi", "chatgpt-desktop"],
+  "providers": ["together", "ollama", "openrouter"],
+  "matrix": {
+    "opencode": {
+      "together": { "status": "implemented", "default": false, "tested": "unit", "notes": "via --provider together" },
+      "ollama": { "status": "implemented", "default": true, "tested": "unit", "notes": "default; no API key" },
+      "openrouter": { "status": "implemented", "default": false, "tested": "unit", "notes": "via --provider openrouter" }
+    },
+    "claude": {
+      "together": { "status": "implemented", "default": true, "tested": "unit", "notes": "default Together preset" },
+      "ollama": { "status": "implemented", "default": false, "tested": "unit", "notes": "--provider ollama" },
+      "openrouter": { "status": "implemented", "default": false, "tested": "unit", "notes": "--provider openrouter" }
+    },
+    "codex": {
+      "together": { "status": "implemented", "default": true, "tested": "unit", "notes": "default Together preset" },
+      "ollama": { "status": "implemented", "default": false, "tested": "unit", "notes": "--provider ollama" },
+      "openrouter": { "status": "implemented", "default": false, "tested": "unit", "notes": "--provider openrouter" }
+    },
+    "pi": {
+      "together": { "status": "alpha", "default": true, "tested": "unit", "notes": "Together preset only" },
+      "ollama": { "status": "none", "default": false, "tested": "unit", "notes": "not supported (post-1.0 / hardening)" },
+      "openrouter": { "status": "none", "default": false, "tested": "unit", "notes": "not supported (post-1.0 / hardening)" }
+    },
+    "chatgpt-desktop": {
+      "together": { "status": "alpha", "default": true, "tested": "unit", "notes": "alpha; Together preset" },
+      "ollama": { "status": "none", "default": false, "tested": "unit", "notes": "not supported" },
+      "openrouter": { "status": "none", "default": false, "tested": "unit", "notes": "not supported" }
+    }
+  }
+}
