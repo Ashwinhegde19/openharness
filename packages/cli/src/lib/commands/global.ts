@@ -26,6 +26,8 @@ without permanently rewriting harness config. Together is an optional preset,
 not a product requirement.
 
 Usage:
+  togetherlink doctor                 # diagnose harness + provider setup
+  togetherlink dry-run opencode [...] # preview the launch plan (no spawn)
   togetherlink configure              # optional provider keys (all skippable)
   togetherlink whoami
   togetherlink opencode [...]         # default provider: Ollama (no API key)

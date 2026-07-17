@@ -5,6 +5,7 @@ import {
   buildOpencodeEnv,
   isSessionOnlyOpencodeLaunch,
   opencodeProviderIdFor,
+  type OpencodeConfig,
 } from "../opencode/core.js";
 import { resolveTogetherApiKey } from "../together-core.js";
 import { defineHarness } from "../harness-types.js";
@@ -290,38 +291,140 @@ async function resolveLaunchApiKey(
   return { apiKey, ...(apiKeyEnv !== undefined ? { apiKeyEnv } : {}) };
 }
 
+/** Result of resolving an OpenCode launch WITHOUT spawning the `opencode` binary. */
+export type OpencodeLaunchPlan = {
+  provider?: ProviderConfig;
+  modelId?: string;
+  configJson?: OpencodeConfig;
+  env?: NodeJS.ProcessEnv;
+  /** Args to forward to the `opencode` binary (product flags removed). */
+  args: string[];
+  cloudDestination: boolean;
+  keyPresent: boolean;
+  apiKeyEnv?: string | undefined;
+  warnings: string[];
+  errors: string[];
+};
+
+function errorMessage(err: unknown): string {
+  return err instanceof Error ? err.message : String(err);
+}
+
+/** Normalize a requested provider id to a builtin preset id for preview fallback. */
+function previewProviderId(ctx: HarnessContext): string {
+  const id = (ctx.provider ?? OPENCODE_DEFAULT_PROVIDER_ID).trim().toLowerCase();
+  return id === "togetherai" ? TOGETHER_PROVIDER_ID : id;
+}
+
+/**
+ * Resolve the full OpenCode launch (provider, model, inline config, env) WITHOUT
+ * spawning the binary. Used by `dry-run` and shared by {@link Harness.run} so the
+ * launch math lives in exactly one place.
+ *
+ * With `preview: true`, a missing provider key becomes a warning so `dry-run`
+ * can still render the intended plan; with `preview: false` (a real launch) the
+ * missing key is fatal.
+ */
+export async function planOpencodeLaunch(
+  ctx: HarnessContext,
+  options: { preview?: boolean } = {},
+): Promise<OpencodeLaunchPlan> {
+  const plan: OpencodeLaunchPlan = {
+    args: [],
+    cloudDestination: false,
+    keyPresent: false,
+    warnings: [],
+    errors: [],
+  };
+
+  const peeled = peelProductFlags(ctx.passthrough ?? []);
+  const effective: HarnessContext = {
+    ...ctx,
+    passthrough: peeled.rest,
+    ...(peeled.provider !== undefined ? { provider: peeled.provider } : {}),
+    ...(peeled.baseUrl !== undefined ? { baseUrl: peeled.baseUrl } : {}),
+    ...(peeled.main !== undefined ? { main: peeled.main } : {}),
+    ...(peeled.apiKey !== undefined ? { apiKey: peeled.apiKey } : {}),
+  };
+
+  let provider: ProviderConfig;
+  try {
+    provider = await resolveProviderForLaunch(effective);
+  } catch (err) {
+    if (!options.preview) {
+      plan.errors.push(errorMessage(err));
+      return plan;
+    }
+    // In preview mode, fall back to the static preset so `dry-run` can still
+    // render the intended plan and surface the missing key/connection as a warning.
+    const preset = getBuiltinProvider(previewProviderId(effective));
+    if (!preset) {
+      plan.errors.push(errorMessage(err));
+      return plan;
+    }
+    provider = preset;
+    plan.warnings.push(errorMessage(err));
+  }
+  plan.provider = provider;
+
+  let modelId: string;
+  try {
+    modelId = defaultModelForProvider(provider, effective.main);
+  } catch (err) {
+    const requested = effective.main?.trim();
+    modelId = requested ?? provider.models[0]?.id ?? "default";
+    plan.warnings.push(errorMessage(err));
+  }
+  plan.modelId = modelId;
+
+  let apiKey: string | undefined;
+  let apiKeyEnv: string | undefined;
+  try {
+    const resolved = await resolveLaunchApiKey(provider, effective);
+    apiKey = resolved.apiKey;
+    apiKeyEnv = resolved.apiKeyEnv;
+  } catch (err) {
+    if (options.preview) {
+      plan.warnings.push(errorMessage(err));
+    } else {
+      plan.errors.push(errorMessage(err));
+      return plan;
+    }
+  }
+  plan.keyPresent = provider.auth.type === "none" || apiKey !== undefined;
+  plan.apiKeyEnv = apiKeyEnv;
+
+  plan.configJson = buildOpencodeConfigJson({ modelId, provider });
+  plan.env = buildOpencodeEnv({
+    configJson: plan.configJson,
+    ...(apiKey !== undefined ? { apiKey } : {}),
+    ...(apiKeyEnv !== undefined ? { apiKeyEnv } : {}),
+  });
+  plan.cloudDestination = provider.id === OPENROUTER_PROVIDER_ID;
+  plan.args = opencodeArgsWithoutModelOverrides(peeled.rest);
+  return plan;
+}
+
 export default defineHarness({
   id: HARNESS.OPENCODE,
   label: "OpenCode",
 
   async run(ctx: HarnessContext): Promise<HarnessResult> {
-    const peeled = peelProductFlags(ctx.passthrough ?? []);
-    const effective: HarnessContext = {
-      ...ctx,
-      passthrough: peeled.rest,
-      ...(peeled.provider !== undefined ? { provider: peeled.provider } : {}),
-      ...(peeled.baseUrl !== undefined ? { baseUrl: peeled.baseUrl } : {}),
-      ...(peeled.main !== undefined ? { main: peeled.main } : {}),
-      ...(peeled.apiKey !== undefined ? { apiKey: peeled.apiKey } : {}),
-    };
-
-    const provider = await resolveProviderForLaunch(effective);
-    const modelId = defaultModelForProvider(provider, effective.main);
-    const { apiKey, apiKeyEnv } = await resolveLaunchApiKey(provider, effective);
-
-    const configJson = buildOpencodeConfigJson({ modelId, provider });
-    const env = buildOpencodeEnv({
-      configJson,
-      ...(apiKey !== undefined ? { apiKey } : {}),
-      ...(apiKeyEnv !== undefined ? { apiKeyEnv } : {}),
-    });
+    const plan = await planOpencodeLaunch(ctx, { preview: false });
+    if (plan.errors.length > 0) {
+      throw new Error(plan.errors.join(" "));
+    }
+    const { provider, modelId, configJson, env, cloudDestination, args } = plan;
+    if (!provider || !modelId || !configJson || !env) {
+      throw new Error("Internal error: incomplete OpenCode launch plan.");
+    }
 
     // Session-only guarantee: we never write OpenCode's user config paths.
     if (!isSessionOnlyOpencodeLaunch(env)) {
       throw new Error("Internal error: OpenCode launch missing OPENCODE_CONFIG_CONTENT.");
     }
 
-    if (provider.id === OPENROUTER_PROVIDER_ID) {
+    if (cloudDestination) {
       process.stderr.write(
         `togetherlink ▸ Cloud destination: OpenRouter (${provider.baseURL}). ` +
           `Prompts leave this machine.\n`,
@@ -342,14 +445,10 @@ export default defineHarness({
       process.stderr.write(`[togetherlink opencode] config: ${JSON.stringify(configJson)}\n`);
     }
 
-    const child = spawn(
-      "opencode",
-      opencodeArgsWithoutModelOverrides(effective.passthrough ?? []),
-      {
-        env,
-        stdio: "inherit",
-      },
-    );
+    const child = spawn("opencode", args, {
+      env,
+      stdio: "inherit",
+    });
 
     const result = await new Promise<{ status: number | null; signal: NodeJS.Signals | null }>(
       (resolve, reject) => {

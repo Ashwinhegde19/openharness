@@ -4,6 +4,9 @@ import { loadEnvFile } from "../lib/load-env.js";
 import { parseArgs } from "../lib/parse-args.js";
 import { printHelp, runConfigure } from "../lib/commands/global.js";
 import { dispatchHarnessCommand } from "../lib/commands/harness.js";
+import { runDoctor } from "../lib/diagnostics/doctor.js";
+import { runDryRun } from "../lib/diagnostics/launch-plan.js";
+import type { HarnessContext } from "../lib/harness-types.js";
 import { isHarnessCommand, resolveHarnessInvocation } from "../lib/commands/harness-invocation.js";
 import { readGlobalConfig, resolveStoredExaApiKey } from "../lib/global-config.js";
 import { maybeSelfUpdate } from "../lib/autoupdate.js";
@@ -170,6 +173,22 @@ async function main() {
 
   if (command === "configure") {
     await runConfigure();
+    return;
+  }
+
+  if (command === "doctor") {
+    await runDoctor({ json: parsed.flags.json });
+    return;
+  }
+
+  if (command === "dry-run") {
+    // Re-parse everything after "dry-run" so harness-level product flags
+    // (e.g. `--provider ollama`) land in passthrough and are peeled by the plan.
+    const dryArgv = process.argv.slice(2).slice(1);
+    const dryParsed = parseArgs(dryArgv);
+    const harnessArg = dryParsed.positional[0];
+    const dryCtx: HarnessContext = { home: os.homedir(), ...dryParsed.flags };
+    await runDryRun(harnessArg, dryCtx, { json: dryParsed.flags.json });
     return;
   }
 
