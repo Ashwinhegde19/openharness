@@ -186,7 +186,7 @@ function resolveClaudeLaunchModel(
   modelName: string;
   modelDefinition:
     | ReturnType<typeof modelDefinitionFromProviderModel>
-    | import("@togetherlink/models").ModelDefinition;
+    | import("@openharness/models").ModelDefinition;
 } {
   if (providerId === TOGETHER_PROVIDER_ID || providerId === "togetherai") {
     const selected = resolveClaudeModel(requested);

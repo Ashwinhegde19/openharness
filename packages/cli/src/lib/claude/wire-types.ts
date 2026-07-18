@@ -1,4 +1,4 @@
-import type { ModelDefinition } from "@togetherlink/models";
+import type { ModelDefinition } from "@openharness/models";
 
 export type AnthropicContentBlock =
   | { type: "text"; text: string }

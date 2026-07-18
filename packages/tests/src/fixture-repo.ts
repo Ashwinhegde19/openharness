@@ -23,7 +23,7 @@ export async function createFixtureRepo(context: TestContext, owner: string): Pr
     path.join(root, "package.json"),
     `${JSON.stringify(
       {
-        name: `togetherlink-fixture-${owner}`,
+        name: `openharness-fixture-${owner}`,
         private: true,
         type: "module",
         scripts: { test: "node --test" },
@@ -85,9 +85,9 @@ export async function createFixtureRepo(context: TestContext, owner: string): Pr
     env: {
       ...process.env,
       GIT_AUTHOR_NAME: "openharness tests",
-      GIT_AUTHOR_EMAIL: "tests@togetherlink.local",
+      GIT_AUTHOR_EMAIL: "tests@openharness.local",
       GIT_COMMITTER_NAME: "openharness tests",
-      GIT_COMMITTER_EMAIL: "tests@togetherlink.local",
+      GIT_COMMITTER_EMAIL: "tests@openharness.local",
     },
   });
 

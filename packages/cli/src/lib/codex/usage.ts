@@ -1,4 +1,4 @@
-import { type ModelDefinition } from "@togetherlink/models";
+import { type ModelDefinition } from "@openharness/models";
 import type { CostTracker } from "../cost.js";
 import type { ChatResponse } from "./wire-types.js";
 

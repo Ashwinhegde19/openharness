@@ -30,7 +30,7 @@ Install dependencies and build the CLI:
 
 ```bash
 pnpm install
-pnpm -F @togetherlink/cli build
+pnpm -F @openharness/cli build
 ```
 
 For local development, keep TypeScript rebuilding in one terminal:
@@ -44,8 +44,8 @@ Run smoke tests from another terminal.
 Quick local checks:
 
 ```bash
-pnpm -F @togetherlink/cli typecheck
-pnpm -F @togetherlink/cli test
+pnpm -F @openharness/cli typecheck
+pnpm -F @openharness/cli test
 ```
 
 ## Manual Harness Launches
@@ -54,98 +54,98 @@ Use these commands for quick live launches while validating a harness manually.
 
 ### OpenCode
 
-OpenCode uses ephemeral Together settings: `togetherlink opencode` injects the Together provider config only for that launch, so there is no `on`/`off` flow and no OpenCode config rewrite. OpenCode's own local session history can still persist normally.
+OpenCode uses ephemeral Together settings: `openharness opencode` injects the Together provider config only for that launch, so there is no `on`/`off` flow and no OpenCode config rewrite. OpenCode's own local session history can still persist normally.
 
 ```bash
 export TOGETHER_API_KEY="..."
 
-pnpm -F @togetherlink/cli exec togetherlink opencode
+pnpm -F @openharness/cli exec openharness opencode
 ```
 
 ### Claude Code
 
-Claude Code uses ephemeral Together settings. `togetherlink` does not write `~/.claude/settings.json` and there is no `claude on/off` flow to remember; Claude Code's own session/history behavior is left intact.
+Claude Code uses ephemeral Together settings. `openharness` does not write `~/.claude/settings.json` and there is no `claude on/off` flow to remember; Claude Code's own session/history behavior is left intact.
 
 Launch Claude Code through the local Together proxy:
 
 ```bash
 export TOGETHER_API_KEY="..."
 
-pnpm -F @togetherlink/cli exec togetherlink claude
+pnpm -F @openharness/cli exec openharness claude
 ```
 
 Pass arguments through to `claude` after the harness name:
 
 ```bash
-pnpm -F @togetherlink/cli exec togetherlink claude --help
-pnpm -F @togetherlink/cli exec togetherlink claude --version
+pnpm -F @openharness/cli exec openharness claude --help
+pnpm -F @openharness/cli exec openharness claude --version
 ```
 
 The Claude local proxy defaults to Together GLM-5.2 (`zai-org/GLM-5.2`) and can route Claude Code through any curated Together model in the repo's shared model list.
 Pick a backend for one launch:
 
 ```bash
-pnpm -F @togetherlink/cli exec togetherlink --main together-glm-5-2 claude
-pnpm -F @togetherlink/cli exec togetherlink --main together-kimi-k2-7-code claude
-pnpm -F @togetherlink/cli exec togetherlink --main Qwen/Qwen3.7-Max claude
+pnpm -F @openharness/cli exec openharness --main together-glm-5-2 claude
+pnpm -F @openharness/cli exec openharness --main together-kimi-k2-7-code claude
+pnpm -F @openharness/cli exec openharness --main Qwen/Qwen3.7-Max claude
 ```
 
 ### Codex
 
-Codex uses ephemeral Together settings. `togetherlink` launches the terminal `codex` CLI with per-run config flags and a local Responses-compatible proxy that translates Codex traffic to Together chat completions, while leaving Codex's own session/history behavior intact.
+Codex uses ephemeral Together settings. `openharness` launches the terminal `codex` CLI with per-run config flags and a local Responses-compatible proxy that translates Codex traffic to Together chat completions, while leaving Codex's own session/history behavior intact.
 
 Launch Codex through Together:
 
 ```bash
 export TOGETHER_API_KEY="..."
 
-pnpm -F @togetherlink/cli exec togetherlink codex
+pnpm -F @openharness/cli exec openharness codex
 ```
 
 Run Codex headlessly through Together:
 
 ```bash
-pnpm -F @togetherlink/cli exec togetherlink codex exec "Say hi"
+pnpm -F @openharness/cli exec openharness codex exec "Say hi"
 tcodex exec "Say hi"
 ```
 
 ### Codex App
 
-Codex App support is an alpha feature. Unlike `togetherlink codex`, it persistently patches Codex's user config so the desktop app can use togetherlink's local Responses-compatible proxy. The config stays active until you run `--restore`, similar to `ollama launch codex-app`. If Codex App is already open, togetherlink asks before restarting it so the new profile can load.
+Codex App support is an alpha feature. Unlike `openharness codex`, it persistently patches Codex's user config so the desktop app can use openharness's local Responses-compatible proxy. The config stays active until you run `--restore`, similar to `ollama launch codex-app`. If Codex App is already open, openharness asks before restarting it so the new profile can load.
 
 ```bash
 export TOGETHER_API_KEY="..."
 
-pnpm -F @togetherlink/cli exec togetherlink codex-app
-pnpm -F @togetherlink/cli exec togetherlink codex-app --model moonshotai/Kimi-K2.7-Code
+pnpm -F @openharness/cli exec openharness codex-app
+pnpm -F @openharness/cli exec openharness codex-app --model moonshotai/Kimi-K2.7-Code
 ```
 
 Restore the previous Codex config:
 
 ```bash
-pnpm -F @togetherlink/cli exec togetherlink codex-app --restore
+pnpm -F @openharness/cli exec openharness codex-app --restore
 ```
 
-Backups live under `~/.togetherlink/backup/codex-app/`. The managed model catalog lives under `~/.codex/` so Codex Desktop can load it, and the session lock lives under `~/.togetherlink/codex-app/`.
+Backups live under `~/.openharness/backup/codex-app/`. The managed model catalog lives under `~/.codex/` so Codex Desktop can load it, and the session lock lives under `~/.openharness/codex-app/`.
 
 ### Pi Code
 
-Pi Code uses ephemeral Together settings with persistent sessions. `togetherlink pi` uses Pi's official Together provider (`together`) and a temporary `PI_CODING_AGENT_DIR` for per-run model config, while pointing `PI_CODING_AGENT_SESSION_DIR` at the normal local Pi sessions folder. It does not write Pi config, and Pi sessions can still be resumed normally.
+Pi Code uses ephemeral Together settings with persistent sessions. `openharness pi` uses Pi's official Together provider (`together`) and a temporary `PI_CODING_AGENT_DIR` for per-run model config, while pointing `PI_CODING_AGENT_SESSION_DIR` at the normal local Pi sessions folder. It does not write Pi config, and Pi sessions can still be resumed normally.
 
 Launch Pi Code through Together:
 
 ```bash
 export TOGETHER_API_KEY="..."
 
-pnpm -F @togetherlink/cli exec togetherlink pi
-pnpm -F @togetherlink/cli exec togetherlink picode
+pnpm -F @openharness/cli exec openharness pi
+pnpm -F @openharness/cli exec openharness picode
 tpi
 ```
 
 Run Pi Code headlessly through Together:
 
 ```bash
-pnpm -F @togetherlink/cli exec togetherlink pi -p "Say hi"
+pnpm -F @openharness/cli exec openharness pi -p "Say hi"
 tpi -p "Say hi"
 ```
 
@@ -156,13 +156,13 @@ Claude support must be tested headlessly before testing the interactive UI. Head
 Use debug logs while working on the proxy:
 
 ```bash
-export TOGETHERLINK_DEBUG=1
+export OPENHARNESS_DEBUG=1
 ```
 
 Basic chat, no tools:
 
 ```bash
-pnpm -F @togetherlink/cli exec togetherlink claude -- \
+pnpm -F @openharness/cli exec openharness claude -- \
   --print \
   --output-format json \
   --no-session-persistence \
@@ -181,7 +181,7 @@ Expected result:
 Tool-use smoke test:
 
 ```bash
-pnpm -F @togetherlink/cli exec togetherlink claude -- \
+pnpm -F @openharness/cli exec openharness claude -- \
   --print \
   --output-format json \
   --no-session-persistence \
@@ -200,7 +200,7 @@ Expected result:
 Repo-context smoke test:
 
 ```bash
-pnpm -F @togetherlink/cli exec togetherlink claude -- \
+pnpm -F @openharness/cli exec openharness claude -- \
   --print \
   --output-format json \
   --no-session-persistence \
@@ -255,9 +255,9 @@ GLM-5.2 returns preserved reasoning in `choices[0].message.reasoning`. Keep that
 
 ## Codex Desktop App-Server Model List Probe
 
-Codex Desktop renders its model picker from the app-server JSON-RPC method `model/list`, not directly from the provider's raw `/v1/models` response. When debugging `togetherlink codex-app`, verify the real app-server contract before changing Desktop config again.
+Codex Desktop renders its model picker from the app-server JSON-RPC method `model/list`, not directly from the provider's raw `/v1/models` response. When debugging `openharness codex-app`, verify the real app-server contract before changing Desktop config again.
 
-First make sure `~/.codex/config.toml` points at the Togetherlink Codex App provider and that the local Togetherlink daemon is reachable:
+First make sure `~/.codex/config.toml` points at the Openharness Codex App provider and that the local Openharness daemon is reachable:
 
 ```bash
 /Applications/Codex.app/Contents/Resources/codex doctor --json
@@ -318,8 +318,8 @@ function notify(method, params) {
 try {
   await request("initialize", {
     clientInfo: {
-      name: "togetherlink-debug",
-      title: "Togetherlink Debug",
+      name: "openharness-debug",
+      title: "Openharness Debug",
       version: "0.5.26",
     },
     capabilities: {
@@ -347,9 +347,9 @@ try {
 '
 ```
 
-Expected result for `togetherlink codex-app` is six visible models, starting with `zai-org/GLM-5.2` and display name `GLM 5.2 · default`. If this probe is correct but Desktop still shows stale or missing models, the bug is in the running Desktop process or frontend state, not the Codex app-server model manager.
+Expected result for `openharness codex-app` is six visible models, starting with `zai-org/GLM-5.2` and display name `GLM 5.2 · default`. If this probe is correct but Desktop still shows stale or missing models, the bug is in the running Desktop process or frontend state, not the Codex app-server model manager.
 
-Also verify the active Togetherlink daemon session route returns the same catalog without calling Together:
+Also verify the active Openharness daemon session route returns the same catalog without calling Together:
 
 ```bash
 node --input-type=module -e '
@@ -357,7 +357,7 @@ import { readFileSync } from "node:fs";
 
 const raw = readFileSync(process.env.HOME + "/.codex/config.toml", "utf8");
 const baseUrl = raw.match(/base_url\s*=\s*"([^"]+)"/)?.[1];
-if (!baseUrl) throw new Error("missing Togetherlink codex-app base_url");
+if (!baseUrl) throw new Error("missing Openharness codex-app base_url");
 
 const response = await fetch(baseUrl + "/models");
 const body = await response.json();
@@ -370,7 +370,7 @@ console.log(JSON.stringify({
 '
 ```
 
-Codex Desktop has had a custom-provider picker bug where the frontend hides the model picker unless the provider reports auth as required: https://github.com/openai/codex/issues/10867. `togetherlink codex-app` intentionally writes `requires_openai_auth = true` for the custom provider as a Desktop workaround. If Desktop prompts for login during manual testing, choose API key and enter any placeholder character; model traffic still goes to the configured local Togetherlink `base_url`.
+Codex Desktop has had a custom-provider picker bug where the frontend hides the model picker unless the provider reports auth as required: https://github.com/openai/codex/issues/10867. `openharness codex-app` intentionally writes `requires_openai_auth = true` for the custom provider as a Desktop workaround. If Desktop prompts for login during manual testing, choose API key and enter any placeholder character; model traffic still goes to the configured local Openharness `base_url`.
 
 ## Notes
 
@@ -384,7 +384,7 @@ Build once, then run any harness test file:
 
 ```bash
 node_modules/.bin/tsc -p packages/cli/tsconfig.json
-chmod +x packages/cli/dist/bin/togetherlink.js
+chmod +x packages/cli/dist/bin/openharness.js
 packages/tests/node_modules/.bin/vitest run --config packages/tests/vitest.config.ts packages/tests/src/Codex.test.ts
 packages/tests/node_modules/.bin/vitest run --config packages/tests/vitest.config.ts packages/tests/src/Claude.test.ts
 packages/tests/node_modules/.bin/vitest run --config packages/tests/vitest.config.ts packages/tests/src/OpenCode.test.ts
@@ -407,18 +407,18 @@ Current scenarios cover:
 
 ## Live Models Check
 
-`packages/tests/src/livemodelscheck.test.ts` is the exhaustive real-inference model check. It is skipped by the normal suite unless `TOGETHERLINK_LIVE_MODELS_CHECK=1` is set, because it launches real Claude Code and Codex CLI sessions and calls Together for every curated model.
+`packages/tests/src/livemodelscheck.test.ts` is the exhaustive real-inference model check. It is skipped by the normal suite unless `OPENHARNESS_LIVE_MODELS_CHECK=1` is set, because it launches real Claude Code and Codex CLI sessions and calls Together for every curated model.
 
 Run it with:
 
 ```bash
-pnpm -F @togetherlink/tests test:live-models-check
+pnpm -F @openharness/tests test:live-models-check
 ```
 
 The check runs one concurrent case per harness/model/probe tuple. Default concurrency is 6 and can be changed with:
 
 ```bash
-VITEST_MAX_CONCURRENCY=3 pnpm -F @togetherlink/tests test:live-models-check
+VITEST_MAX_CONCURRENCY=3 pnpm -F @openharness/tests test:live-models-check
 ```
 
 For each curated `SELECTABLE_MODELS` entry it runs both harnesses through:
@@ -439,7 +439,7 @@ The workflow installs the real agent CLIs explicitly:
 npm install -g @anthropic-ai/claude-code @openai/codex opencode-ai @earendil-works/pi-coding-agent
 ```
 
-This is intentionally a CI setup step, not something `togetherlink` does silently on a user's machine.
+This is intentionally a CI setup step, not something `openharness` does silently on a user's machine.
 
 ## Tool Compatibility Audit
 

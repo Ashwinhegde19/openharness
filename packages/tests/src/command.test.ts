@@ -11,7 +11,7 @@ describe("runCommand", () => {
   let context: TestContext;
 
   beforeEach(async () => {
-    tmpDir = await mkdtemp(path.join(os.tmpdir(), "togetherlink-command-"));
+    tmpDir = await mkdtemp(path.join(os.tmpdir(), "openharness-command-"));
     context = {
       repoRoot: tmpDir,
       cliBin: process.execPath,
@@ -64,7 +64,7 @@ describe("runCommand", () => {
     );
 
     const stored = JSON.parse(
-      await readFile(path.join(home, ".togetherlink", "install-id"), "utf8"),
+      await readFile(path.join(home, ".openharness", "install-id"), "utf8"),
     ) as { id?: string };
     expect(stored.id).toBe(installId);
   });

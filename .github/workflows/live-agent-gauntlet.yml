@@ -42,7 +42,7 @@ jobs:
     env:
       CI: "true"
       TOGETHER_API_KEY: ${{ secrets.TOGETHER_API_KEY }}
-      TOGETHERLINK_DEBUG: "1"
+      OPENHARNESS_DEBUG: "1"
       VITEST_RETRY: "3"
       HARNESS: ${{ github.event.inputs.harness || 'all' }}
 
@@ -147,9 +147,9 @@ jobs:
               ;;
           esac
 
-      - name: Build togetherlink CLI
+      - name: Build openharness CLI
         if: steps.secret.outputs.present == 'true'
-        run: pnpm exec turbo run build --filter @togetherlink/models --filter @togetherlink/cli
+        run: pnpm exec turbo run build --filter @openharness/models --filter @openharness/cli
 
       - name: Typecheck live tests
         if: steps.secret.outputs.present == 'true'
@@ -160,22 +160,22 @@ jobs:
         run: |
           case "$HARNESS" in
             all)
-              VITEST_FILE_PARALLELISM=0 VITEST_MAX_CONCURRENCY=1 pnpm exec turbo run test:gauntlet:core test:gauntlet:claude test:gauntlet:codex test:gauntlet:opencode test:gauntlet:pi --filter @togetherlink/tests --concurrency=1
+              VITEST_FILE_PARALLELISM=0 VITEST_MAX_CONCURRENCY=1 pnpm exec turbo run test:gauntlet:core test:gauntlet:claude test:gauntlet:codex test:gauntlet:opencode test:gauntlet:pi --filter @openharness/tests --concurrency=1
               ;;
             claude)
-              pnpm exec turbo run test:gauntlet:claude --filter @togetherlink/tests
+              pnpm exec turbo run test:gauntlet:claude --filter @openharness/tests
               ;;
             codex)
-              pnpm exec turbo run test:gauntlet:codex --filter @togetherlink/tests
+              pnpm exec turbo run test:gauntlet:codex --filter @openharness/tests
               ;;
             live-models-check)
-              pnpm exec turbo run test:gauntlet:live-models-check --filter @togetherlink/tests
+              pnpm exec turbo run test:gauntlet:live-models-check --filter @openharness/tests
               ;;
             opencode)
-              pnpm exec turbo run test:gauntlet:opencode --filter @togetherlink/tests
+              pnpm exec turbo run test:gauntlet:opencode --filter @openharness/tests
               ;;
             pi)
-              pnpm exec turbo run test:gauntlet:pi --filter @togetherlink/tests
+              pnpm exec turbo run test:gauntlet:pi --filter @openharness/tests
               ;;
             *)
               echo "Unknown harness: $HARNESS" >&2
@@ -183,7 +183,7 @@ jobs:
               ;;
           esac
 
-      - name: Stop togetherlink daemon
+      - name: Stop openharness daemon
         if: always() && steps.secret.outputs.present == 'true'
         run: node packages/cli/dist/bin/openharness.js daemon stop || true
 

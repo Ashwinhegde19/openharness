@@ -9,7 +9,7 @@ export const Route = createRootRoute({
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       {
-        title: "togetherlink - Together AI models in OpenCode, Claude Code, Codex & Pi Code",
+        title: "openharness - Together AI models in OpenCode, Claude Code, Codex & Pi Code",
       },
       {
         name: "description",
@@ -22,7 +22,7 @@ export const Route = createRootRoute({
       { rel: "icon", href: "/favicon.ico", sizes: "any" },
       {
         rel: "icon",
-        href: "/togetherlink-logo.svg",
+        href: "/openharness-logo.svg",
         type: "image/svg+xml",
       },
       { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },

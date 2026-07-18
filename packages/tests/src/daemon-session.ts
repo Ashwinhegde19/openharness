@@ -21,7 +21,7 @@ const GLM_5_2 = {
 
 export type TestDaemon = {
   url: string;
-  /** The daemon's isolated TOGETHERLINK_HOME. */
+  /** The daemon's isolated OPENHARNESS_HOME. */
   home: string;
   stderr: () => string;
   stop: () => Promise<void>;
@@ -35,9 +35,9 @@ export async function startTestDaemon(context: TestContext): Promise<TestDaemon>
     cwd: context.repoRoot,
     env: {
       ...process.env,
-      TOGETHERLINK_DEBUG: "1",
-      TOGETHERLINK_HOME: home,
-      TOGETHERLINK_PORT: String(port),
+      OPENHARNESS_DEBUG: "1",
+      OPENHARNESS_HOME: home,
+      OPENHARNESS_PORT: String(port),
     },
     stdio: ["ignore", "pipe", "pipe"],
   });

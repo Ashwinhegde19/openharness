@@ -130,9 +130,9 @@ Search case-insensitively for:
 
 ```text
 together
-togetherlink
+openharness
 TOGETHER_
-TOGETHERLINK_
+OPENHARNESS_
 api.together
 @ai-sdk/together
 model catalog names

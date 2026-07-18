@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { VISION_MODELS, VISION_PROMPT } from "@togetherlink/models";
+import { VISION_MODELS, VISION_PROMPT } from "@openharness/models";
 import {
   chatCompletionsUrl,
   upstreamRequestHeaders,
@@ -14,7 +14,7 @@ import {
  * so GLM-5.2 reasons over the description rather than hallucinating about an
  * image it never saw.
  *
- * The vision model list and prompt come from @togetherlink/models (the shared
+ * The vision model list and prompt come from @openharness/models (the shared
  * manifest) so they stay in sync with the OpenCode `@vision` subagent. The
  * models are fixed here — not user-configurable — with automatic failover if
  * the primary errors. Reasoning is disabled because image description is a
@@ -270,7 +270,7 @@ async function describeImageWithDelayedFailoverRace(
 }
 
 function visionFailoverRaceDelayMs(): number | undefined {
-  const raw = process.env.TOGETHERLINK_VISION_FAILOVER_RACE_DELAY_MS;
+  const raw = process.env.OPENHARNESS_VISION_FAILOVER_RACE_DELAY_MS;
   const parsed = raw ? Number.parseInt(raw, 10) : NaN;
   return Number.isFinite(parsed) && parsed >= 0 ? parsed : undefined;
 }

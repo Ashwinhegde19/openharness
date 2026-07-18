@@ -1,4 +1,4 @@
-import { GLM_5_2, VISION_MODELS, costPerToken, type ModelDefinition } from "@togetherlink/models";
+import { GLM_5_2, VISION_MODELS, costPerToken, type ModelDefinition } from "@openharness/models";
 import { APPROX_CHARS_PER_TOKEN } from "./claude/context-budget.js";
 
 /**
@@ -8,7 +8,7 @@ import { APPROX_CHARS_PER_TOKEN } from "./claude/context-budget.js";
  * pricing table it can't apply to non-Anthropic Together models,
  * so its estimate is wrong for us. Since the proxy is the one talking to
  * Together and holds the real token counts, it tracks cost itself using the
- * selected model's rates from @togetherlink/models.
+ * selected model's rates from @openharness/models.
  */
 
 function pricingFor(model: ModelDefinition): {

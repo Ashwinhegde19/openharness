@@ -14,7 +14,7 @@ import {
   type DaemonHealth,
 } from "./server.js";
 import type { RegisterSessionRequest } from "./state.js";
-import { togetherlinkHome, isProcessAlive } from "../paths.js";
+import { openharnessHome, isProcessAlive } from "../paths.js";
 
 const HEALTH_POLL_INTERVAL_MS = 50;
 const HEALTH_POLL_TIMEOUT_MS = 5000;
@@ -75,7 +75,7 @@ export async function ensureDaemon(): Promise<{ url: string }> {
     stdio: "ignore",
     env: {
       ...process.env,
-      TOGETHERLINK_PORT: String(port),
+      OPENHARNESS_PORT: String(port),
     },
   });
   child.unref();
@@ -90,7 +90,7 @@ export async function ensureDaemon(): Promise<{ url: string }> {
   }
   throw new Error(
     `openharness daemon did not become healthy on ${url} within ${HEALTH_POLL_TIMEOUT_MS / 1000}s. ` +
-      `Set TOGETHERLINK_PORT to use a different port.`,
+      `Set OPENHARNESS_PORT to use a different port.`,
   );
 }
 
@@ -111,7 +111,7 @@ async function currentScriptIdentity(): Promise<ScriptIdentity> {
 }
 
 function daemonMatchesCurrentScript(health: DaemonHealth, current: ScriptIdentity): boolean {
-  if (health.home !== null && health.home !== togetherlinkHome()) {
+  if (health.home !== null && health.home !== openharnessHome()) {
     return false;
   }
   if (health.scriptPath !== current.scriptPath) {
@@ -272,7 +272,7 @@ export async function updateDaemonSessionPid(
 }
 
 export async function localProxyAuthToken(): Promise<string> {
-  const file = path.join(togetherlinkHome(), LOCAL_PROXY_TOKEN_FILE);
+  const file = path.join(openharnessHome(), LOCAL_PROXY_TOKEN_FILE);
   try {
     const token = (await readFile(file, "utf8")).trim();
     if (token) {
@@ -281,7 +281,7 @@ export async function localProxyAuthToken(): Promise<string> {
   } catch {
     // Create below.
   }
-  const token = `togetherlink-local-${randomBytes(32).toString("base64url")}`;
+  const token = `openharness-local-${randomBytes(32).toString("base64url")}`;
   await mkdir(path.dirname(file), { recursive: true });
   await writeFile(file, `${token}\n`, { encoding: "utf8", mode: 0o600 });
   return token;

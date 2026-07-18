@@ -125,7 +125,7 @@ async function main() {
   // parsing so even `openharness help` keeps an install current, but it's a
   // no-op unless this is the installed bundle and the throttle window passed.
   // Keep this before loading project .env files so a repo cannot redirect the
-  // updater with TOGETHERLINK_MANIFEST_URL / TOGETHERLINK_HOME.
+  // updater with OPENHARNESS_MANIFEST_URL / OPENHARNESS_HOME.
   await maybeSelfUpdate();
 
   // Load a .env (cwd → repo root) after self-update, and only for approved

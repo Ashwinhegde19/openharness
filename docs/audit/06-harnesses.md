@@ -6,7 +6,7 @@ Public v1 product targets OpenCode, Claude Code, Codex. **Pi** exists in the for
 
 | Item                  | Behavior                                                         |
 | --------------------- | ---------------------------------------------------------------- |
-| CLI shape             | harness-first: `togetherlink <harness> [flags] [passthrough…]`   |
+| CLI shape             | harness-first: `openharness <harness> [flags] [passthrough…]`    |
 | Model flag            | `--main` / `--model`                                             |
 | Key flag              | `--api-key` (sets `apiKeyFromFlag`)                              |
 | Detection             | `HARNESS_BIN` + `detect.ts`; missing binary → install hint, exit |

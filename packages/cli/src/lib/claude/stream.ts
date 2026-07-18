@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { type ServerResponse } from "node:http";
-import { type ModelDefinition } from "@togetherlink/models";
+import { type ModelDefinition } from "@openharness/models";
 import { runNativeWebSearchCall } from "../native-web-search.js";
 import { writeProxyDebugLog } from "../proxy-debug.js";
 import { type ProxyPerfTracer } from "../proxy-perf.js";

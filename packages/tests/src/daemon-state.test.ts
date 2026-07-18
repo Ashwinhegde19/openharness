@@ -28,7 +28,7 @@ describe("daemon session state", () => {
     expect(disabledSession.options?.perfSink).toBeUndefined();
     expect(toPublicSessionView(disabledSession).proxyPerf).toBeUndefined();
 
-    vi.stubEnv("TOGETHERLINK_PERF", "1");
+    vi.stubEnv("OPENHARNESS_PERF", "1");
     const enabledSession = buildSession(registerBody("enabled"));
 
     enabledSession.options?.perfSink?.({

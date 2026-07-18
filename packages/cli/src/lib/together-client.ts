@@ -1,4 +1,4 @@
-import type { ModelDefinition } from "@togetherlink/models";
+import type { ModelDefinition } from "@openharness/models";
 import { TOGETHER_BASE_URL } from "./together-core.js";
 import { backoffMs, parseRetryAfter, sleep } from "./together-retry.js";
 import {

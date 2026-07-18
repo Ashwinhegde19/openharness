@@ -1,7 +1,7 @@
 # Upstream baseline
 
-- Source: https://github.com/Nutlope/togetherlink
-- Optional mirror fork: https://github.com/Ashwinhegde19/togetherlink
+- Source: https://github.com/Nutlope/openharness
+- Optional mirror fork: https://github.com/Ashwinhegde19/openharness
 - Pinned commit: `9f56ed93b4b0d73d7a96bc70574851e21a46cdf7`
 - Version at pin: 0.5.26
 - License file: MIT (`LICENSE`); package.json fields currently say Apache-2.0 — reconcile before release
@@ -9,7 +9,7 @@
 
 Planning docs live under [`docs/`](./). Original TogetherLink CLI README:
 
-- [UPSTREAM-TOGETHERLINK-README.md](UPSTREAM-TOGETHERLINK-README.md)
+- [UPSTREAM-OPENHARNESS-README.md](UPSTREAM-OPENHARNESS-README.md)
 - M0 audit: [audit/README.md](audit/README.md)
 
 ## Git remotes
@@ -18,7 +18,7 @@ This repository is configured with:
 
 ```text
 origin    https://github.com/Ashwinhegde19/openharness.git
-upstream  https://github.com/Nutlope/togetherlink.git
+upstream  https://github.com/Nutlope/openharness.git
 ```
 
 Fetch upstream updates without merging blindly:

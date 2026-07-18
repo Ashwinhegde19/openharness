@@ -1,5 +1,5 @@
 import { describe, expect, test, vi } from "vitest";
-import { TOGETHER_BASE_URL, SELECTABLE_MODELS } from "@togetherlink/models";
+import { TOGETHER_BASE_URL, SELECTABLE_MODELS } from "@openharness/models";
 import {
   TOGETHER_COMPATIBILITY_POLICY,
   TOGETHER_PROVIDER_CONFIG,
@@ -23,7 +23,7 @@ import {
   OPENCODE_MODEL_WHITELIST,
   OPENCODE_PROVIDER_ID,
 } from "../../cli/src/lib/opencode/defaults.js";
-import type { ModelDefinition } from "@togetherlink/models";
+import type { ModelDefinition } from "@openharness/models";
 
 const MODEL_DEF: ModelDefinition = {
   id: "zai-org/GLM-5.2",

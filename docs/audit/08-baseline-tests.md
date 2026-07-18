@@ -7,11 +7,11 @@ Commands: `pnpm install && pnpm build && pnpm test`
 
 ## Build
 
-| Step                               | Result                                           |
-| ---------------------------------- | ------------------------------------------------ |
-| `pnpm install`                     | Pass                                             |
-| `pnpm build` (cli + models + site) | Pass                                             |
-| CLI binary                         | `packages/cli/dist/bin/togetherlink.js` produced |
+| Step                               | Result                                          |
+| ---------------------------------- | ----------------------------------------------- |
+| `pnpm install`                     | Pass                                            |
+| `pnpm build` (cli + models + site) | Pass                                            |
+| CLI binary                         | `packages/cli/dist/bin/openharness.js` produced |
 
 ## Full suite (`pnpm test`)
 
@@ -42,8 +42,8 @@ Unhandled `EPIPE` noise appeared during live Claude/Codex long-context tests whe
 
 ### Intentionally skipped without flags
 
-- `LiveSmoke.test.ts` — `TOGETHERLINK_LIVE_SMOKE=1`
-- `livemodelscheck.test.ts` — `TOGETHERLINK_LIVE_MODELS_CHECK=1`
+- `LiveSmoke.test.ts` — `OPENHARNESS_LIVE_SMOKE=1`
+- `livemodelscheck.test.ts` — `OPENHARNESS_LIVE_MODELS_CHECK=1`
 
 ## Offline regression core (M1 gate)
 

@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { type ModelDefinition } from "@togetherlink/models";
+import { type ModelDefinition } from "@openharness/models";
 import { runNativeWebSearchCall } from "../native-web-search.js";
 import { writeProxyDebugLog } from "../proxy-debug.js";
 import { type ProxyPerfTracer } from "../proxy-perf.js";
@@ -126,8 +126,8 @@ export async function callTogetherChatCompletions(
     const json = response.json;
     if (typeof payload.max_tokens === "number") {
       (
-        json as OpenAIChatResponse & { _togetherlinkRequestedMaxTokens?: number }
-      )._togetherlinkRequestedMaxTokens = payload.max_tokens;
+        json as OpenAIChatResponse & { _openharnessRequestedMaxTokens?: number }
+      )._openharnessRequestedMaxTokens = payload.max_tokens;
     }
     const usage = json.usage;
     const promptTokens = usage?.prompt_tokens ?? 0;

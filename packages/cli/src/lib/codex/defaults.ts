@@ -3,11 +3,11 @@ import {
   SELECTABLE_MODELS,
   resolveModelByKeys,
   type ModelDefinition,
-} from "@togetherlink/models";
+} from "@openharness/models";
 
 export const CODEX_DEFAULT_MODEL = GLM_5_2.id;
-export const CODEX_PROVIDER_ID = "togetherlink";
-export const CODEX_AUTH_ENV = "TOGETHERLINK_CODEX_AUTH_TOKEN";
+export const CODEX_PROVIDER_ID = "openharness";
+export const CODEX_AUTH_ENV = "OPENHARNESS_CODEX_AUTH_TOKEN";
 
 export type CodexModelSelection = {
   id: string;

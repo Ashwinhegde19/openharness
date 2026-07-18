@@ -6,7 +6,7 @@ import { readFileSync } from "node:fs";
  * the CLI package.json next to the compiled dist output.
  */
 export const VERSION: string =
-  process.env.TOGETHERLINK_VERSION ?? readPackageVersion() ?? "0.0.0-dev";
+  process.env.OPENHARNESS_VERSION ?? readPackageVersion() ?? "0.0.0-dev";
 
 function readPackageVersion(): string | undefined {
   try {

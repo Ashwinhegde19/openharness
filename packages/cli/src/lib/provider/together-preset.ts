@@ -3,7 +3,7 @@ import {
   TOGETHER_BASE_URL,
   VISION_MODELS,
   type ModelDefinition,
-} from "@togetherlink/models";
+} from "@openharness/models";
 import { TOGETHER_COMPATIBILITY_POLICY } from "./policy.js";
 import type {
   ProviderConfig,
@@ -17,7 +17,7 @@ export const TOGETHER_API_KEY_ENV = "TOGETHER_API_KEY";
 
 /**
  * Map a catalog {@link ModelDefinition} into the provider-neutral model shape.
- * Catalog data stays the source of truth in `@togetherlink/models`; this is the
+ * Catalog data stays the source of truth in `@openharness/models`; this is the
  * view the generic runtime consumes.
  */
 export function modelDefinitionToProviderModel(def: ModelDefinition): ProviderModel {

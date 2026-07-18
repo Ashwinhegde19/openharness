@@ -257,7 +257,7 @@ describe("Claude proxy compatibility API", () => {
     expect(upstreamBodies).toHaveLength(1);
     expect(upstreamBodies[0]?.max_tokens).toBe(32_000);
     const upstreamContent = String(firstUserContent(upstreamBodies[0]));
-    expect(upstreamContent).toContain("Togetherlink bounded compaction request");
+    expect(upstreamContent).toContain("Openharness bounded compaction request");
     expect(upstreamContent).not.toContain("include full code snippets");
     expect(upstreamContent).not.toContain("List ALL user messages");
   });
@@ -418,7 +418,7 @@ describe("Claude proxy compatibility API", () => {
     const content = response.body.content as Array<Record<string, unknown>>;
     expect(content[0]?.type).toBe("thinking");
     expect(content[0]?.thinking).toBe(longReasoning);
-    expect(String(content[0]?.signature)).toMatch(/^togetherlink:[a-f0-9]{16}$/);
+    expect(String(content[0]?.signature)).toMatch(/^openharness:[a-f0-9]{16}$/);
     expect(String(content[0]?.signature).length).toBeLessThan(40);
   });
 
@@ -456,7 +456,7 @@ describe("Claude proxy compatibility API", () => {
               {
                 type: "thinking",
                 thinking: "Remember marker BLUE-CHAIR-8273.",
-                signature: "togetherlink:test",
+                signature: "openharness:test",
               },
               { type: "text", text: "READY" },
             ],
@@ -623,7 +623,7 @@ describe("Claude proxy compatibility API", () => {
     expect(upstreamBodies).toHaveLength(1);
     const messages = upstreamMessages(upstreamBodies[0]);
     expect(messages.filter((message) => message.role === "system")).toHaveLength(1);
-    expect(messages[0]?.content).toContain("Together AI model routed through togetherlink");
+    expect(messages[0]?.content).toContain("Together AI model routed through openharness");
     expect(messages[0]?.content).toContain("Generate a concise, sentence-case title");
     expect(upstreamBodies[0]).toMatchObject({
       model: CLAUDE_HAIKU_MODEL.id,

@@ -4,7 +4,7 @@
 
 | Process       | How started                                   | Lifetime                        |
 | ------------- | --------------------------------------------- | ------------------------------- | -------- | ---- | ------- |
-| CLI parent    | user runs `togetherlink <harness>`            | until harness exits             |
+| CLI parent    | user runs `openharness <harness>`             | until harness exits             |
 | Daemon        | CLI `ensureDaemon` spawns `--daemon` detached | outlives single session; shared |
 | Harness child | `spawn(claude                                 | codex                           | opencode | pi)` | session |
 | Upstream      | HTTPS to provider                             | per request                     |
@@ -12,11 +12,11 @@
 ## Daemon
 
 - Host: **`127.0.0.1` only** (`CLAUDE_LOCAL_PROXY_HOST`)
-- Default port: **7878** (`DEFAULT_DAEMON_PORT` / `TOGETHERLINK_PORT`)
+- Default port: **7878** (`DEFAULT_DAEMON_PORT` / `OPENHARNESS_PORT`)
 - Health: `GET /healthz`
 - Session register: `POST /internal/sessions` (body includes **apiKey**)
 - Agent traffic: `/v1/*` authenticated with session/local bearer token
-- PID file: `~/.togetherlink/` daemon pid path from `daemonPidPath()`
+- PID file: `~/.openharness/` daemon pid path from `daemonPidPath()`
 
 ## Proxied session lifecycle (Claude / Codex)
 

@@ -6,7 +6,7 @@ import { CODEX_AUTH_ENV, CODEX_PROVIDER_ID, resolveCodexModel } from "./defaults
 import { codexArgsIgnoreUserConfig, ensureCodexGenericUserDefaults } from "./user-config.js";
 import { runProxiedSession, type ProxiedSessionResult } from "../proxied-session.js";
 import { togetherEndpointConfig, type ProviderEndpointConfig } from "../provider/index.js";
-import type { ModelDefinition } from "@togetherlink/models";
+import type { ModelDefinition } from "@openharness/models";
 
 export type CodexLaunchOptions = {
   apiKey: string;
@@ -123,7 +123,7 @@ function writeCodexModelCatalog(
   models: Array<{ id: string; definition: ModelDefinition }>,
   providerLabel: string,
 ): { path: string; cleanup: () => void } {
-  const dir = mkdtempSync(join(tmpdir(), "togetherlink-codex-catalog-"));
+  const dir = mkdtempSync(join(tmpdir(), "openharness-codex-catalog-"));
   const path = join(dir, "models.json");
   writeFileSync(path, codexModelCatalogJson({ models, providerLabel }), "utf8");
   return {

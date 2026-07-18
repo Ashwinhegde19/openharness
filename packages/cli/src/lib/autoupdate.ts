@@ -1,6 +1,6 @@
 /**
  * Self-update. The installed CLI lives as a single Bun-target JS bundle at
- * `<home>/.togetherlink/bin/togetherlink.js`, launched by a tiny `togetherlink`
+ * `<home>/.openharness/bin/openharness.js`, launched by a tiny `openharness`
  * shell wrapper that calls `bun run` on it. To update, we fetch a small
  * `latest.json` manifest from the project site, compare versions, and if newer
  * download the new bundle and atomically rename it over the installed file.
@@ -16,10 +16,10 @@ import os from "node:os";
 import { VERSION } from "./version.js";
 
 /** Single origin for the landing page, manifest, and downloadable bundle. */
-const UPDATE_ORIGIN = "https://togetherlink.vercel.app";
+const UPDATE_ORIGIN = "https://openharness.vercel.app";
 /** Override for testing/local mirrors; normally unset. */
 function resolveManifestUrl(): string {
-  return process.env.TOGETHERLINK_MANIFEST_URL ?? `${UPDATE_ORIGIN}/latest.json`;
+  return process.env.OPENHARNESS_MANIFEST_URL ?? `${UPDATE_ORIGIN}/latest.json`;
 }
 
 const THROTTLE_MS = 60 * 60 * 1000; // re-check at most once per hour
@@ -29,18 +29,18 @@ const FETCH_TIMEOUT_MS = 5_000;
 type Manifest = { version: string; url?: string };
 
 /**
- * Where the install lives. `TOGETHERLINK_HOME` (when set) is the `.togetherlink`
+ * Where the install lives. `OPENHARNESS_HOME` (when set) is the `.openharness`
  * directory itself — matching `scripts/install.sh`, which installs the bundle
- * at `$TOGETHERLINK_HOME/bin/togetherlink.js`. When unset, default to
- * `~/.togetherlink`.
+ * at `$OPENHARNESS_HOME/bin/openharness.js`. When unset, default to
+ * `~/.openharness`.
  */
 function resolveInstallDir(): string {
-  return process.env.TOGETHERLINK_HOME || path.join(os.homedir(), ".togetherlink");
+  return process.env.OPENHARNESS_HOME || path.join(os.homedir(), ".openharness");
 }
 
-/** Installed bundle path. `togetherlink` wrapper runs `bun run` on this. */
+/** Installed bundle path. `openharness` wrapper runs `bun run` on this. */
 function installedBundlePath(): string {
-  return path.join(resolveInstallDir(), "bin", "togetherlink.js");
+  return path.join(resolveInstallDir(), "bin", "openharness.js");
 }
 
 /**
@@ -133,7 +133,7 @@ async function withTimeout<T>(p: Promise<T>, ms: number): Promise<T> {
 async function fetchManifest(): Promise<Manifest> {
   const res = await withTimeout(
     fetch(resolveManifestUrl(), {
-      headers: { "User-Agent": `togetherlink/${VERSION}` },
+      headers: { "User-Agent": `openharness/${VERSION}` },
       signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
     }),
     FETCH_TIMEOUT_MS,
@@ -151,7 +151,7 @@ async function fetchManifest(): Promise<Manifest> {
 async function downloadTo(url: string, dest: string): Promise<void> {
   const res = await withTimeout(
     fetch(url, {
-      headers: { "User-Agent": `togetherlink/${VERSION}` },
+      headers: { "User-Agent": `openharness/${VERSION}` },
       signal: AbortSignal.timeout(OVERALL_TIMEOUT_MS),
     }),
     OVERALL_TIMEOUT_MS,
@@ -188,9 +188,9 @@ export async function maybeSelfUpdate(): Promise<void> {
       return;
     }
     const dest = installedBundlePath();
-    const url = manifest.url ?? `${UPDATE_ORIGIN}/togetherlink.js`;
+    const url = manifest.url ?? `${UPDATE_ORIGIN}/openharness.js`;
     await downloadTo(url, dest);
-    process.stderr.write(`togetherlink: updated to v${manifest.version} (next run uses it)\n`);
+    process.stderr.write(`openharness: updated to v${manifest.version} (next run uses it)\n`);
   } catch {
     // Swallowed: update failure never breaks the user's command.
   }

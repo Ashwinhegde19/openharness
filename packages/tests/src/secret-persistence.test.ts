@@ -2,7 +2,7 @@ import { mkdtemp, readFile, rm } from "node:fs/promises";
 import path from "node:path";
 import { tmpdir } from "node:os";
 import { afterEach, describe, expect, test } from "vitest";
-import type { ModelDefinition } from "@togetherlink/models";
+import type { ModelDefinition } from "@openharness/models";
 import {
   createSessionStore,
   PERSISTED_API_KEY_PLACEHOLDER,
@@ -54,8 +54,8 @@ function sessionInput(token: string): SessionPersistInput {
 
 function registration(homeKey = CANARY): RegisterSessionRequest {
   return {
-    token: "togetherlink-local-canary-token",
-    authToken: "togetherlink-local-canary-token",
+    token: "openharness-local-canary-token",
+    authToken: "openharness-local-canary-token",
     agent: "codex-app",
     apiKey: homeKey,
     modelLabel: `${MODEL.name} (Codex App alpha)`,
@@ -91,7 +91,7 @@ describe("SQLite canary secret scan (M2)", () => {
   });
 
   test("upsert never writes the canary API key or auth token to disk", async () => {
-    home = await mkdtemp(path.join(tmpdir(), "togetherlink-m2-sqlite-"));
+    home = await mkdtemp(path.join(tmpdir(), "openharness-m2-sqlite-"));
     const store = await createSessionStore(home);
     if (store.kind !== "sqlite") {
       // Environment without node:sqlite / bun:sqlite — redaction helper is the
@@ -117,7 +117,7 @@ describe("SQLite canary secret scan (M2)", () => {
   });
 
   test("migration scrubs legacy plaintext secrets from existing rows", async () => {
-    home = await mkdtemp(path.join(tmpdir(), "togetherlink-m2-scrub-"));
+    home = await mkdtemp(path.join(tmpdir(), "openharness-m2-scrub-"));
     const store = await createSessionStore(home);
     if (store.kind !== "sqlite") {
       store.close();
@@ -159,7 +159,7 @@ describe("SQLite canary secret scan (M2)", () => {
   });
 
   test("schema user_version is stamped at M2 epoch", async () => {
-    home = await mkdtemp(path.join(tmpdir(), "togetherlink-m2-ver-"));
+    home = await mkdtemp(path.join(tmpdir(), "openharness-m2-ver-"));
     const store = await createSessionStore(home);
     if (store.kind !== "sqlite") {
       store.close();
@@ -185,7 +185,7 @@ describe("SQLite canary secret scan (M2)", () => {
 
 describe("daemon restart seals sessions without rehydrating secrets (M2)", () => {
   test("restorePersisted ends active rows and returns zero live sessions", async () => {
-    const home = await mkdtemp(path.join(tmpdir(), "togetherlink-m2-restore-"));
+    const home = await mkdtemp(path.join(tmpdir(), "openharness-m2-restore-"));
     try {
       const store = await createSessionStore(home);
       store.upsertSession(sessionInput("live-1"));
@@ -193,21 +193,21 @@ describe("daemon restart seals sessions without rehydrating secrets (M2)", () =>
 
       const reg = new SessionRegistry();
       // Point the registry store at our home by restoring with env override.
-      const prev = process.env.TOGETHERLINK_HOME;
-      process.env.TOGETHERLINK_HOME = home;
+      const prev = process.env.OPENHARNESS_HOME;
+      process.env.OPENHARNESS_HOME = home;
       try {
-        // createSessionStore uses togetherlinkHome() which reads TOGETHERLINK_HOME
+        // createSessionStore uses openharnessHome() which reads OPENHARNESS_HOME
         // via paths — verify paths module.
-        const { togetherlinkHome } = await import("../../cli/src/lib/paths.js");
-        expect(togetherlinkHome()).toBe(home);
+        const { openharnessHome } = await import("../../cli/src/lib/paths.js");
+        expect(openharnessHome()).toBe(home);
         const restored = await reg.restorePersisted();
         expect(restored).toBe(0);
         expect(reg.size).toBe(0);
       } finally {
         if (prev === undefined) {
-          delete process.env.TOGETHERLINK_HOME;
+          delete process.env.OPENHARNESS_HOME;
         } else {
-          process.env.TOGETHERLINK_HOME = prev;
+          process.env.OPENHARNESS_HOME = prev;
         }
         reg.closeStore();
       }
@@ -250,7 +250,7 @@ describe("codex-app registration never stores the canary key (M2)", () => {
   });
 
   test("on-disk registration JSON does not contain the canary; read rehydrates from env", async () => {
-    home = await mkdtemp(path.join(tmpdir(), "togetherlink-m2-appreg-"));
+    home = await mkdtemp(path.join(tmpdir(), "openharness-m2-appreg-"));
     process.env.TOGETHER_API_KEY = CANARY;
     await writeAppRegistration(registration(CANARY), home);
 
@@ -260,11 +260,11 @@ describe("codex-app registration never stores the canary key (M2)", () => {
 
     const restored = await readAppRegistration(home);
     expect(restored?.apiKey).toBe(CANARY);
-    expect(restored?.token).toBe("togetherlink-local-canary-token");
+    expect(restored?.token).toBe("openharness-local-canary-token");
   });
 
   test("read returns undefined when the key cannot be re-resolved", async () => {
-    home = await mkdtemp(path.join(tmpdir(), "togetherlink-m2-appreg-miss-"));
+    home = await mkdtemp(path.join(tmpdir(), "openharness-m2-appreg-miss-"));
     delete process.env.TOGETHER_API_KEY;
     await writeAppRegistration(registration("ignored-will-be-redacted"), home);
     expect(await readAppRegistration(home)).toBeUndefined();

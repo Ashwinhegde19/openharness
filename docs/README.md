@@ -18,7 +18,7 @@ docs/
 ├── GLOSSARY.md               # terminology
 ├── REPOSITORY-AUDIT.md       # audit procedure
 ├── UPSTREAM.md               # TogetherLink pin + remotes
-├── UPSTREAM-TOGETHERLINK-README.md
+├── UPSTREAM-OPENHARNESS-README.md
 ├── adr/                      # architecture decision records
 ├── diagrams/                 # mermaid sequence/context diagrams
 └── audit/                    # M0 deliverables + M1 backlog

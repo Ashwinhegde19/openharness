@@ -12,7 +12,7 @@ describe("Codex generic user config", () => {
   let tmpDir: string;
 
   beforeEach(async () => {
-    tmpDir = await mkdtemp(path.join(os.tmpdir(), "togetherlink-codex-user-config-"));
+    tmpDir = await mkdtemp(path.join(os.tmpdir(), "openharness-codex-user-config-"));
   });
 
   afterEach(async () => {

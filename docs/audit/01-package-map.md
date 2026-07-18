@@ -2,22 +2,22 @@
 
 ## Workspace
 
-| Path              | Package name             | Role                                      |
-| ----------------- | ------------------------ | ----------------------------------------- |
-| `/`               | `togetherlink` (private) | Root workspace, scripts, turbo            |
-| `packages/cli`    | `@togetherlink/cli`      | CLI binary, harnesses, daemon, proxies    |
-| `packages/models` | `@togetherlink/models`   | Together model catalog, pricing, base URL |
-| `packages/tests`  | `@togetherlink/tests`    | Vitest suite, fixtures, benches           |
-| `site`            | `@togetherlink/site`     | Install site, telemetry API, dashboard    |
+| Path              | Package name            | Role                                      |
+| ----------------- | ----------------------- | ----------------------------------------- |
+| `/`               | `openharness` (private) | Root workspace, scripts, turbo            |
+| `packages/cli`    | `@openharness/cli`      | CLI binary, harnesses, daemon, proxies    |
+| `packages/models` | `@openharness/models`   | Together model catalog, pricing, base URL |
+| `packages/tests`  | `@openharness/tests`    | Vitest suite, fixtures, benches           |
+| `site`            | `@openharness/site`     | Install site, telemetry API, dashboard    |
 
 Runtime: **Node ≥ 18**, package manager **pnpm@11.9.0**, optional **Bun** for installed bundle.
 
 ## CLI dependency graph (runtime)
 
 ```text
-@togetherlink/cli
+@openharness/cli
 ├── @clack/prompts          (interactive configure)
-└── @togetherlink/models    (workspace) model defs + TOGETHER_BASE_URL
+└── @openharness/models    (workspace) model defs + TOGETHER_BASE_URL
 
 Node/Bun built-ins only for HTTP (fetch), process spawn, sqlite (node:sqlite / bun:sqlite)
 ```
@@ -42,24 +42,24 @@ packages/tests/                          regression surface for M1
 
 ```bash
 pnpm install
-pnpm -F @togetherlink/cli build
-pnpm -F @togetherlink/models build
+pnpm -F @openharness/cli build
+pnpm -F @openharness/models build
 pnpm test                          # vitest via packages/tests
-pnpm -F @togetherlink/cli typecheck
+pnpm -F @openharness/cli typecheck
 ```
 
 ## Persistent local paths
 
-| Path                            | Purpose                                     |
-| ------------------------------- | ------------------------------------------- |
-| `~/.togetherlink/`              | Product home (`TOGETHERLINK_HOME` override) |
-| `~/.togetherlink/config.json`   | Global API keys (Together, optional Exa)    |
-| `~/.togetherlink/daemon.sqlite` | Session registry (includes secrets today)   |
-| `~/.togetherlink/bin/`          | Installed CLI bundle (autoupdate path)      |
-| `~/.togetherlink/install-id`    | Telemetry install id                        |
+| Path                           | Purpose                                    |
+| ------------------------------ | ------------------------------------------ |
+| `~/.openharness/`              | Product home (`OPENHARNESS_HOME` override) |
+| `~/.openharness/config.json`   | Global API keys (Together, optional Exa)   |
+| `~/.openharness/daemon.sqlite` | Session registry (includes secrets today)  |
+| `~/.openharness/bin/`          | Installed CLI bundle (autoupdate path)     |
+| `~/.openharness/install-id`    | Telemetry install id                       |
 
 ## Site / release (out of M1 scope)
 
-- Install: `scripts/install.sh` → downloads from `togetherlink.vercel.app`
-- Autoupdate: `autoupdate.ts` + `TOGETHERLINK_MANIFEST_URL`
-- Telemetry: default `TOGETHERLINK_TELEMETRY_URL` → site Convex API
+- Install: `scripts/install.sh` → downloads from `openharness.vercel.app`
+- Autoupdate: `autoupdate.ts` + `OPENHARNESS_MANIFEST_URL`
+- Telemetry: default `OPENHARNESS_TELEMETRY_URL` → site Convex API

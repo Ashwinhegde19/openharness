@@ -1,5 +1,5 @@
 import { type ServerResponse } from "node:http";
-import { type ModelDefinition } from "@togetherlink/models";
+import { type ModelDefinition } from "@openharness/models";
 import { writeJson } from "../http-util.js";
 import { writeProxyDebugLog } from "../proxy-debug.js";
 import { parseRetryAfter } from "../together-retry.js";

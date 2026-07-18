@@ -11,7 +11,7 @@ import { handleProxyRequest } from "../claude/proxy.js";
 import { writeAnthropicError, isTogetherApiError } from "../claude/together-call.js";
 import { handleCodexProxyRequest, writeOpenAIError } from "../codex/proxy.js";
 import { readAppRegistration } from "./app-registration.js";
-import { togetherlinkHome } from "../paths.js";
+import { openharnessHome } from "../paths.js";
 import {
   sessions as defaultSessions,
   SessionRegistry,
@@ -52,15 +52,15 @@ export type DaemonHealth = {
 
 /**
  * Where the launcher and daemon agree the daemon's pid file lives. Honors
- * `TOGETHERLINK_HOME` (matching autoupdate.ts/install.sh's install dir) so a
+ * `OPENHARNESS_HOME` (matching autoupdate.ts/install.sh's install dir) so a
  * user with a custom install home keeps the pid file alongside the bundle.
  */
-export function daemonPidPath(home = togetherlinkHome()): string {
+export function daemonPidPath(home = openharnessHome()): string {
   return path.join(home, "daemon.pid");
 }
 
 export function resolveDaemonPort(): number {
-  const raw = process.env.TOGETHERLINK_PORT;
+  const raw = process.env.OPENHARNESS_PORT;
   const parsed = raw ? Number.parseInt(raw, 10) : NaN;
   return Number.isFinite(parsed) && parsed > 0 ? parsed : DEFAULT_DAEMON_PORT;
 }
@@ -154,7 +154,7 @@ export function renderDaemonError(
  */
 export async function runDaemon(options: DaemonOptions = {}): Promise<void> {
   const port = resolveDaemonPort();
-  const debug = options.debug ?? process.env.TOGETHERLINK_DEBUG === "1";
+  const debug = options.debug ?? process.env.OPENHARNESS_DEBUG === "1";
   activeSessions = options.sessions ?? defaultSessions;
   const restored = await activeSessions.restorePersisted();
 
@@ -252,7 +252,7 @@ async function handleDaemonRequest(
       ok: true,
       pid: process.pid,
       version: VERSION,
-      home: togetherlinkHome(),
+      home: openharnessHome(),
       scriptPath: RUNNING_DAEMON_IDENTITY.scriptPath,
       scriptSize: RUNNING_DAEMON_IDENTITY.scriptSize,
       scriptMtimeMs: RUNNING_DAEMON_IDENTITY.scriptMtimeMs,
@@ -273,7 +273,7 @@ async function handleDaemonRequest(
 
   // Internal session-management endpoints. Loopback binding is the boundary
   // (same trust model as today's single-session proxy, which has no internal
-  // secret either). Used only by `togetherlink` itself.
+  // secret either). Used only by `openharness` itself.
   if (path_ === "/internal/sessions") {
     if (req.method === "POST") {
       await registerSession(req, res);

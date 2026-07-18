@@ -1,11 +1,11 @@
 import { describe, expect, test } from "vitest";
-import type { ModelDefinition } from "@togetherlink/models";
+import type { ModelDefinition } from "@openharness/models";
 import {
   SessionRegistry,
   buildSession,
   type AgentId,
   type RegisterSessionRequest,
-} from "@togetherlink/cli/dist/lib/daemon/state.js";
+} from "@openharness/cli/dist/lib/daemon/state.js";
 
 /**
  * Unit tests for the now-exported SessionRegistry (#5: the interface is the test

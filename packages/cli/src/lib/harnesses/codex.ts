@@ -27,7 +27,7 @@ import {
   type ProviderModel,
 } from "../provider/index.js";
 import { resolveTogetherApiKey } from "../together-core.js";
-import type { ModelDefinition } from "@togetherlink/models";
+import type { ModelDefinition } from "@openharness/models";
 
 /** Codex default remains Together for backward compatibility. */
 export const CODEX_DEFAULT_PROVIDER_ID = TOGETHER_PROVIDER_ID;

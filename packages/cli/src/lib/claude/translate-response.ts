@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import type { ModelDefinition } from "@togetherlink/models";
+import type { ModelDefinition } from "@openharness/models";
 import { stableHash } from "../stable-hash.js";
 import { CLAUDE_SUPPORTED_MODELS } from "./defaults.js";
 import { APPROX_CHARS_PER_TOKEN, jsonByteLength, safeClaudeInputLimit } from "./context-budget.js";
@@ -19,12 +19,12 @@ type ClaudeModelOptions = {
   modelDefinition: ModelDefinition;
 };
 
-type OpenAIChatResponseWithTogetherlinkMeta = OpenAIChatResponse & {
-  _togetherlinkRequestedMaxTokens?: number;
+type OpenAIChatResponseWithOpenharnessMeta = OpenAIChatResponse & {
+  _openharnessRequestedMaxTokens?: number;
 };
 
 export function thinkingSignature(reasoning: string): string {
-  return `togetherlink:${stableHash(reasoning)}`;
+  return `openharness:${stableHash(reasoning)}`;
 }
 
 function asOpenAIMessageRecord(value: unknown): OpenAIMessage | undefined {
@@ -123,8 +123,8 @@ export function toAnthropicMessage(
 ): Record<string, unknown> {
   const choice = response.choices?.[0];
   const message = choice?.message ?? {};
-  const requestedMaxTokens = (response as OpenAIChatResponseWithTogetherlinkMeta)
-    ._togetherlinkRequestedMaxTokens;
+  const requestedMaxTokens = (response as OpenAIChatResponseWithOpenharnessMeta)
+    ._openharnessRequestedMaxTokens;
   const content: Array<Record<string, unknown>> = [];
   const reasoning = message.reasoning ?? message.reasoning_content;
   if (reasoning) {

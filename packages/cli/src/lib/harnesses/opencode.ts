@@ -436,7 +436,7 @@ export default defineHarness({
         ` (${modelId}) via session-only config.\n`,
     );
 
-    if (process.env.TOGETHERLINK_DEBUG === "1") {
+    if (process.env.OPENHARNESS_DEBUG === "1") {
       process.stderr.write(
         `[openharness opencode] provider: ${provider.id} (${opencodeProviderIdFor(provider)})\n`,
       );

@@ -1,7 +1,7 @@
 # Contributing
 
 Thanks for helping build this project. It is a fork of
-[TogetherLink](https://github.com/Nutlope/togetherlink) generalized into a
+[TogetherLink](https://github.com/Nutlope/openharness) generalized into a
 provider-neutral launcher; see [`docs/UPSTREAM.md`](docs/UPSTREAM.md) for the
 pinned baseline and the relationship between the two repos.
 
@@ -28,8 +28,8 @@ This is a pnpm workspace.
 
 ```bash
 pnpm install
-pnpm -F @togetherlink/cli build
-pnpm -F @togetherlink/tests test          # offline unit tests
+pnpm -F @openharness/cli build
+pnpm -F @openharness/tests test          # offline unit tests
 ```
 
 ## Tests

@@ -47,9 +47,9 @@ jobs:
         run: pnpm typecheck
 
       - name: Build packages
-        run: pnpm exec turbo run build --filter @togetherlink/models --filter @togetherlink/cli
+        run: pnpm exec turbo run build --filter @openharness/models --filter @openharness/cli
 
       - name: Run offline unit and proxy tests
         run: >
-          pnpm -F @togetherlink/tests exec vitest run
+          pnpm -F @openharness/tests exec vitest run
           --exclude 'src/{Claude,Codex,OpenCode,Pi,LiveSmoke,livemodelscheck,daemon-session-auth}.test.ts'

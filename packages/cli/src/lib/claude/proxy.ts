@@ -1,6 +1,6 @@
 import { type IncomingMessage, type ServerResponse } from "node:http";
 import { CLAUDE_SUPPORTED_MODELS } from "./defaults.js";
-import { type ModelDefinition } from "@togetherlink/models";
+import { type ModelDefinition } from "@openharness/models";
 import { CostTracker } from "../cost.js";
 import { createProxyPerfTracer, type ProxyPerfSink } from "../proxy-perf.js";
 import { writeProxyDebugLog } from "../proxy-debug.js";

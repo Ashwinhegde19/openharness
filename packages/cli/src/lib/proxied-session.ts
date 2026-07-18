@@ -1,6 +1,6 @@
 import { spawn } from "node:child_process";
 import { randomBytes } from "node:crypto";
-import type { ModelDefinition } from "@togetherlink/models";
+import type { ModelDefinition } from "@openharness/models";
 import {
   daemonFetch,
   daemonSessionUrl,
@@ -101,7 +101,7 @@ export type ProxiedSessionSpec = {
 };
 
 export async function runProxiedSession(spec: ProxiedSessionSpec): Promise<ProxiedSessionResult> {
-  const debug = process.env.TOGETHERLINK_DEBUG === "1";
+  const debug = process.env.OPENHARNESS_DEBUG === "1";
   const sessionId = randomLocalProxyToken();
   const authToken = await localProxyAuthToken();
   const telemetrySessionId = randomSessionId();
@@ -259,5 +259,5 @@ export async function printSessionCost(
 }
 
 export function randomLocalProxyToken(): string {
-  return `togetherlink-${randomBytes(24).toString("base64url")}`;
+  return `openharness-${randomBytes(24).toString("base64url")}`;
 }

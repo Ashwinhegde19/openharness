@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, test, vi } from "vitest";
-import { GLM_5_2 } from "@togetherlink/models";
-import { fetchTogether } from "@togetherlink/cli/dist/lib/claude/together-call.js";
+import { GLM_5_2 } from "@openharness/models";
+import { fetchTogether } from "@openharness/cli/dist/lib/claude/together-call.js";
 
 /**
  * Characterization tests for the Together HTTP retry loop (#1 prep). These lock

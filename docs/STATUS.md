@@ -115,6 +115,7 @@ Work landed for alpha packaging, diagnostics, and community process:
 - [x] Product name `openharness` — repository and installed CLI binary are `openharness` (provider-neutral fork of TogetherLink)
 - [x] Install path + quick start that does **not** require Together (`openharness opencode` → local Ollama)
 - [x] Release artifacts: `CHANGELOG.md` added; license reconciled to MIT (matches `LICENSE`); install script reviewed (hosted bundle/origin not yet published for the fork — source build is the alpha install path)
+- [x] Alpha version scheme adopted: package.json (root + `packages/cli`) and `CHANGELOG.md` bumped to `0.1.0-alpha.1` (RELEASE-PLAN § 2); replaces the TogetherLink upstream pin `0.5.26`
 
 ### UX / diagnostics
 
@@ -179,7 +180,7 @@ Legend: ✅ launch path implemented (offline unit-tested). Live E2E with real bi
 | ------------------------------------------------- | -------- | --------------------------------------------------------------------------------------- |
 | Pi `--api-key` argv exposure                      | Medium   | models.json hardened to `0600`; `--api-key` still passed on argv (Pi reads it directly) |
 | License: `LICENSE` is MIT; `package.json` now MIT | Resolved | Reconciled in M7 (package.json license set to MIT)                                      |
-| Branding `togetherlink` → `openharness`           | Resolved | Renamed in M7 (CLI binary + doctor/README/STATUS branding)                              |
+| Branding `openharness` → `openharness`            | Resolved | Renamed in M7 (CLI binary + doctor/README/STATUS branding)                              |
 | Live multi-provider CI evidence                   | Medium   | Needs secrets + harness binaries                                                        |
 | Compatibility matrix published/validated          | Resolved | validated in CI (`pnpm matrix:validate`) + rendered to `docs/compatibility-matrix.md`   |
 | Audit README “important findings” partially stale | Resolved | SQLite (#1) + license (#5) findings annotated as resolved in M2/M7                      |

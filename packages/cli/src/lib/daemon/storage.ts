@@ -3,7 +3,7 @@ import type { AgentId, RegisterSessionRequest } from "./state.js";
 import { chmod, mkdir } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { togetherlinkHome } from "../paths.js";
+import { openharnessHome } from "../paths.js";
 
 const DATABASE_FILE = "daemon.sqlite";
 
@@ -68,7 +68,7 @@ export type SessionStore = {
   close(): void;
 };
 
-export async function createSessionStore(home = togetherlinkHome()): Promise<SessionStore> {
+export async function createSessionStore(home = openharnessHome()): Promise<SessionStore> {
   await mkdir(home, { recursive: true });
   const sqlite = await openSqlite(path.join(home, DATABASE_FILE));
   if (sqlite) {
@@ -83,7 +83,7 @@ export async function createSessionStore(home = togetherlinkHome()): Promise<Ses
   return new ResilientSessionStore(new MemorySessionStore());
 }
 
-export function resolveSessionDatabasePath(home = togetherlinkHome()): string {
+export function resolveSessionDatabasePath(home = openharnessHome()): string {
   return path.join(home, DATABASE_FILE);
 }
 

@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { findModelById, MINIMAX_M3, type ModelDefinition } from "@togetherlink/models";
+import { findModelById, MINIMAX_M3, type ModelDefinition } from "@openharness/models";
 import { writeProxyDebugLog } from "../proxy-debug.js";
 import {
   nativeToolMaxUses as sharedNativeToolMaxUses,
@@ -20,11 +20,11 @@ import type {
 } from "./wire-types.js";
 
 const CODEX_IDENTITY_PROMPT =
-  "You are running inside Codex through togetherlink's local Responses-to-Together proxy. " +
+  "You are running inside Codex through openharness's local Responses-to-Together proxy. " +
   "The upstream model is a Together AI model, not an OpenAI model. " +
-  "If asked what model you are, identify yourself as the selected Together AI backend routed by togetherlink.";
+  "If asked what model you are, identify yourself as the selected Together AI backend routed by openharness.";
 
-const CODEX_MEMORY_MODEL_ENV = "TOGETHERLINK_CODEX_MEMORY_MODEL";
+const CODEX_MEMORY_MODEL_ENV = "OPENHARNESS_CODEX_MEMORY_MODEL";
 const CODEX_MEMORY_REQUESTED_MODELS = new Set(["gpt-5.4-mini"]);
 const CODEX_CONTEXT_OUTPUT_SAFETY_TOKENS = 512;
 

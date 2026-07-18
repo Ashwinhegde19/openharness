@@ -1,4 +1,4 @@
-import type { ModelDefinition } from "@togetherlink/models";
+import type { ModelDefinition } from "@openharness/models";
 import type { ProviderModel } from "./types.js";
 
 /**

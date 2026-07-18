@@ -5,7 +5,7 @@ import {
   SELECTABLE_MODELS,
   resolveModelByKeys,
   type ModelDefinition,
-} from "@togetherlink/models";
+} from "@openharness/models";
 
 // Unit tests for the shared model-selection mechanism. The per-harness
 // wrappers (resolveClaudeModel / resolveCodexModel) are thin policy over this

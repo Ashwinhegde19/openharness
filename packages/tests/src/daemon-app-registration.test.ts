@@ -1,7 +1,7 @@
 import { mkdtemp, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
-import { GLM_5_2 } from "@togetherlink/models";
+import { GLM_5_2 } from "@openharness/models";
 import {
   appRegistrationPath,
   clearAppRegistration,
@@ -13,7 +13,7 @@ import { cleanupTmpDir, createTestContext } from "./context.js";
 import { startTestDaemon, type TestDaemon } from "./daemon-session.js";
 import type { TestContext } from "./types.js";
 
-const TOKEN = "togetherlink-local-app-registration-test";
+const TOKEN = "openharness-local-app-registration-test";
 const FAKE_KEY = "fake-key-never-sent-upstream";
 
 function registration(): RegisterSessionRequest {

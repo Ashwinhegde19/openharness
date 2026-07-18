@@ -1,4 +1,4 @@
-import { GLM_5_2, type ModelDefinition } from "@togetherlink/models";
+import { GLM_5_2, type ModelDefinition } from "@openharness/models";
 import {
   nativeToolMaxUses as sharedNativeToolMaxUses,
   runExaSearch as runSharedExaSearch,
@@ -25,8 +25,8 @@ type DebugOptions = {
 
 type TogetherReasoningEffort = "max";
 
-const TOGETHERLINK_IDENTITY_PROMPT =
-  "You are a Together AI model routed through togetherlink, not Anthropic Claude.";
+const OPENHARNESS_IDENTITY_PROMPT =
+  "You are a Together AI model routed through openharness, not Anthropic Claude.";
 
 export function togetherReasoningEffort(
   body: AnthropicMessagesRequest,
@@ -179,8 +179,8 @@ export function toOpenAIMessages(
 ): OpenAIMessage[] {
   const systemParts = [
     targetModel
-      ? `${TOGETHERLINK_IDENTITY_PROMPT} Backend: ${targetModel.name} (${targetModel.id}).`
-      : TOGETHERLINK_IDENTITY_PROMPT,
+      ? `${OPENHARNESS_IDENTITY_PROMPT} Backend: ${targetModel.name} (${targetModel.id}).`
+      : OPENHARNESS_IDENTITY_PROMPT,
   ];
   const system = stringifyAnthropicContent(body.system);
   if (system) {

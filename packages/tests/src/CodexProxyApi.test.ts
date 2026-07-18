@@ -1,6 +1,6 @@
 import http from "node:http";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
-import { GLM_5_2, MINIMAX_M3, QWEN_3_5_9B, QWEN_3_7_MAX } from "@togetherlink/models";
+import { GLM_5_2, MINIMAX_M3, QWEN_3_5_9B, QWEN_3_7_MAX } from "@openharness/models";
 import { handleCodexProxyRequest, type CodexProxyOptions } from "../../cli/src/lib/codex/proxy.js";
 
 const realFetch = globalThis.fetch.bind(globalThis);
@@ -494,8 +494,8 @@ describe("Codex Responses proxy tool compatibility", () => {
 
   test("retries streamed Codex turns when upstream SSE goes idle before output", async () => {
     const requests: Array<{ body: any }> = [];
-    vi.stubEnv("TOGETHERLINK_CODEX_STREAM_IDLE_TIMEOUT_MS", "100");
-    vi.stubEnv("TOGETHERLINK_CODEX_STREAM_IDLE_RETRIES", "1");
+    vi.stubEnv("OPENHARNESS_CODEX_STREAM_IDLE_TIMEOUT_MS", "100");
+    vi.stubEnv("OPENHARNESS_CODEX_STREAM_IDLE_RETRIES", "1");
     vi.stubGlobal(
       "fetch",
       vi.fn(async (url: string, init?: RequestInit) => {
@@ -864,8 +864,8 @@ describe("Codex Responses proxy tool compatibility", () => {
   test("fails streamed native web_search completion when upstream SSE goes idle", async () => {
     const requests: Array<{ url: string; body: any }> = [];
     vi.stubEnv("EXA_API_KEY", "test-exa-key");
-    vi.stubEnv("TOGETHERLINK_CODEX_STREAM_IDLE_TIMEOUT_MS", "100");
-    vi.stubEnv("TOGETHERLINK_CODEX_STREAM_IDLE_RETRIES", "1");
+    vi.stubEnv("OPENHARNESS_CODEX_STREAM_IDLE_TIMEOUT_MS", "100");
+    vi.stubEnv("OPENHARNESS_CODEX_STREAM_IDLE_RETRIES", "1");
     vi.stubGlobal(
       "fetch",
       vi.fn(async (url: string, init?: RequestInit) => {
@@ -907,8 +907,8 @@ describe("Codex Responses proxy tool compatibility", () => {
 
   test("fails when upstream SSE keepalives make no Codex progress", async () => {
     const requests: Array<{ url: string; body: any }> = [];
-    vi.stubEnv("TOGETHERLINK_CODEX_STREAM_IDLE_TIMEOUT_MS", "100");
-    vi.stubEnv("TOGETHERLINK_CODEX_STREAM_IDLE_RETRIES", "1");
+    vi.stubEnv("OPENHARNESS_CODEX_STREAM_IDLE_TIMEOUT_MS", "100");
+    vi.stubEnv("OPENHARNESS_CODEX_STREAM_IDLE_RETRIES", "1");
     vi.stubGlobal(
       "fetch",
       vi.fn(async (url: string, init?: RequestInit) => {
@@ -938,7 +938,7 @@ describe("Codex Responses proxy tool compatibility", () => {
 
   test("fails when native stream emits reasoning but never final output", async () => {
     const requests: Array<{ url: string; body: any }> = [];
-    vi.stubEnv("TOGETHERLINK_CODEX_STREAM_TURN_TIMEOUT_MS", "100");
+    vi.stubEnv("OPENHARNESS_CODEX_STREAM_TURN_TIMEOUT_MS", "100");
     vi.stubGlobal(
       "fetch",
       vi.fn(async (url: string, init?: RequestInit) => {
@@ -1290,7 +1290,7 @@ describe("Codex Responses proxy tool compatibility", () => {
               message: {
                 content: JSON.stringify({
                   rollout_summary: "Captured TogetherLink memory support investigation.",
-                  rollout_slug: "togetherlink_codex_memory_support",
+                  rollout_slug: "openharness_codex_memory_support",
                   raw_memory:
                     "TogetherLink should route Codex memory extraction separately from the main coding model.",
                 }),
@@ -1356,7 +1356,7 @@ describe("Codex Responses proxy tool compatibility", () => {
 
   test("allows Codex memory extraction model override from env", async () => {
     const requests: unknown[] = [];
-    vi.stubEnv("TOGETHERLINK_CODEX_MEMORY_MODEL", QWEN_3_5_9B.id);
+    vi.stubEnv("OPENHARNESS_CODEX_MEMORY_MODEL", QWEN_3_5_9B.id);
     vi.stubGlobal(
       "fetch",
       vi.fn(async (url: string, init?: RequestInit) => {

@@ -2,11 +2,11 @@ import os from "node:os";
 import path from "node:path";
 import { randomUUID } from "node:crypto";
 import { readJsonIfExists, writeJsonAtomic } from "./together-core.js";
-import { togetherlinkHome } from "./global-config.js";
+import { openharnessHome } from "./global-config.js";
 import { VERSION } from "./version.js";
 
 const TELEMETRY_ENDPOINT =
-  process.env.TOGETHERLINK_TELEMETRY_URL ?? "https://togetherlink.vercel.app/api/telemetry";
+  process.env.OPENHARNESS_TELEMETRY_URL ?? "https://openharness.vercel.app/api/telemetry";
 const TELEMETRY_TIMEOUT_MS = 2000;
 
 export type TelemetryEventType =
@@ -77,7 +77,7 @@ export type TelemetryEvent = {
 };
 
 function installIdPath(home = os.homedir()): string {
-  return path.join(togetherlinkHome(home), "install-id");
+  return path.join(openharnessHome(home), "install-id");
 }
 
 function telemetryDisabledByEnvironment(): boolean {

@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# togetherlink installer.
+# openharness installer.
 #
-#   curl -fsSL https://togetherlink.vercel.app/install.sh | sh
+#   curl -fsSL https://openharness.vercel.app/install.sh | sh
 #
-# Installs the togetherlink CLI as a Bun-target JS bundle at
-# ~/.togetherlink/bin/togetherlink.js, with a `togetherlink` wrapper script on
+# Installs the openharness CLI as a Bun-target JS bundle at
+# ~/.openharness/bin/openharness.js, with a `openharness` wrapper script on
 # PATH that runs it with `bun`. Installs Bun for the user if `bun` isn't on
 # PATH. Also installs `tclaude`, `topencode`, `tcodex`, and `tpi` convenience wrappers.
 #
@@ -13,8 +13,8 @@
 
 set -euo pipefail
 
-ORIGIN="${TOGETHERLINK_ORIGIN:-https://togetherlink.vercel.app}"
-INSTALL_DIR="${TOGETHERLINK_HOME:-$HOME/.togetherlink}"
+ORIGIN="${OPENHARNESS_ORIGIN:-https://openharness.vercel.app}"
+INSTALL_DIR="${OPENHARNESS_HOME:-$HOME/.openharness}"
 BIN_DIR="$INSTALL_DIR/bin"
 
 bold() { printf "\033[1m%s\033[0m\n" "$1"; }
@@ -22,7 +22,7 @@ info() { printf "  %s\n" "$1"; }
 ok()   { printf "  \033[32m✓\033[0m %s\n" "$1"; }
 err()  { printf "  \033[31m✗ %s\033[0m\n" "$1" >&2; }
 
-bold "Installing togetherlink…"
+bold "Installing openharness…"
 
 # --- 1. Ensure Bun is present (install it for the user if not) ----------------
 if command -v bun >/dev/null 2>&1; then
@@ -49,50 +49,50 @@ fi
 
 # --- 2. Download the latest bundle + manifest --------------------------------
 mkdir -p "$BIN_DIR"
-info "Downloading togetherlink from $ORIGIN …"
+info "Downloading openharness from $ORIGIN …"
 
-if ! curl -fsSL "$ORIGIN/togetherlink.js" -o "$BIN_DIR/togetherlink.js"; then
-  err "Failed to download $ORIGIN/togetherlink.js"
+if ! curl -fsSL "$ORIGIN/openharness.js" -o "$BIN_DIR/openharness.js"; then
+  err "Failed to download $ORIGIN/openharness.js"
   exit 1
 fi
-ok "Bundle saved → $BIN_DIR/togetherlink.js"
+ok "Bundle saved → $BIN_DIR/openharness.js"
 
-# --- 3. Write the `togetherlink` wrapper that runs the bundle with bun --------
-cat > "$BIN_DIR/togetherlink" <<EOF
+# --- 3. Write the `openharness` wrapper that runs the bundle with bun --------
+cat > "$BIN_DIR/openharness" <<EOF
 #!/usr/bin/env sh
-# togetherlink launcher — runs the installed Bun-target JS bundle.
-exec bun "$BIN_DIR/togetherlink.js" "\$@"
+# openharness launcher — runs the installed Bun-target JS bundle.
+exec bun "$BIN_DIR/openharness.js" "\$@"
 EOF
-chmod +x "$BIN_DIR/togetherlink"
+chmod +x "$BIN_DIR/openharness"
 
 # Short aliases: tclaude / topencode / tcodex / tpi
 cat > "$BIN_DIR/tclaude" <<EOF
 #!/usr/bin/env sh
-exec bun "$BIN_DIR/togetherlink.js" claude "\$@"
+exec bun "$BIN_DIR/openharness.js" claude "\$@"
 EOF
 chmod +x "$BIN_DIR/tclaude"
 
 cat > "$BIN_DIR/topencode" <<EOF
 #!/usr/bin/env sh
-exec bun "$BIN_DIR/togetherlink.js" opencode "\$@"
+exec bun "$BIN_DIR/openharness.js" opencode "\$@"
 EOF
 chmod +x "$BIN_DIR/topencode"
 
 cat > "$BIN_DIR/tcodex" <<EOF
 #!/usr/bin/env sh
-exec bun "$BIN_DIR/togetherlink.js" codex "\$@"
+exec bun "$BIN_DIR/openharness.js" codex "\$@"
 EOF
 chmod +x "$BIN_DIR/tcodex"
 
 cat > "$BIN_DIR/tpi" <<EOF
 #!/usr/bin/env sh
-exec bun "$BIN_DIR/togetherlink.js" pi "\$@"
+exec bun "$BIN_DIR/openharness.js" pi "\$@"
 EOF
 chmod +x "$BIN_DIR/tpi"
 
-ok "Wrappers installed: togetherlink, tclaude, topencode, tcodex, tpi → $BIN_DIR"
+ok "Wrappers installed: openharness, tclaude, topencode, tcodex, tpi → $BIN_DIR"
 
-# Remove old togetherlink-owned wrappers that used the upstream agent names.
+# Remove old openharness-owned wrappers that used the upstream agent names.
 # Current installs must never shadow `claude`, `codex`, or `opencode`; users
 # should get the real CLIs unless they explicitly run tclaude/tcodex/topencode/tpi.
 remove_legacy_shadow_wrapper() {
@@ -104,17 +104,17 @@ remove_legacy_shadow_wrapper() {
   if [ -L "$path" ]; then
     target="$(readlink "$path" 2>/dev/null || true)"
     case "$target" in
-      "$BIN_DIR/tclaude"|"$BIN_DIR/tcodex"|"$BIN_DIR/topencode"|"$BIN_DIR/tpi"|"$BIN_DIR/togetherlink"|"$BIN_DIR/togetherlink.js")
+      "$BIN_DIR/tclaude"|"$BIN_DIR/tcodex"|"$BIN_DIR/topencode"|"$BIN_DIR/tpi"|"$BIN_DIR/openharness"|"$BIN_DIR/openharness.js")
         rm -f "$path"
-        ok "Removed old togetherlink shadow command: $path"
+        ok "Removed old openharness shadow command: $path"
         ;;
     esac
     return 0
   fi
 
-  if [ -f "$path" ] && grep -Fqs "$BIN_DIR/togetherlink.js" "$path"; then
+  if [ -f "$path" ] && grep -Fqs "$BIN_DIR/openharness.js" "$path"; then
     rm -f "$path"
-    ok "Removed old togetherlink shadow command: $path"
+    ok "Removed old openharness shadow command: $path"
   fi
 }
 
@@ -162,7 +162,7 @@ if LINK_DIR="$(find_writable_path_dir)"; then
           ;;
         *)
           links_skipped=$((links_skipped + 1))
-          info "Skipped $dest (already exists; remove it or put $BIN_DIR earlier on PATH to use togetherlink here)"
+          info "Skipped $dest (already exists; remove it or put $BIN_DIR earlier on PATH to use openharness here)"
           return 0
           ;;
       esac
@@ -172,7 +172,7 @@ if LINK_DIR="$(find_writable_path_dir)"; then
     links_changed=$((links_changed + 1))
   }
 
-  install_link togetherlink "$BIN_DIR/togetherlink"
+  install_link openharness "$BIN_DIR/openharness"
   install_link tclaude "$BIN_DIR/tclaude"
   install_link topencode "$BIN_DIR/topencode"
   install_link tcodex "$BIN_DIR/tcodex"
@@ -207,10 +207,10 @@ case ":$PATH:" in
       ok "PATH already configured in $SHELL_RC"
     else
       {
-        printf "\n# togetherlink\n"
+        printf "\n# openharness\n"
         printf "%s\n" "$path_line"
       } >> "$SHELL_RC"
-      ok "Added togetherlink to PATH in $SHELL_RC"
+      ok "Added openharness to PATH in $SHELL_RC"
     fi
 
     info "Restart your shell, or run this now:"
@@ -219,10 +219,10 @@ case ":$PATH:" in
 esac
 
 # Verify the install works right now if already on PATH, else with explicit PATH.
-if PATH="$BIN_DIR:$PATH" togetherlink --version >/dev/null 2>&1; then
-  ok "Verified: $(PATH="$BIN_DIR:$PATH" togetherlink --version)"
-  PATH="$BIN_DIR:$PATH" togetherlink __telemetry-install-completed >/dev/null 2>&1 || true
+if PATH="$BIN_DIR:$PATH" openharness --version >/dev/null 2>&1; then
+  ok "Verified: $(PATH="$BIN_DIR:$PATH" openharness --version)"
+  PATH="$BIN_DIR:$PATH" openharness __telemetry-install-completed >/dev/null 2>&1 || true
 fi
 
-bold "Done. Run \`togetherlink help\` to get started."
-info "On first run, togetherlink will ask for your Together API key (Enter to skip)."
+bold "Done. Run \`openharness help\` to get started."
+info "On first run, openharness will ask for your Together API key (Enter to skip)."

@@ -15,7 +15,7 @@
 
 ```text
 1. explicit --api-key flag
-2. ~/.togetherlink/config.json → apiKey (literal or "{env:TOGETHER_API_KEY}")
+2. ~/.openharness/config.json → apiKey (literal or "{env:TOGETHER_API_KEY}")
 3. process.env.TOGETHER_API_KEY
 ```
 
@@ -26,7 +26,7 @@ Used by: Claude, Codex, Pi, codex-app/ChatGPT Desktop, OpenCode `--provider toge
 ```text
 1. explicit --api-key flag
 2. process.env.OPENROUTER_API_KEY
-3. ~/.togetherlink/config.json → openrouterApiKey (literal or "{env:OPENROUTER_API_KEY}")
+3. ~/.openharness/config.json → openrouterApiKey (literal or "{env:OPENROUTER_API_KEY}")
 ```
 
 Used by: OpenCode `--provider openrouter`.
@@ -39,7 +39,7 @@ No API key. Optional `--base-url` only.
 
 ```text
 1. process.env.EXA_API_KEY
-2. ~/.togetherlink/config.json → exaApiKey
+2. ~/.openharness/config.json → exaApiKey
 ```
 
 Not required for launch. Used by Claude proxy web_search when set.

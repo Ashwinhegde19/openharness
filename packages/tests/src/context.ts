@@ -8,14 +8,14 @@ export async function createTestContext(): Promise<TestContext> {
   await mkdir(artifactsDir, { recursive: true });
   await mkdir(tmpDir, { recursive: true });
   const suiteTmpDir = await mkdtemp(path.join(tmpDir, "suite-"));
-  const togetherlinkHome = path.join(suiteTmpDir, "togetherlink-home");
-  await mkdir(togetherlinkHome, { recursive: true });
+  const openharnessHome = path.join(suiteTmpDir, "openharness-home");
+  await mkdir(openharnessHome, { recursive: true });
   return {
     repoRoot,
     cliBin,
     artifactsDir,
     tmpDir: suiteTmpDir,
-    togetherlinkHome,
+    openharnessHome,
     daemonPort: await findOpenPort(),
     results: [],
   };
@@ -25,8 +25,8 @@ export async function resetTmpDir(context: TestContext): Promise<void> {
   await stopContextDaemon(context);
   await rm(context.tmpDir, { recursive: true, force: true });
   await mkdir(context.tmpDir, { recursive: true });
-  if (context.togetherlinkHome) {
-    await mkdir(context.togetherlinkHome, { recursive: true });
+  if (context.openharnessHome) {
+    await mkdir(context.openharnessHome, { recursive: true });
   }
 }
 
@@ -48,10 +48,10 @@ async function findOpenPort(): Promise<number> {
 }
 
 async function stopContextDaemon(context: TestContext): Promise<void> {
-  if (!context.togetherlinkHome) {
+  if (!context.openharnessHome) {
     return;
   }
-  const raw = await readFile(path.join(context.togetherlinkHome, "daemon.pid"), "utf8").catch(
+  const raw = await readFile(path.join(context.openharnessHome, "daemon.pid"), "utf8").catch(
     () => undefined,
   );
   const pid = raw ? Number.parseInt(raw.trim(), 10) : NaN;

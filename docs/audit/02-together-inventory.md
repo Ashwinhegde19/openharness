@@ -29,15 +29,15 @@ Classification of Together-specific coupling. **Do not bulk-rename** before prov
 
 ## C. Branding / package identity (rename last — M6+)
 
-| Location                               | What              |
-| -------------------------------------- | ----------------- |
-| package names `@togetherlink/*`        | npm identity      |
-| bin `togetherlink`, aliases `tclaude`… | CLI names         |
-| `~/.togetherlink` home                 | paths             |
-| env `TOGETHERLINK_*`                   | env prefix        |
-| site assets / install origin           | distribution      |
-| banners "Routing … → Together AI"      | UX strings        |
-| telemetry events                       | product analytics |
+| Location                              | What              |
+| ------------------------------------- | ----------------- |
+| package names `@openharness/*`        | npm identity      |
+| bin `openharness`, aliases `tclaude`… | CLI names         |
+| `~/.openharness` home                 | paths             |
+| env `OPENHARNESS_*`                   | env prefix        |
+| site assets / install origin          | distribution      |
+| banners "Routing … → Together AI"     | UX strings        |
+| telemetry events                      | product analytics |
 
 ## D. Reusable protocol / lifecycle (keep; generalize inputs)
 
@@ -59,13 +59,13 @@ Classification of Together-specific coupling. **Do not bulk-rename** before prov
 
 ### Product control
 
-- `TOGETHERLINK_HOME`
-- `TOGETHERLINK_PORT` (default daemon **7878**)
-- `TOGETHERLINK_DEBUG`, `TOGETHERLINK_DEBUG_LOG`, `TOGETHERLINK_PERF`
-- `TOGETHERLINK_TELEMETRY_URL`, `TOGETHERLINK_MANIFEST_URL`, `TOGETHERLINK_VERSION`
-- Stream tuning: `TOGETHERLINK_CODEX_STREAM_*`, `TOGETHERLINK_VISION_FAILOVER_RACE_DELAY_MS`
-- Daemon TTL: `TOGETHERLINK_DAEMON_*`
-- Live tests: `TOGETHERLINK_LIVE_SMOKE`, `TOGETHERLINK_LIVE_MODELS_CHECK`
+- `OPENHARNESS_HOME`
+- `OPENHARNESS_PORT` (default daemon **7878**)
+- `OPENHARNESS_DEBUG`, `OPENHARNESS_DEBUG_LOG`, `OPENHARNESS_PERF`
+- `OPENHARNESS_TELEMETRY_URL`, `OPENHARNESS_MANIFEST_URL`, `OPENHARNESS_VERSION`
+- Stream tuning: `OPENHARNESS_CODEX_STREAM_*`, `OPENHARNESS_VISION_FAILOVER_RACE_DELAY_MS`
+- Daemon TTL: `OPENHARNESS_DAEMON_*`
+- Live tests: `OPENHARNESS_LIVE_SMOKE`, `OPENHARNESS_LIVE_MODELS_CHECK`
 
 ## F. Approximate hit density
 

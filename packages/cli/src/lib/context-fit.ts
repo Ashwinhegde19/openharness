@@ -1,4 +1,4 @@
-import type { ModelDefinition } from "@togetherlink/models";
+import type { ModelDefinition } from "@openharness/models";
 import { type ContextTrimTelemetryInfo, sendTelemetryEvent } from "./telemetry.js";
 
 /**
@@ -436,7 +436,7 @@ function finish(
 export function emitContextTrimAlarm(info: ContextTrimTelemetryInfo): void {
   const severity = info.hard ? "DROPPED A LARGE PORTION of" : "trimmed";
   process.stderr.write(
-    `togetherlink: ${severity} ${info.trimmedChars} chars of conversation context ` +
+    `openharness: ${severity} ${info.trimmedChars} chars of conversation context ` +
       `to fit <${info.model}> window (${info.path} path${info.action ? `, ${info.action}` : ""}) ` +
       `— if you see this often, report it\n`,
   );

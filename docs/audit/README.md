@@ -72,8 +72,8 @@ There is no CLI entry gate forcing a Together key. See [03-credential-flow.md](0
 
 ## Important confirmed findings
 
-1. **SQLite plaintext secrets — RESOLVED in M2 (2026-07-16)**: previously persisted `api_key`/`auth_token` in `~/.togetherlink/daemon.sqlite`. Now redacted to a placeholder, legacy rows are scrubbed + VACUUM on open, and daemon restart seals sessions. See `05-persistence.md` and `packages/tests/src/secret-persistence.test.ts`. No longer conflicts with SR-001 / ADR-0005.
-2. **Global config may store a literal API key** in `~/.togetherlink/config.json` (or `{env:TOGETHER_API_KEY}`).
+1. **SQLite plaintext secrets — RESOLVED in M2 (2026-07-16)**: previously persisted `api_key`/`auth_token` in `~/.openharness/daemon.sqlite`. Now redacted to a placeholder, legacy rows are scrubbed + VACUUM on open, and daemon restart seals sessions. See `05-persistence.md` and `packages/tests/src/secret-persistence.test.ts`. No longer conflicts with SR-001 / ADR-0005.
+2. **Global config may store a literal API key** in `~/.openharness/config.json` (or `{env:TOGETHER_API_KEY}`).
 3. **Upstream client is hard-coded** to `https://api.together.ai/v1` (`packages/models` + `together-client.ts`).
 4. **Harness adapter split already exists** (claude / codex / opencode / pi) — preserve; do not invent N×M integrations.
 5. **License mismatch — RESOLVED in M7**: `LICENSE` is MIT and `package.json` is now MIT — reconciled for the public alpha.

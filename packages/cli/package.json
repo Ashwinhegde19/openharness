@@ -1,6 +1,6 @@
 {
-  "name": "@togetherlink/cli",
-  "version": "0.5.26",
+  "name": "@openharness/cli",
+  "version": "0.1.0-alpha.1",
   "description": "Provider-neutral CLI for launching Claude Code, OpenCode, Codex, and Pi Code against selectable model providers",
   "license": "MIT",
   "bin": {
@@ -14,13 +14,13 @@
     "build": "tsc -p tsconfig.json && node -e \"require('node:fs').chmodSync('dist/bin/openharness.js', 0o755)\"",
     "dev": "pnpm build && sh -c 'node scripts/watch-bin-mode.mjs & tsc -p tsconfig.json --watch --preserveWatchOutput'",
     "watch": "pnpm dev",
-    "typecheck": "pnpm --filter @togetherlink/models build && tsc -p tsconfig.json --noEmit",
+    "typecheck": "pnpm --filter @openharness/models build && tsc -p tsconfig.json --noEmit",
     "prepack": "pnpm build",
     "test": "pnpm typecheck"
   },
   "dependencies": {
     "@clack/prompts": "^0.8.2",
-    "@togetherlink/models": "workspace:*"
+    "@openharness/models": "workspace:*"
   },
   "engines": {
     "node": ">=18"

@@ -26,7 +26,7 @@ type LiveModelCase = {
   name: string;
 };
 
-const maybeDescribe = process.env.TOGETHERLINK_LIVE_MODELS_CHECK === "1" ? describe : describe.skip;
+const maybeDescribe = process.env.OPENHARNESS_LIVE_MODELS_CHECK === "1" ? describe : describe.skip;
 
 maybeDescribe("live models check for Claude and Codex", () => {
   let context: TestContext;

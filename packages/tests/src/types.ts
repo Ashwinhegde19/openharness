@@ -25,7 +25,7 @@ export type TestContext = {
   cliBin: string;
   artifactsDir: string;
   tmpDir: string;
-  togetherlinkHome?: string;
+  openharnessHome?: string;
   daemonPort?: number;
   results: TestResult[];
 };

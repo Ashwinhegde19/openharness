@@ -1,14 +1,14 @@
 # Universal Harness Provider Layer
 
-> The repository and installed CLI binary are `openharness` — a provider-neutral fork of [TogetherLink](https://github.com/Nutlope/togetherlink).
+> The repository and installed CLI binary are `openharness` — a provider-neutral fork of [TogetherLink](https://github.com/Nutlope/openharness).
 
 Session-scoped compatibility launcher that connects supported coding harnesses to supported model providers without permanently modifying the harnesses' normal configuration.
 
 ## Document status
 
-- Status: Planning baseline + imported implementation
-- Version: 0.1
-- Last updated: 2026-07-16
+- Status: Provider-neutral fork (rebranded to openharness), M7 public alpha in progress
+- Version: 0.1.0-alpha.1
+- Last updated: 2026-07-17
 - Implementation baseline: TogetherLink (see [docs/UPSTREAM.md](docs/UPSTREAM.md))
 - Code layout: monorepo `packages/` at repository root
 - Code status: **M0–M6 done**; **M7 (public alpha) in progress** — see [docs/STATUS.md](docs/STATUS.md)
@@ -45,7 +45,7 @@ All product planning, ADRs, diagrams, and audit notes live under [`docs/`](docs/
 
 ### Architecture decision records
 
-- [ADR-0001: Fork TogetherLink](docs/adr/0001-fork-togetherlink.md)
+- [ADR-0001: Fork TogetherLink](docs/adr/0001-fork-openharness.md)
 - [ADR-0002: Provider-scoped models](docs/adr/0002-canonical-provider-model.md)
 - [ADR-0003: Session-only configuration](docs/adr/0003-session-only-configuration.md)
 - [ADR-0004: Local protocol proxy](docs/adr/0004-local-proxy-design.md)
@@ -55,7 +55,7 @@ All product planning, ADRs, diagrams, and audit notes live under [`docs/`](docs/
 ### Upstream baseline
 
 - [docs/UPSTREAM.md](docs/UPSTREAM.md) — pinned commit and remotes
-- [docs/UPSTREAM-TOGETHERLINK-README.md](docs/UPSTREAM-TOGETHERLINK-README.md) — original TogetherLink install/dev README
+- [docs/UPSTREAM-OPENHARNESS-README.md](docs/UPSTREAM-OPENHARNESS-README.md) — original TogetherLink install/dev README
 - [TESTING.md](TESTING.md) — upstream test guide (CLI)
 
 ## Codebase
@@ -70,7 +70,7 @@ docs/             Product docs, ADRs, diagrams, M0 audit
 
 ```bash
 pnpm install
-pnpm -F @togetherlink/cli build
+pnpm -F @openharness/cli build
 pnpm test
 ```
 
@@ -87,7 +87,7 @@ ollama pull llama3.2         # fetch a model
 
 # 2. Build and run this launcher
 pnpm install
-pnpm -F @togetherlink/cli build
+pnpm -F @openharness/cli build
 node packages/cli/dist/bin/openharness.js opencode
 ```
 
@@ -132,7 +132,7 @@ Compatibility is measured and published by capability level — not claimed for 
 
 ```text
 origin    https://github.com/Ashwinhegde19/openharness.git   # your product repo (push here)
-upstream  https://github.com/Nutlope/togetherlink.git        # fetch-only baseline
+upstream  https://github.com/Nutlope/openharness.git        # fetch-only baseline
 ```
 
 ## Documentation rules

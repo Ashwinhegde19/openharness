@@ -23,11 +23,11 @@ export type CodexAppSessionLock = {
 };
 
 export function appSessionLockPath(home: string): string {
-  return path.join(togetherlinkHomeDir(home), "codex-app", "session.json");
+  return path.join(openharnessHomeDir(home), "codex-app", "session.json");
 }
 
-function togetherlinkHomeDir(home: string): string {
-  return process.env.TOGETHERLINK_HOME || path.join(home, ".togetherlink");
+function openharnessHomeDir(home: string): string {
+  return process.env.OPENHARNESS_HOME || path.join(home, ".openharness");
 }
 
 export async function readAppSessionLock(home: string): Promise<CodexAppSessionLock | undefined> {
@@ -111,4 +111,4 @@ function isNodeError(err: unknown): err is NodeJS.ErrnoException {
   return err instanceof Error && "code" in err;
 }
 
-// avoid a dead-import lint once togetherlinkHomeDir is consolidated (see #7).
+// avoid a dead-import lint once openharnessHomeDir is consolidated (see #7).

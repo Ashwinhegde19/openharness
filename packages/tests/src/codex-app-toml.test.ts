@@ -6,7 +6,7 @@ import {
   upsertTopLevelTomlKeys,
   removeTopLevelTomlKeys,
   tomlString,
-} from "@togetherlink/cli/dist/lib/codex-app/toml.js";
+} from "@openharness/cli/dist/lib/codex-app/toml.js";
 
 const START = "# >>> openharness codex-app alpha >>>";
 const END = "# <<< openharness codex-app alpha <<<";
@@ -46,10 +46,10 @@ describe("codex-app/toml.ts — pure TOML preamble manipulation (#4)", () => {
     const preamble = 'model = "old"\nother = "keep"';
     const out = upsertTopLevelTomlKeys(preamble, {
       model: '"new"',
-      model_provider: '"togetherlink"',
+      model_provider: '"openharness"',
     });
     expect(out).toContain('model = "new"');
-    expect(out).toContain('model_provider = "togetherlink"');
+    expect(out).toContain('model_provider = "openharness"');
     expect(out).toContain('other = "keep"');
   });
 
@@ -62,7 +62,7 @@ describe("codex-app/toml.ts — pure TOML preamble manipulation (#4)", () => {
   });
 
   test("tomlString quotes a string value", () => {
-    expect(tomlString("togetherlink")).toBe('"togetherlink"');
+    expect(tomlString("openharness")).toBe('"openharness"');
     expect(tomlString('with "quotes"')).toBe('"with \\"quotes\\""');
   });
 

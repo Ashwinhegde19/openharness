@@ -1,7 +1,7 @@
 import { chmodSync, existsSync, watch } from "node:fs";
 import { dirname, resolve } from "node:path";
 
-const binPath = resolve("dist/bin/togetherlink.js");
+const binPath = resolve("dist/bin/openharness.js");
 const binDir = dirname(binPath);
 
 function chmodBin() {

@@ -7,7 +7,7 @@ import {
 } from "./defaults.js";
 import { runProxiedSession, type ProxiedSessionResult } from "../proxied-session.js";
 import { togetherEndpointConfig, type ProviderEndpointConfig } from "../provider/index.js";
-import type { ModelDefinition } from "@togetherlink/models";
+import type { ModelDefinition } from "@openharness/models";
 
 const CONFLICTING_ENV_KEYS = [
   "ANTHROPIC_API_KEY",
@@ -29,7 +29,7 @@ const CONFLICTING_ENV_KEYS = [
   "ANTHROPIC_CUSTOM_MODEL_OPTION_SUPPORTED_CAPABILITIES",
 ] as const;
 
-// Preserve Claude Code's native 32k cumulative-output guard. Togetherlink
+// Preserve Claude Code's native 32k cumulative-output guard. Openharness
 // independently caps ordinary upstream turns at 28k, while compaction keeps
 // the full budget requested by Claude Code.
 const DEFAULT_CLAUDE_CODE_MAX_OUTPUT_TOKENS = 32_000;

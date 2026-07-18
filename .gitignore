@@ -155,7 +155,7 @@ images-test/*
 
 /site/public/install.sh
 /site/public/latest.json
-/site/public/togetherlink.js
+/site/public/openharness.js
 
 MVP-PLAN.md
 

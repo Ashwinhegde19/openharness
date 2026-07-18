@@ -1,77 +1,77 @@
-# togetherlink
+# openharness
 
-> Use Together AI models in the coding-agent CLIs you already run — OpenCode, Claude Code, Codex CLI, and Pi Code. togetherlink injects Together settings for a single run so your normal tool configs stay untouched.
+> Use Together AI models in the coding-agent CLIs you already run — OpenCode, Claude Code, Codex CLI, and Pi Code. openharness injects Together settings for a single run so your normal tool configs stay untouched.
 
-togetherlink is an Apache-2.0 CLI router. Install once, then launch your agent with short commands (`tcodex`, `tclaude`, `topencode`, `tpi`). For Claude Code and Codex CLI it routes the agent's API traffic to Together AI through a local translation proxy; for OpenCode and Pi Code it injects ephemeral per-run config. The installed binary keeps itself up to date automatically from togetherlink.vercel.app.
+openharness is an Apache-2.0 CLI router. Install once, then launch your agent with short commands (`tcodex`, `tclaude`, `topencode`, `tpi`). For Claude Code and Codex CLI it routes the agent's API traffic to Together AI through a local translation proxy; for OpenCode and Pi Code it injects ephemeral per-run config. The installed binary keeps itself up to date automatically from openharness.vercel.app.
 
-This is the LLM-readable documentation file for the project. If you are an AI agent asked to install, configure, or use togetherlink (headless or interactive), read this file first. It covers installation, configuration, every command, the available models, headless/agentic usage patterns, how to keep the tool up to date, and the routing architecture.
+This is the LLM-readable documentation file for the project. If you are an AI agent asked to install, configure, or use openharness (headless or interactive), read this file first. It covers installation, configuration, every command, the available models, headless/agentic usage patterns, how to keep the tool up to date, and the routing architecture.
 
-- Project: https://github.com/Nutlope/togetherlink
-- Website: https://togetherlink.vercel.app
-- Installer: https://togetherlink.vercel.app/install.sh
-- Version manifest: https://togetherlink.vercel.app/latest.json
-- README: https://github.com/Nutlope/togetherlink#readme
-- This file: https://togetherlink.vercel.app/llms.txt
+- Project: https://github.com/Nutlope/openharness
+- Website: https://openharness.vercel.app
+- Installer: https://openharness.vercel.app/install.sh
+- Version manifest: https://openharness.vercel.app/latest.json
+- README: https://github.com/Nutlope/openharness#readme
+- This file: https://openharness.vercel.app/llms.txt
 
 ## Install
 
-One command installs the `togetherlink`, `tclaude`, `topencode`, `tcodex`, and `tpi` commands to `~/.togetherlink/bin/` and installs Bun for you if it isn't already present:
+One command installs the `openharness`, `tclaude`, `topencode`, `tcodex`, and `tpi` commands to `~/.openharness/bin/` and installs Bun for you if it isn't already present:
 
 ```
-curl -fsSL https://togetherlink.vercel.app/install.sh | sh
+curl -fsSL https://openharness.vercel.app/install.sh | sh
 ```
 
 After install, restart your shell (or run the `export PATH=...` line it prints) so the commands are on PATH. The install:
 
-- Downloads the self-contained JS bundle to `~/.togetherlink/bin/togetherlink.js`.
-- Writes shell wrappers (`togetherlink`, `tcodex`, `tclaude`, `topencode`, `tpi`) that run the bundle with `bun`.
+- Downloads the self-contained JS bundle to `~/.openharness/bin/openharness.js`.
+- Writes shell wrappers (`openharness`, `tcodex`, `tclaude`, `topencode`, `tpi`) that run the bundle with `bun`.
 - Links them into a writable directory on your PATH.
-- Does NOT install the underlying agent CLIs. If a tool is missing, togetherlink prints its official install command and exits.
+- Does NOT install the underlying agent CLIs. If a tool is missing, openharness prints its official install command and exits.
 
-To verify: `togetherlink --version`.
+To verify: `openharness --version`.
 
 ## Configure
 
 Before the first launch you need a Together API key (get one at https://api.together.ai/settings/api-keys):
 
 ```
-togetherlink configure
+openharness configure
 ```
 
-This stores your Together API key in `~/.togetherlink/` and optionally an Exa API key (https://exa.ai) that powers web-search emulation in Claude Code. Web search is optional — without it, searches return a clear "EXA_API_KEY not set" error instead of failing silently.
+This stores your Together API key in `~/.openharness/` and optionally an Exa API key (https://exa.ai) that powers web-search emulation in Claude Code. Web search is optional — without it, searches return a clear "EXA_API_KEY not set" error instead of failing silently.
 
 You can also set the key non-interactively:
 
 ```
 export TOGETHER_API_KEY=...
-togetherlink configure        # stores it (skip prompts with the env present)
+openharness configure        # stores it (skip prompts with the env present)
 ```
 
 The API key is required to actually route traffic; the installer lets you skip it (press Enter) and add it later.
 
 ## Commands
 
-Running `togetherlink` with no arguments opens an interactive launcher (requires a TTY) that lets you pick a tool. Run a tool directly with a subcommand:
+Running `openharness` with no arguments opens an interactive launcher (requires a TTY) that lets you pick a tool. Run a tool directly with a subcommand:
 
 ```
-togetherlink configure                      # set API keys
-togetherlink whoami                         # print your anonymous install id
-togetherlink --version | -v                 # print the version
-togetherlink help | --help | -h             # print this usage
+openharness configure                      # set API keys
+openharness whoami                         # print your anonymous install id
+openharness --version | -v                 # print the version
+openharness help | --help | -h             # print this usage
 
-togetherlink codex [...]        # alias: tcodex   (Codex CLI)
-togetherlink claude [...]       # alias: tclaude  (Claude Code)
-togetherlink pi [...]           # alias: tpi      (Pi Code)
-togetherlink opencode [...]     # alias: topencode (OpenCode)
+openharness codex [...]        # alias: tcodex   (Codex CLI)
+openharness claude [...]       # alias: tclaude  (Claude Code)
+openharness pi [...]           # alias: tpi      (Pi Code)
+openharness opencode [...]     # alias: topencode (OpenCode)
 
-togetherlink chatgpt [--model <model>] [--restore]   # alpha: ChatGPT Desktop (alias: codex-app)
+openharness chatgpt [--model <model>] [--restore]   # alpha: ChatGPT Desktop (alias: codex-app)
 
-togetherlink daemon stop                   # stop the background proxy daemon
+openharness daemon stop                   # stop the background proxy daemon
 ```
 
-Any arguments after the harness name are passed straight through to the underlying agent CLI. For example, `tcodex exec "fix the typo"` runs `codex exec` with togetherlink routing.
+Any arguments after the harness name are passed straight through to the underlying agent CLI. For example, `tcodex exec "fix the typo"` runs `codex exec` with openharness routing.
 
-Recognized togetherlink flags (parsed before the passthrough):
+Recognized openharness flags (parsed before the passthrough):
 
 - `--api-key <key>` — use this Together API key for the run.
 - `--main <model>` / `--model <model>` — select the model for this run.
@@ -82,31 +82,31 @@ Recognized togetherlink flags (parsed before the passthrough):
 
 ### ChatGPT Desktop App (alpha)
 
-`togetherlink chatgpt` persistently patches the ChatGPT Desktop config so the desktop app routes through Together. Unlike the CLI wrappers, this change stays active until you restore it:
+`openharness chatgpt` persistently patches the ChatGPT Desktop config so the desktop app routes through Together. Unlike the CLI wrappers, this change stays active until you restore it:
 
 ```
-togetherlink chatgpt                     # configure (patches config)
-togetherlink chatgpt --restore           # restore your OpenAI profile
-togetherlink chatgpt --model <model>     # use a specific model
+openharness chatgpt                     # configure (patches config)
+openharness chatgpt --restore           # restore your OpenAI profile
+openharness chatgpt --model <model>     # use a specific model
 ```
 
-Backups of your original config live under `~/.togetherlink/backup/codex-app/`.
+Backups of your original config live under `~/.openharness/backup/codex-app/`.
 
 ## Models
 
-togetherlink routes to a curated set of Together AI models. The default for Codex and Claude Code is GLM 5.2.
+openharness routes to a curated set of Together AI models. The default for Codex and Claude Code is GLM 5.2.
 
 ### Selecting a model (flag order matters)
 
-Put `--model` (or `--main` for Claude) BEFORE the harness subcommand — togetherlink consumes it there and routes to that model. Verified against the installed CLI (v0.5.26):
+Put `--model` (or `--main` for Claude) BEFORE the harness subcommand — openharness consumes it there and routes to that model. Verified against the installed CLI (v0.5.26):
 
 ```
-togetherlink --model moonshotai/Kimi-K2.6 codex exec "task"
-togetherlink --model moonshotai/Kimi-K2.6 claude -p "task"
-togetherlink --main together-kimi-k2-7-code claude -p "task"   # Claude matches alias OR id
+openharness --model moonshotai/Kimi-K2.6 codex exec "task"
+openharness --model moonshotai/Kimi-K2.6 claude -p "task"
+openharness --main together-kimi-k2-7-code claude -p "task"   # Claude matches alias OR id
 ```
 
-Do NOT put `--model` after the harness (e.g. `tcodex --model X` or `tclaude --model X`). The short aliases expand to `togetherlink <harness> ...`, so the flag lands after the harness name, goes to the agent's passthrough, and is then stripped — it is silently ignored and the run uses the default (GLM 5.2), not the model you asked for. Always use the long form with the flag first.
+Do NOT put `--model` after the harness (e.g. `tcodex --model X` or `tclaude --model X`). The short aliases expand to `openharness <harness> ...`, so the flag lands after the harness name, goes to the agent's passthrough, and is then stripped — it is silently ignored and the run uses the default (GLM 5.2), not the model you asked for. Always use the long form with the flag first.
 
 Selectable models (Together API id):
 
@@ -127,20 +127,20 @@ Both Claude Code and Codex CLI run headlessly (no TTY), so you can delegate code
 
 Both wrappers spawn the agent pointed at the local Together proxy and pass your flags through to the underlying binary. Always close stdin and capture stderr. To run a non-default model, put `--model <id>` before the harness (see Models above).
 
-### Prefer native subagents for delegated togetherlink runs
+### Prefer native subagents for delegated openharness runs
 
-If you are an orchestrating agent running inside Claude Code, Codex, or another CLI that has its own native subagent/delegation tool, prefer this pattern for non-trivial togetherlink work:
+If you are an orchestrating agent running inside Claude Code, Codex, or another CLI that has its own native subagent/delegation tool, prefer this pattern for non-trivial openharness work:
 
 1. Spawn a native subagent first.
-2. Tell that subagent to run the needed `togetherlink` command itself (`tcodex`, `tclaude`, `topencode`, or `tpi`) with a tight task, explicit files, `< /dev/null`, and the guardrails below.
-3. Have the subagent wait for the delegated togetherlink run, inspect its result/diff, and report only the useful summary back to you.
+2. Tell that subagent to run the needed `openharness` command itself (`tcodex`, `tclaude`, `topencode`, or `tpi`) with a tight task, explicit files, `< /dev/null`, and the guardrails below.
+3. Have the subagent wait for the delegated openharness run, inspect its result/diff, and report only the useful summary back to you.
 
-Do this instead of having the main orchestrating agent call `tcodex`/`tclaude` directly for every delegated edit. It keeps the main agent's context and inference budget focused on coordination/review, lets the native subagent own the details of launching and monitoring togetherlink, and works especially well when Claude Code delegates to a subagent that then uses Codex through `tcodex`.
+Do this instead of having the main orchestrating agent call `tcodex`/`tclaude` directly for every delegated edit. It keeps the main agent's context and inference budget focused on coordination/review, lets the native subagent own the details of launching and monitoring openharness, and works especially well when Claude Code delegates to a subagent that then uses Codex through `tcodex`.
 
 Codex CLI — non-interactive `exec` (the `-s workspace-write` sandbox grants write access; `exec` never prompts interactively):
 
 ```
-togetherlink codex exec -s workspace-write -C /abs/repo "<tight, single-concern task with explicit files + guardrails>" < /dev/null 2>&1
+openharness codex exec -s workspace-write -C /abs/repo "<tight, single-concern task with explicit files + guardrails>" < /dev/null 2>&1
 ```
 
 If the working directory isn't a git repo, codex refuses to start ("Not inside a trusted directory"); add `--skip-git-repo-check`, or run inside a git repo.
@@ -148,7 +148,7 @@ If the working directory isn't a git repo, codex refuses to start ("Not inside a
 Claude Code — print mode `-p` (runs once and exits). Add `--dangerously-skip-permissions` so a headless subagent never blocks on a permission prompt:
 
 ```
-togetherlink claude -p "<tight, single-concern task with explicit files + guardrails>" --dangerously-skip-permissions --output-format json < /dev/null 2>&1
+openharness claude -p "<tight, single-concern task with explicit files + guardrails>" --dangerously-skip-permissions --output-format json < /dev/null 2>&1
 ```
 
 Run it in the background, health-check at ~60s, review the diff, run lint, then commit. One file or one concern per task gives the cleanest reviews.
@@ -196,19 +196,19 @@ Per-task cost varies a lot with how verbose the agent is. Mechanical, well-scope
 5. Review the diff + re-run lint yourself before committing.
 6. To select a model, put `--model` (or `--main` for Claude) before the harness subcommand — after the harness it is silently ignored and the default runs.
 7. For Claude `-p`, pass `--dangerously-skip-permissions` so a headless subagent never blocks on a permission prompt. Codex `exec` is non-interactive by design; use `-s workspace-write` for edits and `--skip-git-repo-check` outside a git repo.
-8. If your current CLI has native subagents, delegate togetherlink launches to one of those subagents and let it return the result, instead of spending the main orchestrator's context on the full `tcodex`/`tclaude` run.
+8. If your current CLI has native subagents, delegate openharness launches to one of those subagents and let it return the result, instead of spending the main orchestrator's context on the full `tcodex`/`tclaude` run.
 
-## Keeping togetherlink up to date
+## Keeping openharness up to date
 
-The installed binary self-updates automatically in the background. The check is throttled and bounded, never throws, and runs before argument parsing — so even `togetherlink help` keeps an install current. The update is pulled from https://togetherlink.vercel.app/latest.json, which contains `version`, `url`, and `publishedAt`.
+The installed binary self-updates automatically in the background. The check is throttled and bounded, never throws, and runs before argument parsing — so even `openharness help` keeps an install current. The update is pulled from https://openharness.vercel.app/latest.json, which contains `version`, `url`, and `publishedAt`.
 
 To force a refresh, re-run the install one-liner:
 
 ```
-curl -fsSL https://togetherlink.vercel.app/install.sh | sh
+curl -fsSL https://openharness.vercel.app/install.sh | sh
 ```
 
-You can check the installed version with `togetherlink --version` and compare it against the published manifest at https://togetherlink.vercel.app/latest.json.
+You can check the installed version with `openharness --version` and compare it against the published manifest at https://openharness.vercel.app/latest.json.
 
 ## Architecture (how routing works)
 
@@ -221,27 +221,27 @@ There are two harness families behind the four tools:
 The daemon is one persistent local process shared by all proxied sessions. If you ever need to stop it manually:
 
 ```
-togetherlink daemon stop
+openharness daemon stop
 ```
 
-`togetherlink chatgpt` (alpha) is the exception: it persistently patches ChatGPT Desktop config to route through Together (instead of per-run injection), with backups under `~/.togetherlink/backup/codex-app/`. Restore with `togetherlink chatgpt --restore`.
+`openharness chatgpt` (alpha) is the exception: it persistently patches ChatGPT Desktop config to route through Together (instead of per-run injection), with backups under `~/.openharness/backup/codex-app/`. Restore with `openharness chatgpt --restore`.
 
 ## Troubleshooting
 
-- **"No Together API key found"** — run `togetherlink configure` or set `TOGETHER_API_KEY`.
-- **A tool command is not found** — togetherlink does not install the agent CLIs for you. It prints the official install command (e.g. `npm install -g @openai/codex`) and the docs link when the tool is missing; install it, then re-run.
-- **Web search fails in Claude Code** — set an Exa API key via `togetherlink configure`. Without it, searches return a clear "EXA_API_KEY not set" error.
+- **"No Together API key found"** — run `openharness configure` or set `TOGETHER_API_KEY`.
+- **A tool command is not found** — openharness does not install the agent CLIs for you. It prints the official install command (e.g. `npm install -g @openai/codex`) and the docs link when the tool is missing; install it, then re-run.
+- **Web search fails in Claude Code** — set an Exa API key via `openharness configure`. Without it, searches return a clear "EXA_API_KEY not set" error.
 - **Headless run hangs and produces no edits** — you forgot `< /dev/null`. Close stdin and relaunch; see the Headless usage section.
 - **Cost seems high for a small change** — the agent over-documented. Scope the task tighter and add a "don't over-explain" instruction.
-- **Want your normal config back** — stop using the wrappers. No agent config was saved, so your OpenCode / Claude Code / Codex CLI / Pi Code setup is untouched. For ChatGPT Desktop, run `togetherlink chatgpt --restore`.
+- **Want your normal config back** — stop using the wrappers. No agent config was saved, so your OpenCode / Claude Code / Codex CLI / Pi Code setup is untouched. For ChatGPT Desktop, run `openharness chatgpt --restore`.
 
 ## Links
 
-- [GitHub](https://github.com/Nutlope/togetherlink): source repository and issues
-- [README](https://github.com/Nutlope/togetherlink#readme): human-readable project overview
-- [Website](https://togetherlink.vercel.app): landing page
-- [Install script](https://togetherlink.vercel.app/install.sh): one-command installer (`curl -fsSL https://togetherlink.vercel.app/install.sh | sh`)
-- [Version manifest](https://togetherlink.vercel.app/latest.json): current published version and release timestamp
-- [This LLM docs file](https://togetherlink.vercel.app/llms.txt): the file you are reading now
+- [GitHub](https://github.com/Nutlope/openharness): source repository and issues
+- [README](https://github.com/Nutlope/openharness#readme): human-readable project overview
+- [Website](https://openharness.vercel.app): landing page
+- [Install script](https://openharness.vercel.app/install.sh): one-command installer (`curl -fsSL https://openharness.vercel.app/install.sh | sh`)
+- [Version manifest](https://openharness.vercel.app/latest.json): current published version and release timestamp
+- [This LLM docs file](https://openharness.vercel.app/llms.txt): the file you are reading now
 - [Together AI API keys](https://api.together.ai/settings/api-keys): get a key to route traffic
 - [llms.txt specification](https://llmstxt.org): the convention this file follows

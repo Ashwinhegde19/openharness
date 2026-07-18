@@ -1,6 +1,6 @@
 # Persistence classification
 
-Home root: `TOGETHERLINK_HOME` or `~/.togetherlink`.
+Home root: `OPENHARNESS_HOME` or `~/.openharness`.
 
 ## Classification legend
 
@@ -21,10 +21,10 @@ Home root: `TOGETHERLINK_HOME` or `~/.togetherlink`.
 | `daemon.sqlite` → `model_definition_json`           | N                                     | Includes public pricing                                              |
 | local-proxy-token file                              | **S**                                 | Session-scoped; restrict perms                                       |
 | `install-id`                                        | N                                     | Telemetry                                                            |
-| `bin/togetherlink.js`                               | N                                     | Install artifact                                                     |
+| `bin/openharness.js`                                | N                                     | Install artifact                                                     |
 | codex-app registration / session lock               | P (no API key)                        | **M2** redacts `apiKey`; rehydrates from env/global config on read   |
-| temp `togetherlink-codex-catalog-*`                 | N                                     | Model catalog only                                                   |
-| temp `togetherlink-pi-*` / `models.json`            | **S**                                 | Contains apiKey today                                                |
+| temp `openharness-codex-catalog-*`                  | N                                     | Model catalog only                                                   |
+| temp `openharness-pi-*` / `models.json`             | **S**                                 | Contains apiKey today                                                |
 | OpenCode user config                                | N                                     | Product claims no permanent write                                    |
 | Claude `~/.claude/settings.json`                    | N                                     | Not written by product                                               |
 | Codex user config                                   | P                                     | May ensure generic defaults (`user-config.ts`) — review for mutation |
@@ -66,4 +66,4 @@ File mode: attempts `chmod 0o600` on DB.
 
 ## Logging defaults
 
-Default logs should exclude prompts and keys. Debug paths exist (`TOGETHERLINK_DEBUG`). Canary redaction tests are required by product SECURITY.md and should be added if missing.
+Default logs should exclude prompts and keys. Debug paths exist (`OPENHARNESS_DEBUG`). Canary redaction tests are required by product SECURITY.md and should be added if missing.

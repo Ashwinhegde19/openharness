@@ -100,7 +100,7 @@ Exit:
 
 ### Daemon restart (normative)
 
-After a daemon process restart, credentialed proxied sessions **cannot** be transparently resumed. Active SQLite rows are sealed (marked ended) with usage totals preserved. Operators must re-launch the harness (or re-run `togetherlink codex-app` with a resolvable `TOGETHER_API_KEY` / global config).
+After a daemon process restart, credentialed proxied sessions **cannot** be transparently resumed. Active SQLite rows are sealed (marked ended) with usage totals preserved. Operators must re-launch the harness (or re-run `openharness codex-app` with a resolvable `TOGETHER_API_KEY` / global config).
 
 ## 6. M3 - OpenCode + Ollama
 
@@ -132,9 +132,9 @@ Exit:
 ### Usage
 
 ```bash
-togetherlink opencode --provider ollama
-togetherlink opencode --provider ollama --main llama3.2
-togetherlink --provider ollama --main llama3.2 opencode
+openharness opencode --provider ollama
+openharness opencode --provider ollama --main llama3.2
+openharness --provider ollama --main llama3.2 opencode
 ```
 
 ## 7. M4 - OpenCode + OpenRouter
@@ -163,8 +163,8 @@ Exit:
 
 ```bash
 export OPENROUTER_API_KEY=sk-or-...
-togetherlink opencode --provider openrouter
-togetherlink opencode --provider openrouter --main openai/gpt-4o-mini
+openharness opencode --provider openrouter
+openharness opencode --provider openrouter --main openai/gpt-4o-mini
 ```
 
 ## 8. M5 - Claude generalization
@@ -185,9 +185,9 @@ Work:
 ### Usage
 
 ```bash
-togetherlink claude --provider openrouter --main openai/gpt-4o-mini
-togetherlink claude --provider ollama --main llama3.2
-togetherlink claude                              # Together preset (default)
+openharness claude --provider openrouter --main openai/gpt-4o-mini
+openharness claude --provider ollama --main llama3.2
+openharness claude                              # Together preset (default)
 ```
 
 ## 9. M6 - Codex generalization
@@ -207,9 +207,9 @@ Work:
 ### Usage
 
 ```bash
-togetherlink codex --provider openrouter --main openai/gpt-4o-mini
-togetherlink codex --provider ollama --main llama3.2
-togetherlink codex                              # Together preset (default)
+openharness codex --provider openrouter --main openai/gpt-4o-mini
+openharness codex --provider ollama --main llama3.2
+openharness codex                              # Together preset (default)
 ```
 
 ## 10. M7 - Public alpha

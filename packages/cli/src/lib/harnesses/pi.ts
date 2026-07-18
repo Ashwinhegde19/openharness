@@ -12,7 +12,7 @@ const PI_SUPPORTED_MODELS = CODEX_SUPPORTED_MODELS.map((model) => model.id).join
 
 const VALUE_FLAGS = new Set(["--api-key", "--provider", "--model", "--models"]);
 
-function piArgsWithoutTogetherlinkOverrides(args: string[]): string[] {
+function piArgsWithoutOpenharnessOverrides(args: string[]): string[] {
   const sanitized: string[] = [];
   for (let i = 0; i < args.length; i += 1) {
     const arg = args[i];
@@ -91,7 +91,7 @@ export default defineHarness({
       );
     }
 
-    const agentDir = mkdtempSync(join(tmpdir(), "togetherlink-pi-"));
+    const agentDir = mkdtempSync(join(tmpdir(), "openharness-pi-"));
     const sessionDir =
       process.env.PI_CODING_AGENT_SESSION_DIR ??
       join(ctx.home || homedir(), ".pi", "agent", "sessions");
@@ -111,10 +111,10 @@ export default defineHarness({
       "--no-skills",
       "--no-prompt-templates",
       "--no-themes",
-      ...piArgsWithoutTogetherlinkOverrides(ctx.passthrough ?? []),
+      ...piArgsWithoutOpenharnessOverrides(ctx.passthrough ?? []),
     ];
 
-    if (process.env.TOGETHERLINK_DEBUG === "1") {
+    if (process.env.OPENHARNESS_DEBUG === "1") {
       process.stderr.write(`[openharness pi] provider: ${PI_PROVIDER_ID}\n`);
       process.stderr.write(`[openharness pi] model: ${selectedModel.id}\n`);
       process.stderr.write(`[openharness pi] models: ${PI_SUPPORTED_MODELS}\n`);

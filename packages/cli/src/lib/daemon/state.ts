@@ -1,5 +1,5 @@
 import { CostTracker } from "../cost.js";
-import type { ModelDefinition } from "@togetherlink/models";
+import type { ModelDefinition } from "@openharness/models";
 import type { ClaudeProxyOptions } from "../claude/proxy.js";
 import type { CodexProxyOptions } from "../codex/proxy.js";
 import type { ProxyPerfPayload } from "../proxy-perf.js";
@@ -21,15 +21,15 @@ const DEFAULT_NO_PID_SESSION_IDLE_TTL_MS = 24 * 60 * 60 * 1000;
 const DEFAULT_MAX_NO_PID_SESSIONS = 50;
 const DEFAULT_LAST_SEEN_PERSIST_INTERVAL_MS = 5 * 60 * 1000;
 const NO_PID_SESSION_IDLE_TTL_MS = envInt(
-  "TOGETHERLINK_DAEMON_NO_PID_SESSION_IDLE_TTL_MS",
+  "OPENHARNESS_DAEMON_NO_PID_SESSION_IDLE_TTL_MS",
   DEFAULT_NO_PID_SESSION_IDLE_TTL_MS,
 );
 const MAX_NO_PID_SESSIONS = envInt(
-  "TOGETHERLINK_DAEMON_MAX_NO_PID_SESSIONS",
+  "OPENHARNESS_DAEMON_MAX_NO_PID_SESSIONS",
   DEFAULT_MAX_NO_PID_SESSIONS,
 );
 const LAST_SEEN_PERSIST_INTERVAL_MS = envInt(
-  "TOGETHERLINK_DAEMON_LAST_SEEN_PERSIST_INTERVAL_MS",
+  "OPENHARNESS_DAEMON_LAST_SEEN_PERSIST_INTERVAL_MS",
   DEFAULT_LAST_SEEN_PERSIST_INTERVAL_MS,
 );
 
@@ -394,7 +394,7 @@ export function buildSession(req: RegisterSessionRequest): SessionState {
         : {}),
       ...(req.debug !== undefined ? { debug: req.debug } : {}),
       costTracker,
-      ...(process.env.TOGETHERLINK_PERF === "1"
+      ...(process.env.OPENHARNESS_PERF === "1"
         ? { perfSink: (payload: ProxyPerfPayload) => recordSessionProxyPerf(state, payload) }
         : {}),
     };

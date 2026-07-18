@@ -40,7 +40,7 @@ export function createProxyPerfTracer(
   fields: ProxyPerfFields = {},
   sink?: ProxyPerfSink,
 ): ProxyPerfTracer {
-  if (process.env.TOGETHERLINK_PERF !== "1") {
+  if (process.env.OPENHARNESS_PERF !== "1") {
     return disabledProxyPerfTracer;
   }
   const startedAt = performance.now();

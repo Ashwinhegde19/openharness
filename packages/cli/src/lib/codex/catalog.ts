@@ -1,4 +1,4 @@
-import { type ModelDefinition } from "@togetherlink/models";
+import { type ModelDefinition } from "@openharness/models";
 import { CODEX_SUPPORTED_MODELS } from "./defaults.js";
 
 const CODEX_BASE_INSTRUCTIONS =

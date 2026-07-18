@@ -1,6 +1,6 @@
-# Domain Glossary — togetherlink
+# Domain Glossary — openharness
 
-The ubiquitous language for the togetherlink CLI proxy/router. Terms here are
+The ubiquitous language for the openharness CLI proxy/router. Terms here are
 the canonical names for concepts in the codebase; architecture review and code
 discussion should use these words exactly. Architecture vocabulary (module,
 interface, depth, seam, adapter, leverage, locality) comes from the
@@ -8,7 +8,7 @@ interface, depth, seam, adapter, leverage, locality) comes from the
 
 ## Agents (the harness families)
 
-A **harness** is a Togetherlink adapter for one coding-agent CLI. There are two
+A **harness** is a Openharness adapter for one coding-agent CLI. There are two
 architecturally distinct families (recorded as `ProxiedHarness` and
 `SpawnedHarness` in `harness-types.ts`):
 
@@ -22,7 +22,7 @@ architecturally distinct families (recorded as `ProxiedHarness` and
   `models.json` from disk (Pi). No daemon, no proxy, no `CostTracker`, no
   keepalive.
 
-**Harness** — anything that adapts one agent CLI to Togetherlink. _Avoid:_
+**Harness** — anything that adapts one agent CLI to Openharness. _Avoid:_
 integration, connector.
 
 **HarnessId** — the enum of harness identifiers (`claude`, `codex`, `opencode`,
@@ -75,7 +75,7 @@ shared seam (not under any harness tree).
 proxied harness: model resolve → daemon → register → telemetry → banner →
 spawn → pid update → keepalive → await exit → cost print → deregister.
 
-**paths** (`paths.ts`, shared) — the single source of truth for the togetherlink
+**paths** (`paths.ts`, shared) — the single source of truth for the openharness
 home directory + process-liveness check. Replaces 4+3 duplicated copies.
 
 ## Sources of truth

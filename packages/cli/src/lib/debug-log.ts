@@ -5,7 +5,7 @@ let warnedAboutDebugLogWrite = false;
 export function writeDebugLogLine(line: string): void {
   process.stderr.write(line);
 
-  const logPath = process.env.TOGETHERLINK_DEBUG_LOG;
+  const logPath = process.env.OPENHARNESS_DEBUG_LOG;
   if (!logPath) {
     return;
   }

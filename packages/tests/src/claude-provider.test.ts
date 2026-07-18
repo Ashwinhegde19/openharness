@@ -16,7 +16,7 @@ import {
 import { buildClaudeEnv } from "../../cli/src/lib/claude/core.js";
 import { resolveTargetModel } from "../../cli/src/lib/claude/translate-response.js";
 import { peelProductFlags } from "../../cli/src/lib/cli-flags.js";
-import type { ModelDefinition } from "@togetherlink/models";
+import type { ModelDefinition } from "@openharness/models";
 
 describe("Claude multi-provider helpers (M5)", () => {
   test("Claude default provider remains Together for backward compatibility", () => {

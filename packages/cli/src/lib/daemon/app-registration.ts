@@ -1,7 +1,7 @@
 import { mkdir, readFile, rename, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import type { RegisterSessionRequest } from "./state.js";
-import { togetherlinkHome } from "../paths.js";
+import { openharnessHome } from "../paths.js";
 import { withoutPersistedSecrets } from "./storage.js";
 import { resolveTogetherApiKey } from "../together-core.js";
 
@@ -18,13 +18,13 @@ const REGISTRATION_FILE = "registration.json";
  * daemon rebuild the session on demand; the provider API key is re-resolved
  * from the environment / global config at read time (M2 — no plaintext keys).
  */
-export function appRegistrationPath(home = togetherlinkHome()): string {
+export function appRegistrationPath(home = openharnessHome()): string {
   return path.join(home, "codex-app", REGISTRATION_FILE);
 }
 
 export async function writeAppRegistration(
   registration: RegisterSessionRequest,
-  home = togetherlinkHome(),
+  home = openharnessHome(),
 ): Promise<void> {
   const file = appRegistrationPath(home);
   await mkdir(path.dirname(file), { recursive: true });
@@ -40,7 +40,7 @@ export async function writeAppRegistration(
   await rename(tmp, file);
 }
 
-export async function clearAppRegistration(home = togetherlinkHome()): Promise<void> {
+export async function clearAppRegistration(home = openharnessHome()): Promise<void> {
   await rm(appRegistrationPath(home), { force: true });
 }
 
@@ -51,7 +51,7 @@ export async function clearAppRegistration(home = togetherlinkHome()): Promise<v
  * return undefined; the next `openharness codex-app` run rewrites the file.
  */
 export async function readAppRegistration(
-  home = togetherlinkHome(),
+  home = openharnessHome(),
 ): Promise<RegisterSessionRequest | undefined> {
   let raw: string;
   try {

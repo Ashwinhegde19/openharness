@@ -4,7 +4,7 @@ import {
   VISION_PRIMARY,
   VISION_PROMPT,
   type ModelDefinition,
-} from "@togetherlink/models";
+} from "@openharness/models";
 
 export const OPENCODE_PROVIDER_ID = "togetherai";
 

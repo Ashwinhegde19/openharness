@@ -19,12 +19,12 @@ export type GlobalConfig = {
   exaApiKey: string;
 };
 
-export function togetherlinkHome(home = os.homedir()): string {
-  return path.join(home, ".togetherlink");
+export function openharnessHome(home = os.homedir()): string {
+  return path.join(home, ".openharness");
 }
 
 function globalConfigPath(home = os.homedir()): string {
-  return path.join(togetherlinkHome(home), "config.json");
+  return path.join(openharnessHome(home), "config.json");
 }
 
 export async function readGlobalConfig(home = os.homedir()): Promise<GlobalConfig> {

@@ -2,10 +2,10 @@ import { createFileRoute } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { useEffect, useRef, useState } from "react";
 
-const installCommand = "curl -fsSL https://togetherlink.vercel.app/install.sh | sh";
-const githubUrl = "https://github.com/Nutlope/togetherlink";
+const installCommand = "curl -fsSL https://openharness.vercel.app/install.sh | sh";
+const githubUrl = "https://github.com/Nutlope/openharness";
 const togetherReferralUrl =
-  "https://togetherai.link/?utm_source=togetherlink&utm_medium=referral&utm_campaign=example-app";
+  "https://togetherai.link/?utm_source=openharness&utm_medium=referral&utm_campaign=example-app";
 
 const features = [
   {
@@ -88,24 +88,24 @@ const heroToolPositions = [
 ];
 
 const explicitCommands = [
-  "togetherlink opencode",
-  "togetherlink claude",
-  "togetherlink codex",
-  "togetherlink pi",
+  "openharness opencode",
+  "openharness claude",
+  "openharness codex",
+  "openharness pi",
 ];
 
 const codexAppCommands = [
   {
-    command: "togetherlink chatgpt",
+    command: "openharness chatgpt",
     label: "Configure",
     description:
       "Patches ChatGPT Desktop config to route through Together. The change stays active until you restore.",
   },
   {
-    command: "togetherlink chatgpt --restore",
+    command: "openharness chatgpt --restore",
     label: "Restore",
     description:
-      "Brings back your OpenAI / ChatGPT subscription profile and removes the togetherlink config.",
+      "Brings back your OpenAI / ChatGPT subscription profile and removes the openharness config.",
   },
 ];
 
@@ -200,11 +200,11 @@ function Home() {
         <div className="flex items-center gap-2 text-base font-semibold text-ink">
           <img
             className="block size-[22px]"
-            src="/togetherlink-logo.svg"
+            src="/openharness-logo.svg"
             alt=""
             aria-hidden="true"
           />
-          togetherlink
+          openharness
         </div>
         <nav className="ml-auto flex gap-[22px] text-sm font-medium text-muted max-[520px]:ml-0 max-[520px]:basis-full max-[520px]:gap-[18px]">
           <a className="transition-colors hover:text-ink" href={githubUrl}>
@@ -247,7 +247,7 @@ function Home() {
           <div className="relative z-10 flex size-[134px] flex-col items-center justify-center rounded-full bg-white text-ink shadow-[0_1px_2px_rgba(10,10,10,.04),0_24px_70px_-28px_rgba(10,10,10,.32),inset_0_0_0_1px_rgba(229,231,235,.96)]">
             <img
               className="mb-1 size-[42px]"
-              src="/togetherlink-logo.svg"
+              src="/openharness-logo.svg"
               alt=""
               aria-hidden="true"
             />
@@ -407,7 +407,7 @@ function Home() {
             <span>
               Configure stays active until you restore. Backups live under{" "}
               <code className="rounded-md border border-amber-300 bg-white px-[7px] py-0.5 font-mono text-[12px] text-ink">
-                ~/.togetherlink/backup/codex-app/
+                ~/.openharness/backup/codex-app/
               </code>
               .
             </span>
@@ -433,14 +433,14 @@ function Home() {
           </button>
         </div>
         <Step number="1">
-          Install with the one-liner above. It drops the binary at <code>~/.togetherlink/bin/</code>{" "}
-          and adds <code>togetherlink</code>, <code>tclaude</code>, <code>topencode</code>,{" "}
+          Install with the one-liner above. It drops the binary at <code>~/.openharness/bin/</code>{" "}
+          and adds <code>openharness</code>, <code>tclaude</code>, <code>topencode</code>,{" "}
           <code>tcodex</code>, and <code>tpi</code>.
         </Step>
         <Step number="2">
           Run <code>topencode</code>, <code>tclaude</code>, or <code>tcodex</code>, or{" "}
-          <code>tpi</code>. For the ChatGPT desktop app run <code>togetherlink chatgpt</code>{" "}
-          (alpha), and restore it with <code>togetherlink chatgpt --restore</code>. On first launch
+          <code>tpi</code>. For the ChatGPT desktop app run <code>openharness chatgpt</code>{" "}
+          (alpha), and restore it with <code>openharness chatgpt --restore</code>. On first launch
           it asks once for your Together API key - press Enter to skip and add it later.
         </Step>
         <Step number="3">
@@ -566,7 +566,7 @@ function formatReleaseAge(publishedAt: string | undefined) {
 function InstallCommandText() {
   return (
     <>
-      curl -fsSL https://togetherlink.vercel.app/
+      curl -fsSL https://openharness.vercel.app/
       <wbr />
       install.sh | sh
     </>

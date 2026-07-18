@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { type ServerResponse } from "node:http";
-import { type ModelDefinition } from "@togetherlink/models";
+import { type ModelDefinition } from "@openharness/models";
 import type { CostTracker } from "../cost.js";
 import { runNativeWebSearchCall } from "../native-web-search.js";
 import { writeProxyDebugLog } from "../proxy-debug.js";
@@ -722,7 +722,7 @@ async function* parseSseChunks(body: ReadableStream<Uint8Array>): AsyncGenerator
 }
 
 function codexStreamIdleTimeoutMs(): number {
-  const raw = process.env.TOGETHERLINK_CODEX_STREAM_IDLE_TIMEOUT_MS;
+  const raw = process.env.OPENHARNESS_CODEX_STREAM_IDLE_TIMEOUT_MS;
   const parsed = raw ? Number.parseInt(raw, 10) : NaN;
   return Number.isFinite(parsed) && parsed > 0
     ? Math.max(100, parsed)
@@ -730,7 +730,7 @@ function codexStreamIdleTimeoutMs(): number {
 }
 
 function codexStreamTurnTimeoutMs(): number {
-  const raw = process.env.TOGETHERLINK_CODEX_STREAM_TURN_TIMEOUT_MS;
+  const raw = process.env.OPENHARNESS_CODEX_STREAM_TURN_TIMEOUT_MS;
   const parsed = raw ? Number.parseInt(raw, 10) : NaN;
   return Number.isFinite(parsed) && parsed > 0
     ? Math.max(100, parsed)
@@ -738,7 +738,7 @@ function codexStreamTurnTimeoutMs(): number {
 }
 
 function codexStreamIdleRetries(): number {
-  const raw = process.env.TOGETHERLINK_CODEX_STREAM_IDLE_RETRIES;
+  const raw = process.env.OPENHARNESS_CODEX_STREAM_IDLE_RETRIES;
   const parsed = raw ? Number.parseInt(raw, 10) : NaN;
   return Number.isFinite(parsed) && parsed >= 0
     ? Math.floor(parsed)

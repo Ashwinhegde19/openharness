@@ -95,13 +95,13 @@ export async function runCodexAppCommand(ctx: HarnessContext): Promise<HarnessRe
     targetModelId: selectedModel.definition.id,
     modelName: selectedModel.definition.name,
     modelDefinition: selectedModel.definition,
-    ...(process.env.TOGETHERLINK_DEBUG === "1" ? { debug: true } : {}),
+    ...(process.env.OPENHARNESS_DEBUG === "1" ? { debug: true } : {}),
   };
   await registerDaemonSession(proxyUrl, registration);
   // This command exits after configuring, so no launcher stays alive to
   // re-register the session. Persist the register body so the daemon can
   // rebuild the session on demand (restart, idle reap) from disk.
-  await writeAppRegistration(registration, togetherlinkHomeDir(ctx.home));
+  await writeAppRegistration(registration, openharnessHomeDir(ctx.home));
 
   const configPath = codexConfigPath(ctx.home);
   const backup = await backupCodexAppConfig(ctx.home, configPath);
@@ -109,7 +109,7 @@ export async function runCodexAppCommand(ctx: HarnessContext): Promise<HarnessRe
   const next = buildCodexAppConfig(existing ?? "", {
     modelId: selectedModel.definition.id,
     providerId: CODEX_APP_PROVIDER_ID,
-    providerName: "Togetherlink",
+    providerName: "Openharness",
     baseUrl: `${agentProxyUrl}/v1`,
     bearerToken: authToken,
     catalogPath,
@@ -151,7 +151,7 @@ export async function runCodexAppCommand(ctx: HarnessContext): Promise<HarnessRe
     },
   });
   const intro = [
-    "ChatGPT App profile changed to Togetherlink. (alpha)",
+    "ChatGPT App profile changed to Openharness. (alpha)",
     `Model: ${selectedModel.definition.name}`,
     "Start a task or open a repository in ChatGPT App as usual.",
     "Restore your previous ChatGPT App profile with: openharness chatgpt --restore",
@@ -218,7 +218,7 @@ export function buildCodexAppConfig(
     'wire_api = "responses"',
     "# ChatGPT Desktop currently gates its model picker on provider auth state.",
     "# Setting this true is a Desktop workaround for custom providers; the",
-    "# actual model requests still go to the local Togetherlink base_url above.",
+    "# actual model requests still go to the local Openharness base_url above.",
     "# See https://github.com/openai/codex/issues/10867",
     `requires_openai_auth = ${CODEX_APP_REQUIRES_OPENAI_AUTH_WORKAROUND ? "true" : "false"}`,
     CODEX_APP_CONFIG_MARKER_END,
@@ -252,7 +252,7 @@ async function restoreCodexApp(home: string): Promise<HarnessResult> {
   await rm(appSessionLockPath(home), { force: true });
   // Drop the persisted registration so the daemon stops lazily resurrecting
   // the codex-app session after the user restores their original profile.
-  await clearAppRegistration(togetherlinkHomeDir(home));
+  await clearAppRegistration(openharnessHomeDir(home));
   // Restore should also drop the models cache: a stale OpenAI-only cache left
   // behind by a openharness session would make Codex show "Unknown model"
   // warnings for the user's real (restored) model until the cache expires.
@@ -360,14 +360,14 @@ function sleep(ms: number): Promise<void> {
 
 function backupDir(home: string): string {
   return path.join(
-    process.env.TOGETHERLINK_HOME || path.join(home, ".togetherlink"),
+    process.env.OPENHARNESS_HOME || path.join(home, ".openharness"),
     "backup",
     "codex-app",
   );
 }
 
 function modelCatalogPath(home: string): string {
-  return path.join(home, ".codex", "togetherlink-codex-app-models.json");
+  return path.join(home, ".codex", "openharness-codex-app-models.json");
 }
 
 /**
@@ -388,8 +388,8 @@ async function bustStaleModelsCache(home: string): Promise<void> {
   }
 }
 
-function togetherlinkHomeDir(home: string): string {
-  return process.env.TOGETHERLINK_HOME || path.join(home, ".togetherlink");
+function openharnessHomeDir(home: string): string {
+  return process.env.OPENHARNESS_HOME || path.join(home, ".openharness");
 }
 
 function codexAppSessionToken(authToken: string): string {
