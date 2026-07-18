@@ -157,7 +157,7 @@ Exit:
 - [x] unit coverage for preset, discovery, merge, OpenCode config;
 - [ ] live text/stream/tool round trip for one model (needs `OPENROUTER_API_KEY` + opencode);
 - [x] redaction path inherits M2 (keys not in SQLite);
-- [ ] formal compatibility matrix entry (publish with alpha).
+- [x] formal compatibility matrix entry — published at `docs/compatibility-matrix.md` (validated in CI).
 
 ### Usage
 
@@ -180,7 +180,7 @@ Work:
 - [x] multi-provider launch + model alias synthesis;
 - [x] cloud destination warning for OpenRouter;
 - [ ] live standard coding task evidence on CI (optional; needs key + claude binary);
-- [ ] formal level-3 matrix entry.
+- [x] formal matrix entry published at `docs/compatibility-matrix.md` (Claude OpenRouter/Ollama = implemented, unit-tested); level-3 live evidence still optional (see above).
 
 ### Usage
 
@@ -202,7 +202,7 @@ Work:
 - [x] multi-provider launch + model catalog synthesis;
 - [x] provider-scoped credentials / cloud warning;
 - [ ] live standard coding task evidence on CI (optional);
-- [ ] formal level 2/3 matrix entry.
+- [x] formal matrix entry published at `docs/compatibility-matrix.md` (Codex OpenRouter/Ollama = implemented, unit-tested); level 2/3 live evidence still optional (see above).
 
 ### Usage
 

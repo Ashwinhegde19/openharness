@@ -182,7 +182,7 @@ Legend: ✅ launch path implemented (offline unit-tested). Live E2E with real bi
 | Branding `togetherlink` → `openharness`           | Resolved | Renamed in M7 (CLI binary + doctor/README/STATUS branding)                              |
 | Live multi-provider CI evidence                   | Medium   | Needs secrets + harness binaries                                                        |
 | Compatibility matrix published/validated          | Resolved | validated in CI (`pnpm matrix:validate`) + rendered to `docs/compatibility-matrix.md`   |
-| Audit README “important findings” partially stale | Low      | e.g. SQLite secrets fixed in M2                                                         |
+| Audit README “important findings” partially stale | Resolved | SQLite (#1) + license (#5) findings annotated as resolved in M2/M7                      |
 
 ---
 
