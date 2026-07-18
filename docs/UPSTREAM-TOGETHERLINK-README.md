@@ -1,6 +1,6 @@
 # openharness
 
-[![Live Agent Gauntlet](https://github.com/Nutlope/openharness/actions/workflows/live-agent-gauntlet.yml/badge.svg?branch=main)](https://github.com/Nutlope/openharness/actions/workflows/live-agent-gauntlet.yml)
+[![Live Agent Gauntlet](https://github.com/Nutlope/togetherlink/actions/workflows/live-agent-gauntlet.yml/badge.svg?branch=main)](https://github.com/Nutlope/togetherlink/actions/workflows/live-agent-gauntlet.yml)
 
 ![TogetherLink hero](assets/openharness-hero.png)
 

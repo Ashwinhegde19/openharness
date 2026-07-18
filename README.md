@@ -1,6 +1,6 @@
 # Universal Harness Provider Layer
 
-> The repository and installed CLI binary are `openharness` — a provider-neutral fork of [TogetherLink](https://github.com/Nutlope/openharness).
+> The repository and installed CLI binary are `openharness` — a provider-neutral fork of [TogetherLink](https://github.com/Nutlope/togetherlink).
 
 Session-scoped compatibility launcher that connects supported coding harnesses to supported model providers without permanently modifying the harnesses' normal configuration.
 
@@ -132,7 +132,7 @@ Compatibility is measured and published by capability level — not claimed for 
 
 ```text
 origin    https://github.com/Ashwinhegde19/openharness.git   # your product repo (push here)
-upstream  https://github.com/Nutlope/openharness.git        # fetch-only baseline
+upstream  https://github.com/Nutlope/togetherlink.git        # fetch-only baseline
 ```
 
 ## Documentation rules

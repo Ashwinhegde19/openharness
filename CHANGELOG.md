@@ -5,8 +5,8 @@ All notable changes to the CLI are recorded here. The format is based on
 source of truth in the root `package.json`.
 
 The repository and installed CLI binary are **openharness** — a provider-neutral
-fork of [TogetherLink](https://github.com/Nutlope/openharness). The binary was
-renamed from `openharness` to `openharness` during M7.
+fork of [TogetherLink](https://github.com/Nutlope/togetherlink). The binary was
+renamed from `togetherlink` to `openharness` during M7.
 
 ## [0.1.0-alpha.1] — 2026-07-17 (public alpha · M7 in progress)
 

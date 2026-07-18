@@ -6,11 +6,11 @@ openharness is an Apache-2.0 CLI router. Install once, then launch your agent wi
 
 This is the LLM-readable documentation file for the project. If you are an AI agent asked to install, configure, or use openharness (headless or interactive), read this file first. It covers installation, configuration, every command, the available models, headless/agentic usage patterns, how to keep the tool up to date, and the routing architecture.
 
-- Project: https://github.com/Nutlope/openharness
+- Project: https://github.com/Nutlope/togetherlink
 - Website: https://openharness.vercel.app
 - Installer: https://openharness.vercel.app/install.sh
 - Version manifest: https://openharness.vercel.app/latest.json
-- README: https://github.com/Nutlope/openharness#readme
+- README: https://github.com/Nutlope/togetherlink#readme
 - This file: https://openharness.vercel.app/llms.txt
 
 ## Install
@@ -237,8 +237,8 @@ openharness daemon stop
 
 ## Links
 
-- [GitHub](https://github.com/Nutlope/openharness): source repository and issues
-- [README](https://github.com/Nutlope/openharness#readme): human-readable project overview
+- [GitHub](https://github.com/Nutlope/togetherlink): source repository and issues
+- [README](https://github.com/Nutlope/togetherlink#readme): human-readable project overview
 - [Website](https://openharness.vercel.app): landing page
 - [Install script](https://openharness.vercel.app/install.sh): one-command installer (`curl -fsSL https://openharness.vercel.app/install.sh | sh`)
 - [Version manifest](https://openharness.vercel.app/latest.json): current published version and release timestamp

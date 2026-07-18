@@ -1,6 +1,6 @@
 # Upstream baseline
 
-- Source: https://github.com/Nutlope/openharness
+- Source: https://github.com/Nutlope/togetherlink
 - Optional mirror fork: https://github.com/Ashwinhegde19/openharness
 - Pinned commit: `9f56ed93b4b0d73d7a96bc70574851e21a46cdf7`
 - Version at pin: 0.5.26
@@ -18,7 +18,7 @@ This repository is configured with:
 
 ```text
 origin    https://github.com/Ashwinhegde19/openharness.git
-upstream  https://github.com/Nutlope/openharness.git
+upstream  https://github.com/Nutlope/togetherlink.git
 ```
 
 Fetch upstream updates without merging blindly:

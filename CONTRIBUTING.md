@@ -1,7 +1,7 @@
 # Contributing
 
 Thanks for helping build this project. It is a fork of
-[TogetherLink](https://github.com/Nutlope/openharness) generalized into a
+[TogetherLink](https://github.com/Nutlope/togetherlink) generalized into a
 provider-neutral launcher; see [`docs/UPSTREAM.md`](docs/UPSTREAM.md) for the
 pinned baseline and the relationship between the two repos.
 

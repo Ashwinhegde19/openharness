@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import { useEffect, useRef, useState } from "react";
 
 const installCommand = "curl -fsSL https://openharness.vercel.app/install.sh | sh";
-const githubUrl = "https://github.com/Nutlope/openharness";
+const githubUrl = "https://github.com/Nutlope/togetherlink";
 const togetherReferralUrl =
   "https://togetherai.link/?utm_source=openharness&utm_medium=referral&utm_campaign=example-app";
 
