@@ -55,7 +55,7 @@ All product planning, ADRs, diagrams, and audit notes live under [`docs/`](docs/
 ### Upstream baseline
 
 - [docs/UPSTREAM.md](docs/UPSTREAM.md) — pinned commit and remotes
-- [docs/UPSTREAM-OPENHARNESS-README.md](docs/UPSTREAM-OPENHARNESS-README.md) — original TogetherLink install/dev README
+- [docs/UPSTREAM-TOGETHERLINK-README.md](docs/UPSTREAM-TOGETHERLINK-README.md) — original TogetherLink install/dev README
 - [TESTING.md](TESTING.md) — upstream test guide (CLI)
 
 ## Codebase

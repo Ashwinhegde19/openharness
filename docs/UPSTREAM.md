@@ -9,7 +9,7 @@
 
 Planning docs live under [`docs/`](./). Original TogetherLink CLI README:
 
-- [UPSTREAM-OPENHARNESS-README.md](UPSTREAM-OPENHARNESS-README.md)
+- [UPSTREAM-TOGETHERLINK-README.md](UPSTREAM-TOGETHERLINK-README.md)
 - M0 audit: [audit/README.md](audit/README.md)
 
 ## Git remotes
