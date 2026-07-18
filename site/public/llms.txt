@@ -2,7 +2,7 @@
 
 > Use Together AI models in the coding-agent CLIs you already run — OpenCode, Claude Code, Codex CLI, and Pi Code. openharness injects Together settings for a single run so your normal tool configs stay untouched.
 
-openharness is an Apache-2.0 CLI router. Install once, then launch your agent with short commands (`tcodex`, `tclaude`, `topencode`, `tpi`). For Claude Code and Codex CLI it routes the agent's API traffic to Together AI through a local translation proxy; for OpenCode and Pi Code it injects ephemeral per-run config. The installed binary keeps itself up to date automatically from openharness.vercel.app.
+openharness is an Apache-2.0 CLI router. Install once, then launch your agent with short commands (`ohcodex`, `ohclaude`, `ohopencode`, `ohpi`). For Claude Code and Codex CLI it routes the agent's API traffic to Together AI through a local translation proxy; for OpenCode and Pi Code it injects ephemeral per-run config. The installed binary keeps itself up to date automatically from openharness.vercel.app.
 
 This is the LLM-readable documentation file for the project. If you are an AI agent asked to install, configure, or use openharness (headless or interactive), read this file first. It covers installation, configuration, every command, the available models, headless/agentic usage patterns, how to keep the tool up to date, and the routing architecture.
 
@@ -15,7 +15,7 @@ This is the LLM-readable documentation file for the project. If you are an AI ag
 
 ## Install
 
-One command installs the `openharness`, `tclaude`, `topencode`, `tcodex`, and `tpi` commands to `~/.openharness/bin/` and installs Bun for you if it isn't already present:
+One command installs the `openharness`, `ohclaude`, `ohopencode`, `ohcodex`, and `ohpi` commands to `~/.openharness/bin/` and installs Bun for you if it isn't already present:
 
 ```
 curl -fsSL https://openharness.vercel.app/install.sh | sh
@@ -24,7 +24,7 @@ curl -fsSL https://openharness.vercel.app/install.sh | sh
 After install, restart your shell (or run the `export PATH=...` line it prints) so the commands are on PATH. The install:
 
 - Downloads the self-contained JS bundle to `~/.openharness/bin/openharness.js`.
-- Writes shell wrappers (`openharness`, `tcodex`, `tclaude`, `topencode`, `tpi`) that run the bundle with `bun`.
+- Writes shell wrappers (`openharness`, `ohcodex`, `ohclaude`, `ohopencode`, `ohpi`) that run the bundle with `bun`.
 - Links them into a writable directory on your PATH.
 - Does NOT install the underlying agent CLIs. If a tool is missing, openharness prints its official install command and exits.
 
@@ -59,17 +59,17 @@ openharness whoami                         # print your anonymous install id
 openharness --version | -v                 # print the version
 openharness help | --help | -h             # print this usage
 
-openharness codex [...]        # alias: tcodex   (Codex CLI)
-openharness claude [...]       # alias: tclaude  (Claude Code)
-openharness pi [...]           # alias: tpi      (Pi Code)
-openharness opencode [...]     # alias: topencode (OpenCode)
+openharness codex [...]        # alias: ohcodex   (Codex CLI)
+openharness claude [...]       # alias: ohclaude  (Claude Code)
+openharness pi [...]           # alias: ohpi      (Pi Code)
+openharness opencode [...]     # alias: ohopencode (OpenCode)
 
 openharness chatgpt [--model <model>] [--restore]   # alpha: ChatGPT Desktop (alias: codex-app)
 
 openharness daemon stop                   # stop the background proxy daemon
 ```
 
-Any arguments after the harness name are passed straight through to the underlying agent CLI. For example, `tcodex exec "fix the typo"` runs `codex exec` with openharness routing.
+Any arguments after the harness name are passed straight through to the underlying agent CLI. For example, `ohcodex exec "fix the typo"` runs `codex exec` with openharness routing.
 
 Recognized openharness flags (parsed before the passthrough):
 
@@ -106,7 +106,7 @@ openharness --model moonshotai/Kimi-K2.6 claude -p "task"
 openharness --main together-kimi-k2-7-code claude -p "task"   # Claude matches alias OR id
 ```
 
-Do NOT put `--model` after the harness (e.g. `tcodex --model X` or `tclaude --model X`). The short aliases expand to `openharness <harness> ...`, so the flag lands after the harness name, goes to the agent's passthrough, and is then stripped — it is silently ignored and the run uses the default (GLM 5.2), not the model you asked for. Always use the long form with the flag first.
+Do NOT put `--model` after the harness (e.g. `ohcodex --model X` or `ohclaude --model X`). The short aliases expand to `openharness <harness> ...`, so the flag lands after the harness name, goes to the agent's passthrough, and is then stripped — it is silently ignored and the run uses the default (GLM 5.2), not the model you asked for. Always use the long form with the flag first.
 
 Selectable models (Together API id):
 
@@ -121,7 +121,7 @@ Vision-capable models accept image attachments directly; text-only models (GLM 5
 
 ## Headless & agentic usage
 
-Both Claude Code and Codex CLI run headlessly (no TTY), so you can delegate code changes to an AI agent from scripts, CI, or another orchestrating agent. The patterns below were verified against the installed `tcodex` and `tclaude` (v0.5.26) and apply to both. They differ in the headless subcommand and in how permissions are handled; the stdin, banner, and model-selection behavior is identical.
+Both Claude Code and Codex CLI run headlessly (no TTY), so you can delegate code changes to an AI agent from scripts, CI, or another orchestrating agent. The patterns below were verified against the installed `ohcodex` and `ohclaude` (v0.5.26) and apply to both. They differ in the headless subcommand and in how permissions are handled; the stdin, banner, and model-selection behavior is identical.
 
 ### The working invocation pattern
 
@@ -132,10 +132,10 @@ Both wrappers spawn the agent pointed at the local Together proxy and pass your 
 If you are an orchestrating agent running inside Claude Code, Codex, or another CLI that has its own native subagent/delegation tool, prefer this pattern for non-trivial openharness work:
 
 1. Spawn a native subagent first.
-2. Tell that subagent to run the needed `openharness` command itself (`tcodex`, `tclaude`, `topencode`, or `tpi`) with a tight task, explicit files, `< /dev/null`, and the guardrails below.
+2. Tell that subagent to run the needed `openharness` command itself (`ohcodex`, `ohclaude`, `ohopencode`, or `ohpi`) with a tight task, explicit files, `< /dev/null`, and the guardrails below.
 3. Have the subagent wait for the delegated openharness run, inspect its result/diff, and report only the useful summary back to you.
 
-Do this instead of having the main orchestrating agent call `tcodex`/`tclaude` directly for every delegated edit. It keeps the main agent's context and inference budget focused on coordination/review, lets the native subagent own the details of launching and monitoring openharness, and works especially well when Claude Code delegates to a subagent that then uses Codex through `tcodex`.
+Do this instead of having the main orchestrating agent call `ohcodex`/`ohclaude` directly for every delegated edit. It keeps the main agent's context and inference budget focused on coordination/review, lets the native subagent own the details of launching and monitoring openharness, and works especially well when Claude Code delegates to a subagent that then uses Codex through `ohcodex`.
 
 Codex CLI — non-interactive `exec` (the `-s workspace-write` sandbox grants write access; `exec` never prompts interactively):
 
@@ -196,7 +196,7 @@ Per-task cost varies a lot with how verbose the agent is. Mechanical, well-scope
 5. Review the diff + re-run lint yourself before committing.
 6. To select a model, put `--model` (or `--main` for Claude) before the harness subcommand — after the harness it is silently ignored and the default runs.
 7. For Claude `-p`, pass `--dangerously-skip-permissions` so a headless subagent never blocks on a permission prompt. Codex `exec` is non-interactive by design; use `-s workspace-write` for edits and `--skip-git-repo-check` outside a git repo.
-8. If your current CLI has native subagents, delegate openharness launches to one of those subagents and let it return the result, instead of spending the main orchestrator's context on the full `tcodex`/`tclaude` run.
+8. If your current CLI has native subagents, delegate openharness launches to one of those subagents and let it return the result, instead of spending the main orchestrator's context on the full `ohcodex`/`ohclaude` run.
 
 ## Keeping openharness up to date
 
@@ -214,9 +214,9 @@ You can check the installed version with `openharness --version` and compare it 
 
 There are two harness families behind the four tools:
 
-- **Proxied harnesses — Claude Code, Codex CLI.** `tclaude` and `tcodex` spawn a shared local daemon and route the agent's `/v1/*` traffic through it. The daemon translates the agent's native wire format (Anthropic Messages for Claude, OpenAI Responses for Codex) to Together's chat-completions API and back. Per run: it resolves the model, ensures the daemon, registers a session with your token, prints a banner, spawns the agent pointed at the local proxy, tracks cost, and deregisters on exit. Nothing is written to your real agent config — close it and your setup is exactly as it was.
+- **Proxied harnesses — Claude Code, Codex CLI.** `ohclaude` and `ohcodex` spawn a shared local daemon and route the agent's `/v1/*` traffic through it. The daemon translates the agent's native wire format (Anthropic Messages for Claude, OpenAI Responses for Codex) to Together's chat-completions API and back. Per run: it resolves the model, ensures the daemon, registers a session with your token, prints a banner, spawns the agent pointed at the local proxy, tracks cost, and deregisters on exit. Nothing is written to your real agent config — close it and your setup is exactly as it was.
 
-- **Spawned harnesses — OpenCode, Pi Code.** `topencode` and `tpi` spawn the agent binary directly. The binary talks to Together itself, using ephemeral config injected only for that launch (OpenCode) or a temporary `models.json` on disk (Pi). No daemon, no proxy.
+- **Spawned harnesses — OpenCode, Pi Code.** `ohopencode` and `ohpi` spawn the agent binary directly. The binary talks to Together itself, using ephemeral config injected only for that launch (OpenCode) or a temporary `models.json` on disk (Pi). No daemon, no proxy.
 
 The daemon is one persistent local process shared by all proxied sessions. If you ever need to stop it manually:
 

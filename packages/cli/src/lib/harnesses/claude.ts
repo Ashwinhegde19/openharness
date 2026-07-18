@@ -30,7 +30,7 @@ import {
 } from "../provider/index.js";
 import { resolveTogetherApiKey } from "../together-core.js";
 
-/** Claude default remains Together for backward compatibility with tclaude users. */
+/** Claude default remains Together for backward compatibility with ohclaude users. */
 export const CLAUDE_DEFAULT_PROVIDER_ID = TOGETHER_PROVIDER_ID;
 
 async function resolveOpenRouterApiKey(ctx: HarnessContext): Promise<string> {

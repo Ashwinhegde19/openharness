@@ -15,7 +15,7 @@ Use this loop:
 5. Run the focused test again, then the relevant typecheck/build.
 6. Re-run a live smoke using the user's original pattern when the bug depends on real Codex, Claude, OpenCode, Pi, or Together behavior.
 
-For Codex proxy bugs, prefer `packages/tests/src/CodexProxyApi.test.ts` for deterministic protocol regressions before doing a live `tcodex -- exec ...` smoke. Examples of patterns that need regression coverage:
+For Codex proxy bugs, prefer `packages/tests/src/CodexProxyApi.test.ts` for deterministic protocol regressions before doing a live `ohcodex -- exec ...` smoke. Examples of patterns that need regression coverage:
 
 - parallel `multi_agent_v1` calls must stay in one assistant tool-call group before their tool outputs;
 - more than five parallel subagent calls must preserve all call IDs and outputs;
@@ -106,7 +106,7 @@ Run Codex headlessly through Together:
 
 ```bash
 pnpm -F @openharness/cli exec openharness codex exec "Say hi"
-tcodex exec "Say hi"
+ohcodex exec "Say hi"
 ```
 
 ### Codex App
@@ -139,14 +139,14 @@ export TOGETHER_API_KEY="..."
 
 pnpm -F @openharness/cli exec openharness pi
 pnpm -F @openharness/cli exec openharness picode
-tpi
+ohpi
 ```
 
 Run Pi Code headlessly through Together:
 
 ```bash
 pnpm -F @openharness/cli exec openharness pi -p "Say hi"
-tpi -p "Say hi"
+ohpi -p "Say hi"
 ```
 
 ## Claude Code Headless Smoke Tests

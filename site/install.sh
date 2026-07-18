@@ -6,14 +6,14 @@
 # Installs the openharness CLI as a Bun-target JS bundle at
 # ~/.openharness/bin/openharness.js, with a `openharness` wrapper script on
 # PATH that runs it with `bun`. Installs Bun for the user if `bun` isn't on
-# PATH. Also installs `tclaude`, `topencode`, `tcodex`, and `tpi` convenience wrappers.
+# PATH. Also installs `ohclaude`, `ohopencode`, `ohcodex`, and `ohpi` convenience wrappers.
 #
 # After install, the CLI prompts once for a Together API key on first use
 # (Enter skips — the key is optional). The CLI self-updates in the background.
 
 set -euo pipefail
 
-ORIGIN="${OPENHARNESS_ORIGIN:-https://openharness.vercel.app}"
+ORIGIN="${OPENHARNESS_ORIGIN:-${OPENHARNESS_ORIGIN:-https://openharness.vercel.app}}"
 INSTALL_DIR="${OPENHARNESS_HOME:-$HOME/.openharness}"
 BIN_DIR="$INSTALL_DIR/bin"
 
@@ -23,6 +23,16 @@ ok()   { printf "  \033[32m✓\033[0m %s\n" "$1"; }
 err()  { printf "  \033[31m✗ %s\033[0m\n" "$1" >&2; }
 
 bold "Installing openharness…"
+
+# This repository is the `openharness` fork. The upstream default ORIGIN points
+# at TogetherLink's hosted bundle, which is NOT this fork's build. Until a hosted
+# bundle is published for the fork, build from source (see README "Quick start")
+# or set OPENHARNESS_ORIGIN to your own hosted bundle.
+if [ "$ORIGIN" = "https://openharness.vercel.app" ]; then
+  info "Note: this fork (openharness) has no published hosted bundle yet."
+  info "For the alpha, build from source — see README 'Quick start'."
+  info "Set OPENHARNESS_ORIGIN to point at your own hosted bundle when available."
+fi
 
 # --- 1. Ensure Bun is present (install it for the user if not) ----------------
 if command -v bun >/dev/null 2>&1; then
@@ -65,36 +75,36 @@ exec bun "$BIN_DIR/openharness.js" "\$@"
 EOF
 chmod +x "$BIN_DIR/openharness"
 
-# Short aliases: tclaude / topencode / tcodex / tpi
-cat > "$BIN_DIR/tclaude" <<EOF
+# Short aliases: ohclaude / ohopencode / ohcodex / ohpi
+cat > "$BIN_DIR/ohclaude" <<EOF
 #!/usr/bin/env sh
 exec bun "$BIN_DIR/openharness.js" claude "\$@"
 EOF
-chmod +x "$BIN_DIR/tclaude"
+chmod +x "$BIN_DIR/ohclaude"
 
-cat > "$BIN_DIR/topencode" <<EOF
+cat > "$BIN_DIR/ohopencode" <<EOF
 #!/usr/bin/env sh
 exec bun "$BIN_DIR/openharness.js" opencode "\$@"
 EOF
-chmod +x "$BIN_DIR/topencode"
+chmod +x "$BIN_DIR/ohopencode"
 
-cat > "$BIN_DIR/tcodex" <<EOF
+cat > "$BIN_DIR/ohcodex" <<EOF
 #!/usr/bin/env sh
 exec bun "$BIN_DIR/openharness.js" codex "\$@"
 EOF
-chmod +x "$BIN_DIR/tcodex"
+chmod +x "$BIN_DIR/ohcodex"
 
-cat > "$BIN_DIR/tpi" <<EOF
+cat > "$BIN_DIR/ohpi" <<EOF
 #!/usr/bin/env sh
 exec bun "$BIN_DIR/openharness.js" pi "\$@"
 EOF
-chmod +x "$BIN_DIR/tpi"
+chmod +x "$BIN_DIR/ohpi"
 
-ok "Wrappers installed: openharness, tclaude, topencode, tcodex, tpi → $BIN_DIR"
+ok "Wrappers installed: openharness, ohclaude, ohopencode, ohcodex, ohpi → $BIN_DIR"
 
 # Remove old openharness-owned wrappers that used the upstream agent names.
 # Current installs must never shadow `claude`, `codex`, or `opencode`; users
-# should get the real CLIs unless they explicitly run tclaude/tcodex/topencode/tpi.
+# should get the real CLIs unless they explicitly run ohclaude/ohcodex/ohopencode/ohpi.
 remove_legacy_shadow_wrapper() {
   name="$1"
   path="$BIN_DIR/$name"
@@ -104,7 +114,7 @@ remove_legacy_shadow_wrapper() {
   if [ -L "$path" ]; then
     target="$(readlink "$path" 2>/dev/null || true)"
     case "$target" in
-      "$BIN_DIR/tclaude"|"$BIN_DIR/tcodex"|"$BIN_DIR/topencode"|"$BIN_DIR/tpi"|"$BIN_DIR/openharness"|"$BIN_DIR/openharness.js")
+      "$BIN_DIR/ohclaude"|"$BIN_DIR/ohcodex"|"$BIN_DIR/ohopencode"|"$BIN_DIR/ohpi"|"$BIN_DIR/openharness"|"$BIN_DIR/openharness.js")
         rm -f "$path"
         ok "Removed old openharness shadow command: $path"
         ;;
@@ -173,10 +183,10 @@ if LINK_DIR="$(find_writable_path_dir)"; then
   }
 
   install_link openharness "$BIN_DIR/openharness"
-  install_link tclaude "$BIN_DIR/tclaude"
-  install_link topencode "$BIN_DIR/topencode"
-  install_link tcodex "$BIN_DIR/tcodex"
-  install_link tpi "$BIN_DIR/tpi"
+  install_link ohclaude "$BIN_DIR/ohclaude"
+  install_link ohopencode "$BIN_DIR/ohopencode"
+  install_link ohcodex "$BIN_DIR/ohcodex"
+  install_link ohpi "$BIN_DIR/ohpi"
   if [ "$links_changed" -gt 0 ]; then
     ok "Linked $links_changed command(s) into current PATH → $LINK_DIR"
   fi

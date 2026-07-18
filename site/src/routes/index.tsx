@@ -14,7 +14,7 @@ const features = [
     tagTone: "live",
     body: (
       <>
-        Run <code>topencode</code> and OpenCode launches with Together GLM 5.2 wired in - config
+        Run <code>ohopencode</code> and OpenCode launches with Together GLM 5.2 wired in - config
         injected only for that launch. Close it and your OpenCode setup is exactly as it was, while
         sessions can still resume.
       </>
@@ -30,8 +30,8 @@ const features = [
     tagTone: "beta",
     body: (
       <>
-        Run <code>tclaude</code> and Claude Code routes through a local translation proxy - no edits
-        to your real config. You keep your Claude Code subscription and login the whole time.
+        Run <code>ohclaude</code> and Claude Code routes through a local translation proxy - no
+        edits to your real config. You keep your Claude Code subscription and login the whole time.
       </>
     ),
     icon: <ClaudeMark />,
@@ -43,8 +43,9 @@ const features = [
     tagTone: "beta",
     body: (
       <>
-        Run <code>tcodex</code> and Codex talks to Together through a local Responses-to-chat proxy.
-        Settings are injected per run, with headless <code>exec</code> support for fast checks.
+        Run <code>ohcodex</code> and Codex talks to Together through a local Responses-to-chat
+        proxy. Settings are injected per run, with headless <code>exec</code> support for fast
+        checks.
       </>
     ),
     icon: <CodexMark />,
@@ -56,7 +57,7 @@ const features = [
     tagTone: "live",
     body: (
       <>
-        Run <code>tpi</code> and Pi Code launches with Pi's official Together provider, a temporary
+        Run <code>ohpi</code> and Pi Code launches with Pi's official Together provider, a temporary
         Pi config directory, and normal local session persistence.
       </>
     ),
@@ -68,10 +69,10 @@ const features = [
 ];
 
 const heroTools = [
-  { name: "OpenCode", command: "topencode", icon: <OpenCodeMark /> },
-  { name: "Claude Code", command: "tclaude", icon: <ClaudeMark /> },
-  { name: "Codex CLI", command: "tcodex", icon: <CodexMark /> },
-  { name: "Pi Code", command: "tpi", icon: <PiMark /> },
+  { name: "OpenCode", command: "ohopencode", icon: <OpenCodeMark /> },
+  { name: "Claude Code", command: "ohclaude", icon: <ClaudeMark /> },
+  { name: "Codex CLI", command: "ohcodex", icon: <CodexMark /> },
+  { name: "Pi Code", command: "ohpi", icon: <PiMark /> },
 ];
 
 const heroProof = [
@@ -434,12 +435,12 @@ function Home() {
         </div>
         <Step number="1">
           Install with the one-liner above. It drops the binary at <code>~/.openharness/bin/</code>{" "}
-          and adds <code>openharness</code>, <code>tclaude</code>, <code>topencode</code>,{" "}
-          <code>tcodex</code>, and <code>tpi</code>.
+          and adds <code>openharness</code>, <code>ohclaude</code>, <code>ohopencode</code>,{" "}
+          <code>ohcodex</code>, and <code>ohpi</code>.
         </Step>
         <Step number="2">
-          Run <code>topencode</code>, <code>tclaude</code>, or <code>tcodex</code>, or{" "}
-          <code>tpi</code>. For the ChatGPT desktop app run <code>openharness chatgpt</code>{" "}
+          Run <code>ohopencode</code>, <code>ohclaude</code>, or <code>ohcodex</code>, or{" "}
+          <code>ohpi</code>. For the ChatGPT desktop app run <code>openharness chatgpt</code>{" "}
           (alpha), and restore it with <code>openharness chatgpt --restore</code>. On first launch
           it asks once for your Together API key - press Enter to skip and add it later.
         </Step>

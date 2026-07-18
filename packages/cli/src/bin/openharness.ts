@@ -83,10 +83,10 @@ async function runInteractiveLauncher(): Promise<void> {
   const choice = await clack.select({
     message: "What do you want to run?",
     options: [
-      { value: "opencode", label: "OpenCode", hint: "topencode · default Ollama" },
-      { value: "codex", label: "Codex", hint: "tcodex · Together preset" },
-      { value: "claude", label: "Claude Code", hint: "tclaude · Together preset" },
-      { value: "pi", label: "Pi Code", hint: "tpi · Together preset" },
+      { value: "opencode", label: "OpenCode", hint: "ohopencode · default Ollama" },
+      { value: "codex", label: "Codex", hint: "ohcodex · Together preset" },
+      { value: "claude", label: "Claude Code", hint: "ohclaude · Together preset" },
+      { value: "pi", label: "Pi Code", hint: "ohpi · Together preset" },
       { value: "chatgpt", label: "ChatGPT Desktop", hint: "chatgpt · Together preset" },
       { value: "configure", label: "Configure", hint: "optional provider keys" },
     ],
