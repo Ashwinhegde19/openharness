@@ -40,6 +40,13 @@ renamed from `togetherlink` to `openharness` during M7.
   `--api-key` value is still passed on argv; switching Pi to env-only auth
   (`TOGETHER_API_KEY`) is tracked as follow-up.
 
+### Docs / tooling
+
+- The machine-readable compatibility matrix is now **published**: it is
+  validated in CI (`pnpm matrix:validate`) and rendered to a human-readable
+  `docs/compatibility-matrix.md` (`pnpm matrix:render`). Editing the JSON and
+  re-running render keeps the two in sync.
+
 ### Baseline
 
 Forked from TogetherLink at pin `9f56ed93` (v0.5.26). Milestones M0–M6

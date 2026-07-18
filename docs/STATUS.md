@@ -175,14 +175,14 @@ Legend: ✅ launch path implemented (offline unit-tested). Live E2E with real bi
 
 ## Known open debt (track before/with M7+)
 
-| Item                                              | Severity | Notes                                                      |
-| ------------------------------------------------- | -------- | ---------------------------------------------------------- |
+| Item                                              | Severity | Notes                                                                                   |
+| ------------------------------------------------- | -------- | --------------------------------------------------------------------------------------- |
 | Pi `--api-key` argv exposure                      | Medium   | models.json hardened to `0600`; `--api-key` still passed on argv (Pi reads it directly) |
-| License: `LICENSE` is MIT; `package.json` now MIT | Resolved | Reconciled in M7 (package.json license set to MIT)         |
-| Branding `togetherlink` → `openharness`           | Resolved | Renamed in M7 (CLI binary + doctor/README/STATUS branding) |
-| Live multi-provider CI evidence                   | Medium   | Needs secrets + harness binaries                           |
-| Compatibility matrix not published                | Medium   | Alpha exit                                                 |
-| Audit README “important findings” partially stale | Low      | e.g. SQLite secrets fixed in M2                            |
+| License: `LICENSE` is MIT; `package.json` now MIT | Resolved | Reconciled in M7 (package.json license set to MIT)                                      |
+| Branding `togetherlink` → `openharness`           | Resolved | Renamed in M7 (CLI binary + doctor/README/STATUS branding)                              |
+| Live multi-provider CI evidence                   | Medium   | Needs secrets + harness binaries                                                        |
+| Compatibility matrix published/validated          | Resolved | validated in CI (`pnpm matrix:validate`) + rendered to `docs/compatibility-matrix.md`   |
+| Audit README “important findings” partially stale | Low      | e.g. SQLite secrets fixed in M2                                                         |
 
 ---
 
