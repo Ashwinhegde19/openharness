@@ -52,6 +52,10 @@ function writePiModelsJson(agentDir: string, apiKey: string): void {
     },
   }));
 
+  // M2 follow-up: the temp models.json carries the Together API key in
+  // plaintext for the launched Pi process. The agent dir is already 0700
+  // (mkdtempSync), but write with 0600 so the key file is never
+  // group/world-readable. The dir is removed on exit (best-effort).
   writeFileSync(
     join(agentDir, "models.json"),
     `${JSON.stringify(
@@ -66,7 +70,7 @@ function writePiModelsJson(agentDir: string, apiKey: string): void {
       null,
       2,
     )}\n`,
-    "utf8",
+    { encoding: "utf8", mode: 0o600 },
   );
 }
 

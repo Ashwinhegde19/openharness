@@ -32,6 +32,14 @@ renamed from `togetherlink` to `openharness` during M7.
   for this fork. The supported alpha install path is the source build — see the
   README "Quick start".
 
+### Security
+
+- Pi harness: the temporary `models.json` (carries the Together API key for the
+  launched process) is now written with `0600` permissions instead of the
+  default (world-readable) mode. The temp dir is removed on exit. The
+  `--api-key` value is still passed on argv; switching Pi to env-only auth
+  (`TOGETHER_API_KEY`) is tracked as follow-up.
+
 ### Baseline
 
 Forked from TogetherLink at pin `9f56ed93` (v0.5.26). Milestones M0–M6

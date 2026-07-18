@@ -177,7 +177,7 @@ Legend: ✅ launch path implemented (offline unit-tested). Live E2E with real bi
 
 | Item                                              | Severity | Notes                                                      |
 | ------------------------------------------------- | -------- | ---------------------------------------------------------- |
-| Pi secret on disk/argv                            | Medium   | M2 follow-up                                               |
+| Pi `--api-key` argv exposure                      | Medium   | models.json hardened to `0600`; `--api-key` still passed on argv (Pi reads it directly) |
 | License: `LICENSE` is MIT; `package.json` now MIT | Resolved | Reconciled in M7 (package.json license set to MIT)         |
 | Branding `togetherlink` → `openharness`           | Resolved | Renamed in M7 (CLI binary + doctor/README/STATUS branding) |
 | Live multi-provider CI evidence                   | Medium   | Needs secrets + harness binaries                           |
