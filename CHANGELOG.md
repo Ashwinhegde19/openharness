@@ -4,9 +4,9 @@ All notable changes to the CLI are recorded here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/), and the version is the single
 source of truth in the root `package.json`.
 
-The repository is **openharness**; the installed CLI binary is **togetherlink**
-(working title — the rename is deferred to post-M7 per `docs/STATUS.md`). It is a
-provider-neutral fork of [TogetherLink](https://github.com/Nutlope/togetherlink).
+The repository and installed CLI binary are **openharness** — a provider-neutral
+fork of [TogetherLink](https://github.com/Nutlope/togetherlink). The binary was
+renamed from `togetherlink` to `openharness` during M7.
 
 ## [0.5.26] — 2026-07-17 (public alpha · M7 in progress)
 

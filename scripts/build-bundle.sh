@@ -32,7 +32,7 @@ echo "✓ installer → site/public/install.sh and site/install.sh"
 # Bundle the CLI entry. --target=bun keeps Bun-only runtime assumptions; the
 # result is a single self-contained JS file with models inlined.
 bun build \
-  "$ROOT/packages/cli/src/bin/togetherlink.ts" \
+  "$ROOT/packages/cli/src/bin/openharness.ts" \
   --target=bun \
   --production \
   --define "process.env.TOGETHERLINK_VERSION=\"${VERSION}\"" \

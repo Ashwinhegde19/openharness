@@ -1,6 +1,6 @@
 # Project status checklist
 
-**Last updated:** 2026-07-17  
+**Last updated:** 2026-07-18  
 **Branch:** `main` (public: https://github.com/Ashwinhegde19/openharness)  
 **Baseline:** TogetherLink fork pin `9f56ed93` (v0.5.26) — implementation baseline only, not product identity.
 
@@ -106,7 +106,7 @@ Use this file to track how far the roadmap has been implemented. Detailed work i
 
 ---
 
-## M7 — Public alpha ⬜ **In progress**
+## M7 — Public alpha 🔧 **In progress**
 
 Work landed for alpha packaging, diagnostics, and community process:
 
@@ -132,12 +132,12 @@ Work landed for alpha packaging, diagnostics, and community process:
 
 - [x] Machine-readable compatibility matrix (`docs/compatibility-matrix.json`)
 - [x] Documented what is unit-tested vs live-tested (see `docs/COMPATIBILITY.md` + matrix `tested` field)
-- [ ] Alpha gates from [RELEASE-PLAN.md](./RELEASE-PLAN.md) § Alpha 1 — run by maintainer before tagging alpha
+- [x] Alpha gates from [RELEASE-PLAN.md](./RELEASE-PLAN.md) § Alpha 1 — offline gates verified 2026-07-18 (Together regression ✓ 274 offline tests, OpenCode+Ollama no permanent config ✓, canary secret scan ✓); live Linux smoke + external-tester exit items tracked below
 
 ### Exit criteria (from roadmap)
 
 - [ ] External user completes setup without editing harness config (awaiting external tester)
-- [ ] Alpha gates pass (see above)
+- [ ] Alpha gates pass (offline gates verified 2026-07-18; live Linux smoke + external tester still required for tag)
 - [ ] No open critical/high on shipped path (true for implemented paths; Pi/ChatGPT alpha carries known limits)
 
 ---

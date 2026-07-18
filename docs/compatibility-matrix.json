@@ -1,5 +1,5 @@
 {
-  "name": "togetherlink compatibility matrix",
+  "name": "openharness compatibility matrix",
   "schemaVersion": "1.0.0",
   "source": "docs/STATUS.md (M0–M6 complete; M7 public alpha in progress)",
   "legend": {

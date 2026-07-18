@@ -27,7 +27,7 @@ No LiteLLM, no Express. Daemon is a small `node:http` server.
 ## Conceptual ownership (matches openharness ARCHITECTURE)
 
 ```text
-packages/cli/src/bin/togetherlink.ts     CLI entry, configure, daemon stop
+packages/cli/src/bin/openharness.ts    CLI entry, configure, daemon stop
 packages/cli/src/lib/commands/           parse + dispatch
 packages/cli/src/lib/harnesses/          harness adapters (thin)
 packages/cli/src/lib/claude|codex|opencode/  protocol + launch details
