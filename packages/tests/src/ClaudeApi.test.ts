@@ -145,7 +145,7 @@ describe("Claude proxy compatibility API", () => {
       throw new Error("expected upstream user content to be a string");
     }
     expect(upstreamContent).toContain(
-      "[togetherlink trimmed older context to fit the model window]",
+      "[openharness trimmed older context to fit the model window]",
     );
     expect(upstreamContent.length).toBeLessThan(nearFullContext.length);
     expect(upstreamBodies[0]?.max_tokens).toBeLessThanOrEqual(28_000);
@@ -544,7 +544,7 @@ describe("Claude proxy compatibility API", () => {
       throw new Error("expected upstream user content to be strings");
     }
     expect(secondContent.length).toBeLessThan(firstContent.length);
-    expect(secondContent).toContain("[togetherlink trimmed older context to fit the model window]");
+    expect(secondContent).toContain("[openharness trimmed older context to fit the model window]");
   });
 
   test("routes Claude Code Haiku-tier model requests without proxy subagent inference", async () => {

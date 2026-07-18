@@ -4,14 +4,14 @@
   "description": "Provider-neutral CLI for launching Claude Code, OpenCode, Codex, and Pi Code against selectable model providers",
   "license": "MIT",
   "bin": {
-    "togetherlink": "./dist/bin/togetherlink.js"
+    "openharness": "./dist/bin/openharness.js"
   },
   "files": [
     "dist"
   ],
   "type": "module",
   "scripts": {
-    "build": "tsc -p tsconfig.json && node -e \"require('node:fs').chmodSync('dist/bin/togetherlink.js', 0o755)\"",
+    "build": "tsc -p tsconfig.json && node -e \"require('node:fs').chmodSync('dist/bin/openharness.js', 0o755)\"",
     "dev": "pnpm build && sh -c 'node scripts/watch-bin-mode.mjs & tsc -p tsconfig.json --watch --preserveWatchOutput'",
     "watch": "pnpm dev",
     "typecheck": "pnpm --filter @togetherlink/models build && tsc -p tsconfig.json --noEmit",

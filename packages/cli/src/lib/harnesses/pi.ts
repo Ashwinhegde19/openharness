@@ -82,8 +82,8 @@ export default defineHarness({
     if (!apiKey) {
       throw new Error(
         "Pi currently uses the Together provider preset and needs a key. " +
-          "Pass --api-key, set TOGETHER_API_KEY, or run `togetherlink configure`. " +
-          "For local models without a cloud key: `togetherlink opencode` (Ollama).",
+          "Pass --api-key, set TOGETHER_API_KEY, or run `openharness configure`. " +
+          "For local models without a cloud key: `openharness opencode` (Ollama).",
       );
     }
 
@@ -111,14 +111,14 @@ export default defineHarness({
     ];
 
     if (process.env.TOGETHERLINK_DEBUG === "1") {
-      process.stderr.write(`[togetherlink pi] provider: ${PI_PROVIDER_ID}\n`);
-      process.stderr.write(`[togetherlink pi] model: ${selectedModel.id}\n`);
-      process.stderr.write(`[togetherlink pi] models: ${PI_SUPPORTED_MODELS}\n`);
-      process.stderr.write(`[togetherlink pi] temp config dir: ${agentDir}\n`);
-      process.stderr.write(`[togetherlink pi] session dir: ${sessionDir}\n`);
+      process.stderr.write(`[openharness pi] provider: ${PI_PROVIDER_ID}\n`);
+      process.stderr.write(`[openharness pi] model: ${selectedModel.id}\n`);
+      process.stderr.write(`[openharness pi] models: ${PI_SUPPORTED_MODELS}\n`);
+      process.stderr.write(`[openharness pi] temp config dir: ${agentDir}\n`);
+      process.stderr.write(`[openharness pi] session dir: ${sessionDir}\n`);
     }
 
-    process.stderr.write(`togetherlink ▸ Launching Pi Code with Together AI.\n`);
+    process.stderr.write(`openharness ▸ Launching Pi Code with Together AI.\n`);
     const child = spawn("pi", args, {
       env: {
         ...process.env,
@@ -132,7 +132,7 @@ export default defineHarness({
     const result = await new Promise<{ status: number | null; signal: NodeJS.Signals | null }>(
       (resolve) => {
         child.on("error", (err) => {
-          process.stderr.write(`togetherlink ▸ Failed to launch pi: ${err.message}.\n`);
+          process.stderr.write(`openharness ▸ Failed to launch pi: ${err.message}.\n`);
           resolve({ status: 1, signal: null });
         });
         child.on("exit", (status, signal) => resolve({ status, signal }));

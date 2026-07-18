@@ -17,29 +17,99 @@
   "providers": ["together", "ollama", "openrouter"],
   "matrix": {
     "opencode": {
-      "together": { "status": "implemented", "default": false, "tested": "unit", "notes": "via --provider together" },
-      "ollama": { "status": "implemented", "default": true, "tested": "unit", "notes": "default; no API key" },
-      "openrouter": { "status": "implemented", "default": false, "tested": "unit", "notes": "via --provider openrouter" }
+      "together": {
+        "status": "implemented",
+        "default": false,
+        "tested": "unit",
+        "notes": "via --provider together"
+      },
+      "ollama": {
+        "status": "implemented",
+        "default": true,
+        "tested": "unit",
+        "notes": "default; no API key"
+      },
+      "openrouter": {
+        "status": "implemented",
+        "default": false,
+        "tested": "unit",
+        "notes": "via --provider openrouter"
+      }
     },
     "claude": {
-      "together": { "status": "implemented", "default": true, "tested": "unit", "notes": "default Together preset" },
-      "ollama": { "status": "implemented", "default": false, "tested": "unit", "notes": "--provider ollama" },
-      "openrouter": { "status": "implemented", "default": false, "tested": "unit", "notes": "--provider openrouter" }
+      "together": {
+        "status": "implemented",
+        "default": true,
+        "tested": "unit",
+        "notes": "default Together preset"
+      },
+      "ollama": {
+        "status": "implemented",
+        "default": false,
+        "tested": "unit",
+        "notes": "--provider ollama"
+      },
+      "openrouter": {
+        "status": "implemented",
+        "default": false,
+        "tested": "unit",
+        "notes": "--provider openrouter"
+      }
     },
     "codex": {
-      "together": { "status": "implemented", "default": true, "tested": "unit", "notes": "default Together preset" },
-      "ollama": { "status": "implemented", "default": false, "tested": "unit", "notes": "--provider ollama" },
-      "openrouter": { "status": "implemented", "default": false, "tested": "unit", "notes": "--provider openrouter" }
+      "together": {
+        "status": "implemented",
+        "default": true,
+        "tested": "unit",
+        "notes": "default Together preset"
+      },
+      "ollama": {
+        "status": "implemented",
+        "default": false,
+        "tested": "unit",
+        "notes": "--provider ollama"
+      },
+      "openrouter": {
+        "status": "implemented",
+        "default": false,
+        "tested": "unit",
+        "notes": "--provider openrouter"
+      }
     },
     "pi": {
-      "together": { "status": "alpha", "default": true, "tested": "unit", "notes": "Together preset only" },
-      "ollama": { "status": "none", "default": false, "tested": "unit", "notes": "not supported (post-1.0 / hardening)" },
-      "openrouter": { "status": "none", "default": false, "tested": "unit", "notes": "not supported (post-1.0 / hardening)" }
+      "together": {
+        "status": "alpha",
+        "default": true,
+        "tested": "unit",
+        "notes": "Together preset only"
+      },
+      "ollama": {
+        "status": "none",
+        "default": false,
+        "tested": "unit",
+        "notes": "not supported (post-1.0 / hardening)"
+      },
+      "openrouter": {
+        "status": "none",
+        "default": false,
+        "tested": "unit",
+        "notes": "not supported (post-1.0 / hardening)"
+      }
     },
     "chatgpt-desktop": {
-      "together": { "status": "alpha", "default": true, "tested": "unit", "notes": "alpha; Together preset" },
+      "together": {
+        "status": "alpha",
+        "default": true,
+        "tested": "unit",
+        "notes": "alpha; Together preset"
+      },
       "ollama": { "status": "none", "default": false, "tested": "unit", "notes": "not supported" },
-      "openrouter": { "status": "none", "default": false, "tested": "unit", "notes": "not supported" }
+      "openrouter": {
+        "status": "none",
+        "default": false,
+        "tested": "unit",
+        "notes": "not supported"
+      }
     }
   }
 }

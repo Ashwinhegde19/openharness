@@ -97,7 +97,7 @@ async function listenOrExitOnRace(server: Server, port: number): Promise<void> {
             process.exit(0);
           }
           process.stderr.write(
-            `[togetherlink daemon] port ${port} in use by a non-daemon process.\n`,
+            `[openharness daemon] port ${port} in use by a non-daemon process.\n`,
           );
           process.exit(1);
         });
@@ -147,7 +147,7 @@ export function renderDaemonError(
 
 /**
  * Run the shared, persistent proxy daemon. One process serves every
- * `togetherlink claude` session: each registers its token + credentials at
+ * `openharness claude` session: each registers its token + credentials at
  * `POST /internal/sessions`, and the daemon resolves every `/v1/*` request to
  * that session (and its CostTracker) by the presented Bearer token. Runs
  * forever — the http server keeps the event loop alive — until SIGTERM/SIGINT.
@@ -179,10 +179,10 @@ export async function runDaemon(options: DaemonOptions = {}): Promise<void> {
   await writeFile(daemonPidPath(), `${process.pid}\n`, { encoding: "utf8" });
   if (debug) {
     process.stderr.write(
-      `[togetherlink daemon] listening: ${daemonUrl(port)} (pid ${process.pid})\n`,
+      `[openharness daemon] listening: ${daemonUrl(port)} (pid ${process.pid})\n`,
     );
     if (restored > 0) {
-      process.stderr.write(`[togetherlink daemon] restored ${restored} active session(s).\n`);
+      process.stderr.write(`[openharness daemon] restored ${restored} active session(s).\n`);
     }
   }
 
@@ -193,7 +193,7 @@ export async function runDaemon(options: DaemonOptions = {}): Promise<void> {
   const reaper = setInterval(() => {
     const removed = activeSessions.reapDead();
     if (debug && removed > 0) {
-      process.stderr.write(`[togetherlink daemon] reaped ${removed} dead session(s).\n`);
+      process.stderr.write(`[openharness daemon] reaped ${removed} dead session(s).\n`);
     }
   }, SESSION_REAP_INTERVAL_MS);
   reaper.unref();
@@ -205,7 +205,7 @@ export async function runDaemon(options: DaemonOptions = {}): Promise<void> {
     closing = true;
     clearInterval(reaper);
     if (debug) {
-      process.stderr.write(`[togetherlink daemon] ${signal} — shutting down.\n`);
+      process.stderr.write(`[openharness daemon] ${signal} — shutting down.\n`);
     }
     activeSessions.closeStore();
     server.close();
@@ -238,7 +238,7 @@ async function handleDaemonRequest(
 ): Promise<void> {
   const path_ = requestPath(req);
   if (opts.debug) {
-    process.stderr.write(`[togetherlink daemon] ${req.method} ${path_}\n`);
+    process.stderr.write(`[openharness daemon] ${req.method} ${path_}\n`);
   }
 
   // Unauthenticated liveness + health (must work before any session exists).
@@ -264,7 +264,7 @@ async function handleDaemonRequest(
   if (req.method === "GET" && path_ === "/") {
     writeJson(res, 200, {
       ok: true,
-      service: "togetherlink daemon",
+      service: "openharness daemon",
       version: VERSION,
       activeSessionCount: activeSessions.size,
     });
@@ -431,7 +431,7 @@ async function handleDaemonRequest(
  * The Codex desktop app holds the stable local-proxy token in its config with
  * no launcher process alive to re-register when this daemon loses the session
  * (restart, idle reap, kill -9). Without this fallback every request from the
- * app 401s until the user re-runs `togetherlink codex-app`.
+ * app 401s until the user re-runs `openharness codex-app`.
  */
 async function restoreAppSession(token: string): Promise<SessionState | undefined> {
   const registration = await readAppRegistration();

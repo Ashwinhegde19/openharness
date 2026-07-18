@@ -113,7 +113,7 @@ export function createProxyPerfTracer(
       } catch {
         // Perf capture is diagnostic only and must never affect proxy traffic.
       }
-      process.stderr.write(`[togetherlink perf] ${JSON.stringify(payload)}\n`);
+      process.stderr.write(`[openharness perf] ${JSON.stringify(payload)}\n`);
     },
   };
 }

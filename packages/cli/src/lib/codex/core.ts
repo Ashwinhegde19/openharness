@@ -65,7 +65,7 @@ export async function runCodexTogether(options: CodexLaunchOptions): Promise<Cod
     args,
     binary: "codex",
     keepaliveLabel: "Codex session",
-    banner: (name) => `togetherlink ▸ Routing Codex → ${providerLabel} (${name}). Not OpenAI.\n`,
+    banner: (name) => `openharness ▸ Routing Codex → ${providerLabel} (${name}). Not OpenAI.\n`,
     beforeSpawn: () => {
       catalog = writeCodexModelCatalog(catalogModels, providerLabel);
       return catalog;

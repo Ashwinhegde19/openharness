@@ -1,6 +1,6 @@
 # Universal Harness Provider Layer
 
-> Working title. The final product name is intentionally undecided. The repository is `openharness`; the installed CLI binary is `togetherlink` (rename deferred to post-M7 per the debt list in `docs/STATUS.md`).
+> The repository and installed CLI binary are `openharness` — a provider-neutral fork of [TogetherLink](https://github.com/Nutlope/togetherlink).
 
 Session-scoped compatibility launcher that connects supported coding harnesses to supported model providers without permanently modifying the harnesses' normal configuration.
 
@@ -88,11 +88,11 @@ ollama pull llama3.2         # fetch a model
 # 2. Build and run this launcher
 pnpm install
 pnpm -F @togetherlink/cli build
-node packages/cli/dist/bin/togetherlink.js opencode
+node packages/cli/dist/bin/openharness.js opencode
 ```
 
-Before launching, run `togetherlink doctor` to confirm the harness is on your
-PATH and Ollama is reachable, and `togetherlink dry-run opencode` to preview the
+Before launching, run `openharness doctor` to confirm the harness is on your
+PATH and Ollama is reachable, and `openharness dry-run opencode` to preview the
 exact (redacted) launch plan. Cloud providers (Together, OpenRouter) are opt-in
 via `--provider` and only need a key when you select them.
 
@@ -104,26 +104,26 @@ via `--provider` and only need a key when you select them.
 
 ```bash
 # Diagnose your setup (harnesses, Ollama reachability, optional keys)
-togetherlink doctor
+openharness doctor
 
 # Preview a launch plan without spawning anything (redacted)
-togetherlink dry-run opencode --provider ollama --main llama3.2
+openharness dry-run opencode --provider ollama --main llama3.2
 
 # No cloud key — first run
-togetherlink opencode                          # Ollama (default)
-togetherlink opencode --provider ollama --main llama3.2
+openharness opencode                          # Ollama (default)
+openharness opencode --provider ollama --main llama3.2
 
 # Optional cloud providers
 export OPENROUTER_API_KEY=...
-togetherlink opencode --provider openrouter
+openharness opencode --provider openrouter
 
 export TOGETHER_API_KEY=...
-togetherlink opencode --provider together
-togetherlink claude                            # Together preset (default)
-togetherlink claude --provider openrouter --main openai/gpt-4o-mini
-togetherlink claude --provider ollama --main llama3.2
-togetherlink codex --provider openrouter --main openai/gpt-4o-mini
-togetherlink codex --provider ollama --main llama3.2
+openharness opencode --provider together
+openharness claude                            # Together preset (default)
+openharness claude --provider openrouter --main openai/gpt-4o-mini
+openharness claude --provider ollama --main llama3.2
+openharness codex --provider openrouter --main openai/gpt-4o-mini
+openharness codex --provider ollama --main llama3.2
 ```
 
 Compatibility is measured and published by capability level — not claimed for every combination.

@@ -13,7 +13,7 @@ describe("paths.ts — single source of truth for home + liveness (#7)", () => {
     }
   });
 
-  test("togetherlinkHome falls back to ~/.togetherlink when env unset", () => {
+  test("togetherlinkHome falls back to ~/.openharness when env unset", () => {
     const original = process.env.TOGETHERLINK_HOME;
     delete process.env.TOGETHERLINK_HOME;
     try {

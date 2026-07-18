@@ -387,7 +387,7 @@ export async function runCodexExaSearch(
     exaApiKey: process.env.EXA_API_KEY,
     debugLog: (label, value) => debugLog(options, label, value),
     missingApiKeyMessage:
-      "Web search error: EXA_API_KEY is not set. Run `togetherlink configure` or export EXA_API_KEY and retry.",
+      "Web search error: EXA_API_KEY is not set. Run `openharness configure` or export EXA_API_KEY and retry.",
     includePublishedDate: true,
     snippetLength: 700,
   });
@@ -602,5 +602,5 @@ function defaultMaxOutputTokens(
 }
 
 function debugLog(options: DebugOptions, label: string, payload: unknown | (() => unknown)): void {
-  writeProxyDebugLog("togetherlink codex proxy", options, label, payload);
+  writeProxyDebugLog("openharness codex proxy", options, label, payload);
 }

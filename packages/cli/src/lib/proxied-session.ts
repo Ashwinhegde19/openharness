@@ -127,7 +127,7 @@ export async function runProxiedSession(spec: ProxiedSessionSpec): Promise<Proxi
     await registerDaemonSession(proxyUrl, registration);
   } catch (err) {
     throw new Error(
-      `Could not register this ${spec.agent === "claude" ? "Claude" : "Codex"} session with the togetherlink daemon: ${err instanceof Error ? err.message : String(err)}`,
+      `Could not register this ${spec.agent === "claude" ? "Claude" : "Codex"} session with the openharness daemon: ${err instanceof Error ? err.message : String(err)}`,
     );
   }
 
@@ -142,9 +142,9 @@ export async function runProxiedSession(spec: ProxiedSessionSpec): Promise<Proxi
 
   process.stderr.write(spec.banner(spec.modelName));
   if (debug) {
-    process.stderr.write(`[togetherlink proxy] daemon: ${proxyUrl}\n`);
-    process.stderr.write(`[togetherlink proxy] session: ${agentProxyUrl}\n`);
-    process.stderr.write(`[togetherlink ${spec.agent}] model: ${spec.modelId}\n`);
+    process.stderr.write(`[openharness proxy] daemon: ${proxyUrl}\n`);
+    process.stderr.write(`[openharness proxy] session: ${agentProxyUrl}\n`);
+    process.stderr.write(`[openharness ${spec.agent}] model: ${spec.modelId}\n`);
   }
 
   const beforeSpawnResult = spec.beforeSpawn ? await spec.beforeSpawn() : undefined;
@@ -185,7 +185,7 @@ export async function runProxiedSession(spec: ProxiedSessionSpec): Promise<Proxi
 
   const result = await new Promise<ProxiedSessionResult>((resolve) => {
     child.on("error", (err) => {
-      process.stderr.write(`togetherlink ▸ Failed to launch ${spec.binary}: ${err.message}.\n`);
+      process.stderr.write(`openharness ▸ Failed to launch ${spec.binary}: ${err.message}.\n`);
       resolve({ status: 1, signal: null });
     });
     child.on("exit", (status, signal) => resolve({ status, signal }));

@@ -30,7 +30,7 @@ import {
 
 /**
  * Product flags that may appear after `opencode` in the argv (users often write
- * `togetherlink opencode --provider ollama`). Peel them into context so they
+ * `openharness opencode --provider ollama`). Peel them into context so they
  * are not forwarded to the native binary.
  */
 function peelProductFlags(args: string[]): {
@@ -148,7 +148,7 @@ async function resolveOllamaProvider(ctx: HarnessContext): Promise<ProviderConfi
   if (!discovery.ok) {
     if (requested) {
       process.stderr.write(
-        `togetherlink ▸ Warning: ${discovery.error} Using --main ${requested} without discovery.\n`,
+        `openharness ▸ Warning: ${discovery.error} Using --main ${requested} without discovery.\n`,
       );
       return buildOllamaProviderConfig({
         baseURL: discovery.baseURL,
@@ -162,7 +162,7 @@ async function resolveOllamaProvider(ctx: HarnessContext): Promise<ProviderConfi
   if (requested && !models.some((m) => m.id === requested)) {
     models = [ollamaModelFromId(requested), ...models];
     process.stderr.write(
-      `togetherlink ▸ Model "${requested}" was not in Ollama's catalog; ` +
+      `openharness ▸ Model "${requested}" was not in Ollama's catalog; ` +
         `including it anyway. If launch fails, run \`ollama pull ${requested}\`.\n`,
     );
   }
@@ -191,7 +191,7 @@ async function resolveOpenRouterProvider(ctx: HarnessContext): Promise<ProviderC
   const requested = ctx.main?.trim();
   if (!discovery.ok) {
     process.stderr.write(
-      `togetherlink ▸ Warning: ${discovery.error} Using curated OpenRouter catalog.\n`,
+      `openharness ▸ Warning: ${discovery.error} Using curated OpenRouter catalog.\n`,
     );
     return buildOpenRouterProviderConfig({
       baseURL: discovery.baseURL,
@@ -280,7 +280,7 @@ async function resolveLaunchApiKey(
   if (!apiKey) {
     throw new Error(
       "OpenCode Together preset needs a key. Pass --api-key, set TOGETHER_API_KEY, " +
-        "or run `togetherlink configure`. For local models use the default " +
+        "or run `openharness configure`. For local models use the default " +
         "`--provider ollama` (no key); for OpenRouter use `--provider openrouter`.",
     );
   }
@@ -426,23 +426,23 @@ export default defineHarness({
 
     if (cloudDestination) {
       process.stderr.write(
-        `togetherlink ▸ Cloud destination: OpenRouter (${provider.baseURL}). ` +
+        `openharness ▸ Cloud destination: OpenRouter (${provider.baseURL}). ` +
           `Prompts leave this machine.\n`,
       );
     }
 
     process.stderr.write(
-      `togetherlink ▸ Routing OpenCode → ${provider.label}` +
+      `openharness ▸ Routing OpenCode → ${provider.label}` +
         ` (${modelId}) via session-only config.\n`,
     );
 
     if (process.env.TOGETHERLINK_DEBUG === "1") {
       process.stderr.write(
-        `[togetherlink opencode] provider: ${provider.id} (${opencodeProviderIdFor(provider)})\n`,
+        `[openharness opencode] provider: ${provider.id} (${opencodeProviderIdFor(provider)})\n`,
       );
-      process.stderr.write(`[togetherlink opencode] baseURL: ${provider.baseURL}\n`);
-      process.stderr.write(`[togetherlink opencode] model: ${modelId}\n`);
-      process.stderr.write(`[togetherlink opencode] config: ${JSON.stringify(configJson)}\n`);
+      process.stderr.write(`[openharness opencode] baseURL: ${provider.baseURL}\n`);
+      process.stderr.write(`[openharness opencode] model: ${modelId}\n`);
+      process.stderr.write(`[openharness opencode] config: ${JSON.stringify(configJson)}\n`);
     }
 
     const child = spawn("opencode", args, {

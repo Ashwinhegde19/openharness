@@ -219,7 +219,7 @@ function debugLog(
   label: string,
   value: unknown | (() => unknown),
 ): void {
-  writeProxyDebugLog("togetherlink proxy", options, label, value);
+  writeProxyDebugLog("openharness proxy", options, label, value);
 }
 
 /**

@@ -237,7 +237,7 @@ export class SessionRegistry {
       this.store.markSessionEnded(
         session.token,
         now,
-        session.externalSummary ?? "[togetherlink cost] session total: $0.0000 (0 in, 0 out)",
+        session.externalSummary ?? "[openharness cost] session total: $0.0000 (0 in, 0 out)",
         {
           promptTokens: session.promptTokens ?? 0,
           cachedTokens: session.cachedTokens ?? 0,
@@ -249,7 +249,7 @@ export class SessionRegistry {
     }
     if (sealed > 0) {
       process.stderr.write(
-        `[togetherlink daemon] Sealed ${sealed} session(s) after restart — ` +
+        `[openharness daemon] Sealed ${sealed} session(s) after restart — ` +
           `API keys are not persisted; re-launch the harness to continue.\n`,
       );
     }
@@ -504,7 +504,7 @@ function storedSessionToPersistInput(session: StoredSession): SessionPersistInpu
     ...session,
     lastSeenAt: session.lastSeenAt ?? session.startedAt,
     costSummary:
-      session.externalSummary ?? "[togetherlink cost] session total: $0.0000 (0 in, 0 out)",
+      session.externalSummary ?? "[openharness cost] session total: $0.0000 (0 in, 0 out)",
     costTotals: {
       promptTokens: session.promptTokens ?? 0,
       cachedTokens: session.cachedTokens ?? 0,

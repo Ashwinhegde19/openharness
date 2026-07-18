@@ -11,10 +11,7 @@ import {
 } from "../provider/index.js";
 import { OPENROUTER_API_KEY_ENV } from "../provider/openrouter-preset.js";
 import { planOpencodeLaunch } from "../harnesses/opencode.js";
-import {
-  readGlobalConfig,
-  resolveStoredOpenRouterApiKey,
-} from "../global-config.js";
+import { readGlobalConfig, resolveStoredOpenRouterApiKey } from "../global-config.js";
 import { resolveTogetherApiKey } from "../together-core.js";
 import type { LaunchPlan } from "./types.js";
 
@@ -36,7 +33,7 @@ export async function buildLaunchPlan(
 ): Promise<LaunchPlan> {
   const empty: LaunchPlan = {
     harness: harnessArg ?? "",
-    harnessLabel: harnessArg ? HARNESS_LABEL[harnessArg as HarnessId] ?? harnessArg : "",
+    harnessLabel: harnessArg ? (HARNESS_LABEL[harnessArg as HarnessId] ?? harnessArg) : "",
     family: "spawned",
     provider: "",
     providerLabel: "",
@@ -113,7 +110,9 @@ async function mapProxiedPlan(harness: HarnessId, ctx: HarnessContext): Promise<
     errors.push(`Unknown provider "${ctx.provider}". Supported: ollama, openrouter, together.`);
   }
 
-  const provider = getBuiltinProvider(providerId === "togetherai" ? TOGETHER_PROVIDER_ID : providerId);
+  const provider = getBuiltinProvider(
+    providerId === "togetherai" ? TOGETHER_PROVIDER_ID : providerId,
+  );
   if (!provider) {
     return {
       harness,
@@ -143,7 +142,7 @@ async function mapProxiedPlan(harness: HarnessId, ctx: HarnessContext): Promise<
   if (provider.auth.type !== "none" && !keyPresent) {
     warnings.push(
       `No ${provider.auth.apiKeyEnv ?? "API key"} found. ` +
-        `Set it or run \`togetherlink configure\` before launching for real.`,
+        `Set it or run \`openharness configure\` before launching for real.`,
     );
   }
 
@@ -168,9 +167,7 @@ async function mapProxiedPlan(harness: HarnessId, ctx: HarnessContext): Promise<
     passthrough: peeled.rest,
     notes: [
       "Launches a session-scoped local proxy; the harness config is not permanently modified.",
-      ...(cloudDestination
-        ? ["Cloud destination: prompts leave this machine (OpenRouter)."]
-        : []),
+      ...(cloudDestination ? ["Cloud destination: prompts leave this machine (OpenRouter)."] : []),
     ],
     warnings,
     errors,
@@ -220,7 +217,10 @@ function printLaunchPlan(plan: LaunchPlan): void {
     ["base URL", plan.baseURL || "—"],
     ["model", plan.model || "—"],
     ["session-only", plan.sessionOnly ? "yes (no permanent config)" : "no"],
-    ["cloud destination", plan.cloudDestination ? "yes — prompts leave this machine" : "no (local/on-prem)"],
+    [
+      "cloud destination",
+      plan.cloudDestination ? "yes — prompts leave this machine" : "no (local/on-prem)",
+    ],
     [
       "auth",
       plan.auth.type === "none"
@@ -252,5 +252,9 @@ function printLaunchPlan(plan: LaunchPlan): void {
     console.log(`  ✗ ${error}`);
   }
   console.log("─".repeat(48));
-  console.log(plan.errors.length > 0 ? "Plan has errors — not ready to launch." : "Plan ready (preview only — nothing launched).");
+  console.log(
+    plan.errors.length > 0
+      ? "Plan has errors — not ready to launch."
+      : "Plan ready (preview only — nothing launched).",
+  );
 }

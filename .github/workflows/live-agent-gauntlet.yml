@@ -185,7 +185,7 @@ jobs:
 
       - name: Stop togetherlink daemon
         if: always() && steps.secret.outputs.present == 'true'
-        run: node packages/cli/dist/bin/togetherlink.js daemon stop || true
+        run: node packages/cli/dist/bin/openharness.js daemon stop || true
 
       - name: Save Turborepo cache
         if: always() && steps.secret.outputs.present == 'true'

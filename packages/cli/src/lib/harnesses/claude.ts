@@ -75,7 +75,7 @@ async function resolveClaudeProvider(ctx: HarnessContext): Promise<{
     if (!discovery.ok) {
       if (requested) {
         process.stderr.write(
-          `togetherlink ▸ Warning: ${discovery.error} Using --main ${requested} without discovery.\n`,
+          `openharness ▸ Warning: ${discovery.error} Using --main ${requested} without discovery.\n`,
         );
         const models = [ollamaModelFromId(requested)];
         const provider = buildOllamaProviderConfig({
@@ -120,7 +120,7 @@ async function resolveClaudeProvider(ctx: HarnessContext): Promise<{
     const requested = ctx.main?.trim();
     if (!discovery.ok) {
       process.stderr.write(
-        `togetherlink ▸ Warning: ${discovery.error} Using curated OpenRouter catalog.\n`,
+        `openharness ▸ Warning: ${discovery.error} Using curated OpenRouter catalog.\n`,
       );
       const models = mergeOpenRouterCatalog({ requested });
       const provider = buildOpenRouterProviderConfig({
@@ -158,9 +158,9 @@ async function resolveClaudeProvider(ctx: HarnessContext): Promise<{
   if (!apiKey) {
     throw new Error(
       "Claude Code with the Together preset needs a key. " +
-        "Pass --api-key, set TOGETHER_API_KEY, or run `togetherlink configure`. " +
+        "Pass --api-key, set TOGETHER_API_KEY, or run `openharness configure`. " +
         "Or use a non-Together provider: " +
-        "`togetherlink claude --provider openrouter --main openai/gpt-4o-mini` " +
+        "`openharness claude --provider openrouter --main openai/gpt-4o-mini` " +
         "or `--provider ollama --main llama3.2`.",
     );
   }
@@ -241,7 +241,7 @@ export default defineHarness({
 
     if (providerId === OPENROUTER_PROVIDER_ID) {
       process.stderr.write(
-        `togetherlink ▸ Cloud destination: OpenRouter (${resolved.endpoint.baseURL}). ` +
+        `openharness ▸ Cloud destination: OpenRouter (${resolved.endpoint.baseURL}). ` +
           `Prompts leave this machine.\n`,
       );
     }

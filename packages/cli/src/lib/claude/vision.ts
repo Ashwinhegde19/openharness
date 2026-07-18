@@ -310,5 +310,5 @@ function debug(options: VisionRequestOptions, label: string, value: unknown): vo
   if (!options.debug) {
     return;
   }
-  process.stderr.write(`[togetherlink vision] ${label}: ${JSON.stringify(value)}\n`);
+  process.stderr.write(`[openharness vision] ${label}: ${JSON.stringify(value)}\n`);
 }

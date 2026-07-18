@@ -1707,7 +1707,7 @@ describe("Codex Responses proxy tool compatibility", () => {
     const retryMessages = requests[1]?.body?.messages;
     expect(retryMessages).toBeDefined();
     const hasTrimMarker = retryMessages.some(
-      (m: any) => typeof m.content === "string" && m.content.includes("[togetherlink trimmed"),
+      (m: any) => typeof m.content === "string" && m.content.includes("[openharness trimmed"),
     );
     expect(hasTrimMarker).toBe(true);
   });

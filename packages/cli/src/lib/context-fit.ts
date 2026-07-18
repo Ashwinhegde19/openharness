@@ -30,8 +30,8 @@ const HARD_WARN_DROPPED_FRACTION = 0.5;
 /** Upper bound on fit retries per request; the ladder converges well under this. */
 export const CONTEXT_FIT_MAX_ATTEMPTS = 6;
 
-const IMAGE_REMOVED_PLACEHOLDER = "[togetherlink removed an older image to fit the model window]";
-const TRIM_MARKER = "\n[togetherlink trimmed older context to fit the model window]\n";
+const IMAGE_REMOVED_PLACEHOLDER = "[openharness removed an older image to fit the model window]";
+const TRIM_MARKER = "\n[openharness trimmed older context to fit the model window]\n";
 
 /** Structural view of an OpenAI chat message — harness-agnostic on purpose. */
 type FitContentPart = { type?: string; text?: string; image_url?: unknown };

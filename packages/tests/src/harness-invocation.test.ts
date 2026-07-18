@@ -53,7 +53,7 @@ describe("harness invocation parsing", () => {
     expect(invocation.flags.passthroughSeparator).toBeUndefined();
   });
 
-  test("keeps togetherlink flags before the harness", () => {
+  test("keeps openharness flags before the harness", () => {
     const parsed = parseArgs([
       "--main",
       "together-kimi-k2-7-code",
@@ -68,7 +68,7 @@ describe("harness invocation parsing", () => {
     expect(invocation.flags.passthrough).toEqual(["--resume", "session-id"]);
   });
 
-  test("passes known togetherlink flags through after the harness", () => {
+  test("passes known openharness flags through after the harness", () => {
     const parsed = parseArgs(["claude", "--main", "real-claude-value"]);
     const invocation = resolveHarnessInvocation(parsed.positional, parsed.flags);
 

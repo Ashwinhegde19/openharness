@@ -117,7 +117,7 @@ describe("daemon lazy codex-app session restore", () => {
 
   test("re-registers the persisted codex-app session on a token miss instead of 401ing", async () => {
     // Simulate the state after a daemon restart / idle reap: the register
-    // body is on disk (written by `togetherlink codex-app`) but the daemon
+    // body is on disk (written by `openharness codex-app`) but the daemon
     // has no in-memory session for the token the Codex app keeps sending.
     await writeAppRegistration(registration(), daemon.home);
     const before = await sessionCount();
@@ -141,7 +141,7 @@ describe("daemon lazy codex-app session restore", () => {
   });
 
   test("stops resurrecting the session after restore clears the registration", async () => {
-    // `togetherlink codex-app --restore` deletes both the daemon session and
+    // `openharness codex-app --restore` deletes both the daemon session and
     // the persisted registration; the token must go back to 401.
     await fetch(`${daemon.url}/internal/sessions/${encodeURIComponent(TOKEN)}`, {
       method: "DELETE",

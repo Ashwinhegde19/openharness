@@ -68,7 +68,7 @@ export function codexAppLaunchMessage(result: CodexAppLaunchResult): string {
     return "ChatGPT App is already open. Restart it when you are ready so it reloads this profile.";
   }
   if (result.wasRunning && result.restartUnsupported) {
-    return "ChatGPT App is already open, but togetherlink could not restart it. Quit and reopen ChatGPT App when you are ready.";
+    return "ChatGPT App is already open, but openharness could not restart it. Quit and reopen ChatGPT App when you are ready.";
   }
   if (!result.wasRunning && !result.launchAttempted) {
     return "ChatGPT App was not running.";

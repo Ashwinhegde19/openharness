@@ -9,7 +9,7 @@ const LOADABLE_ENV_KEYS = new Set(["TOGETHER_API_KEY", "OPENROUTER_API_KEY"]);
  * real exports / shell-defined vars always win, matching dotenv's `override: false`.
  * Provider API keys may be loaded from project .env files. EXA_API_KEY is not
  * loaded here because web-search queries would be visible to whoever owns that
- * key; use the real environment or `togetherlink configure` for Exa.
+ * key; use the real environment or `openharness configure` for Exa.
  *
  * Looks first in the directory the CLI was invoked from (cwd), then walks up
  * to the repo root so harness launches pick up a shared root .env.

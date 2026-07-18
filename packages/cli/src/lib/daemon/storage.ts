@@ -247,7 +247,7 @@ class ResilientSessionStore implements SessionStore {
 
 function warnStoreError(action: string, err: unknown): void {
   const message = err instanceof Error ? err.message : String(err);
-  process.stderr.write(`[togetherlink daemon] Could not ${action}: ${message}\n`);
+  process.stderr.write(`[openharness daemon] Could not ${action}: ${message}\n`);
 }
 
 class SqliteSessionStore implements SessionStore {

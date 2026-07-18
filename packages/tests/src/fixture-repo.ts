@@ -37,7 +37,7 @@ export async function createFixtureRepo(context: TestContext, owner: string): Pr
     [
       "# Stats Fixture",
       "",
-      "This tiny repo is used by togetherlink live agent tests.",
+      "This tiny repo is used by openharness live agent tests.",
       "",
       "Implemented functions:",
       "- sum(numbers)",
@@ -84,9 +84,9 @@ export async function createFixtureRepo(context: TestContext, owner: string): Pr
     cwd: root,
     env: {
       ...process.env,
-      GIT_AUTHOR_NAME: "togetherlink tests",
+      GIT_AUTHOR_NAME: "openharness tests",
       GIT_AUTHOR_EMAIL: "tests@togetherlink.local",
-      GIT_COMMITTER_NAME: "togetherlink tests",
+      GIT_COMMITTER_NAME: "openharness tests",
       GIT_COMMITTER_EMAIL: "tests@togetherlink.local",
     },
   });

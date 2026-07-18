@@ -27,7 +27,7 @@ async function daemonStop(): Promise<void> {
     pid = undefined;
   }
   if (pid === undefined) {
-    console.log(`togetherlink daemon: not running (no pid file at ${pidPath}).`);
+    console.log(`openharness daemon: not running (no pid file at ${pidPath}).`);
     return;
   }
   try {
@@ -40,7 +40,7 @@ async function daemonStop(): Promise<void> {
       } catch {
         // ignore
       }
-      console.log(`togetherlink daemon: not running (stale pid file removed).`);
+      console.log(`openharness daemon: not running (stale pid file removed).`);
       return;
     }
     throw err;
@@ -53,7 +53,7 @@ async function daemonStop(): Promise<void> {
   } catch {
     // already cleaned by the daemon
   }
-  console.log(`togetherlink daemon: stopped (pid ${pid}) on ${daemonUrl(port)}.`);
+  console.log(`openharness daemon: stopped (pid ${pid}) on ${daemonUrl(port)}.`);
 }
 
 async function loadStoredExaKey(): Promise<void> {
@@ -101,7 +101,7 @@ async function runInteractiveLauncher(): Promise<void> {
   }
   if (choice === "chatgpt") {
     // ChatGPT Desktop (the former Codex desktop app, merged in 2026). Routes
-    // to the same codex-app flow as `togetherlink chatgpt` / `codex-app`.
+    // to the same codex-app flow as `openharness chatgpt` / `codex-app`.
     const { runCodexAppCommand } = await import("../lib/codex-app.js");
     const result = await runCodexAppCommand({ home: os.homedir() });
     if (result.message) {
@@ -122,7 +122,7 @@ function isInteractive(): boolean {
 
 async function main() {
   // Self-update first (throttled, bounded, never throws). Placed before arg
-  // parsing so even `togetherlink help` keeps an install current, but it's a
+  // parsing so even `openharness help` keeps an install current, but it's a
   // no-op unless this is the installed bundle and the throttle window passed.
   // Keep this before loading project .env files so a repo cannot redirect the
   // updater with TOGETHERLINK_MANIFEST_URL / TOGETHERLINK_HOME.
@@ -133,7 +133,7 @@ async function main() {
   loadEnvFile();
 
   // If EXA_API_KEY still isn't set (not in the env or .env), fall back to the
-  // key stored by `togetherlink configure`, so the proxy's web search works
+  // key stored by `openharness configure`, so the proxy's web search works
   // without the user re-sourcing .env every session.
   await loadStoredExaKey();
 
@@ -162,7 +162,7 @@ async function main() {
   }
 
   if (command === "--version" || command === "-v" || command === "version") {
-    process.stdout.write(`togetherlink v${VERSION}\n`);
+    process.stdout.write(`openharness v${VERSION}\n`);
     return;
   }
 

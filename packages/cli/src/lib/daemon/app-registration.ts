@@ -10,11 +10,11 @@ const REGISTRATION_FILE = "registration.json";
 /**
  * Persisted daemon registration for the codex-app integration.
  *
- * `togetherlink codex-app` configures the Codex desktop app once and exits, so
+ * `openharness codex-app` configures the Codex desktop app once and exits, so
  * unlike the CLI launchers there is no long-lived process to re-register the
  * session when the daemon loses it (restart, idle reap, kill -9). The Codex
  * app keeps sending its stable token and gets 401s until the user re-runs
- * `togetherlink codex-app`. Persisting the non-secret register body lets the
+ * `openharness codex-app`. Persisting the non-secret register body lets the
  * daemon rebuild the session on demand; the provider API key is re-resolved
  * from the environment / global config at read time (M2 — no plaintext keys).
  */
@@ -48,7 +48,7 @@ export async function clearAppRegistration(home = togetherlinkHome()): Promise<v
  * Read the persisted registration, re-resolve the provider API key from env /
  * global config, and validate the same fields the daemon's register endpoint
  * requires for a proxied agent. Missing/malformed files or unresolvable keys
- * return undefined; the next `togetherlink codex-app` run rewrites the file.
+ * return undefined; the next `openharness codex-app` run rewrites the file.
  */
 export async function readAppRegistration(
   home = togetherlinkHome(),

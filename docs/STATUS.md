@@ -19,7 +19,7 @@ Use this file to track how far the roadmap has been implemented. Detailed work i
 | **M4**    | OpenCode + OpenRouter              | ✅ **Done** (live gauntlet / matrix entry optional) |
 | **M5**    | Claude multi-provider              | ✅ **Done** (live evidence / matrix optional)       |
 | **M6**    | Codex multi-provider               | ✅ **Done** (live evidence / matrix optional)       |
-| **M7**    | Public alpha                       | 🔧 **In progress** ← **current frontier**          |
+| **M7**    | Public alpha                       | 🔧 **In progress** ← **current frontier**           |
 | **M8**    | Beta hardening                     | ⬜ Not started                                      |
 | **M9**    | Stable 1.0                         | ⬜ Not started                                      |
 
@@ -112,8 +112,8 @@ Work landed for alpha packaging, diagnostics, and community process:
 
 ### Product / packaging
 
-- [x] Temporary publishable product name — keeping working title `togetherlink`; repo is `openharness` (rename deferred to post-M7 per debt list)
-- [x] Install path + quick start that does **not** require Together (`togetherlink opencode` → local Ollama)
+- [x] Product name `openharness` — repository and installed CLI binary are `openharness` (provider-neutral fork of TogetherLink)
+- [x] Install path + quick start that does **not** require Together (`openharness opencode` → local Ollama)
 - [x] Release artifacts: `CHANGELOG.md` added; license reconciled to MIT (matches `LICENSE`); install script reviewed (hosted bundle/origin not yet published for the fork — source build is the alpha install path)
 
 ### UX / diagnostics
@@ -175,14 +175,14 @@ Legend: ✅ launch path implemented (offline unit-tested). Live E2E with real bi
 
 ## Known open debt (track before/with M7+)
 
-| Item                                              | Severity      | Notes                                  |
-| ------------------------------------------------- | ------------- | -------------------------------------- |
-| Pi secret on disk/argv                            | Medium        | M2 follow-up                           |
-| License: `LICENSE` is MIT; `package.json` now MIT | Resolved      | Reconciled in M7 (package.json license set to MIT) |
-| Branding still `togetherlink`                     | Low for alpha | Rename after architecture stable (M7+) |
-| Live multi-provider CI evidence                   | Medium        | Needs secrets + harness binaries       |
-| Compatibility matrix not published                | Medium        | Alpha exit                             |
-| Audit README “important findings” partially stale | Low           | e.g. SQLite secrets fixed in M2        |
+| Item                                              | Severity | Notes                                                      |
+| ------------------------------------------------- | -------- | ---------------------------------------------------------- |
+| Pi secret on disk/argv                            | Medium   | M2 follow-up                                               |
+| License: `LICENSE` is MIT; `package.json` now MIT | Resolved | Reconciled in M7 (package.json license set to MIT)         |
+| Branding `togetherlink` → `openharness`           | Resolved | Renamed in M7 (CLI binary + doctor/README/STATUS branding) |
+| Live multi-provider CI evidence                   | Medium   | Needs secrets + harness binaries                           |
+| Compatibility matrix not published                | Medium   | Alpha exit                                                 |
+| Audit README “important findings” partially stale | Low      | e.g. SQLite secrets fixed in M2                            |
 
 ---
 

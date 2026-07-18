@@ -221,7 +221,7 @@ async function fetchWithContextFit(
     }
     if (fit.debug) {
       process.stderr.write(
-        `[togetherlink proxy] context-fit retry (${outcome.action}): ` +
+        `[openharness proxy] context-fit retry (${outcome.action}): ` +
           `input ${outcome.inputTokens} tokens vs window ${outcome.contextWindow}\n`,
       );
     }

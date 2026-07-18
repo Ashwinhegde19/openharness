@@ -1,9 +1,10 @@
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
 import { cleanupTmpDir, createTestContext } from "./context.js";
 import { registerClaudeSession, startTestDaemon, type TestDaemon } from "./daemon-session.js";
+import { LIVE_ENABLED } from "./live.js";
 import type { TestContext } from "./types.js";
 
-describe("daemon session-URL auth", () => {
+describe.skipIf(!LIVE_ENABLED)("daemon session-URL auth", () => {
   let context: TestContext;
   let daemon: TestDaemon;
   let token: string;

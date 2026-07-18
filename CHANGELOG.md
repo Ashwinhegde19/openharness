@@ -11,6 +11,7 @@ provider-neutral fork of [TogetherLink](https://github.com/Nutlope/togetherlink)
 ## [0.5.26] — 2026-07-17 (public alpha · M7 in progress)
 
 ### Added
+
 - `doctor` command: detects installed harnesses, checks Ollama reachability,
   reports optional provider key presence (no secret exposure), and prints a
   first-run recommendation.
@@ -21,6 +22,7 @@ provider-neutral fork of [TogetherLink](https://github.com/Nutlope/togetherlink)
   (private vulnerability reporting path).
 
 ### Notes
+
 - OpenCode defaults to local **Ollama** (no API key). Together and OpenRouter are
   opt-in via `--provider together` / `--provider openrouter`.
 - No product-level API key is required to run the CLI or OpenCode.
@@ -31,6 +33,7 @@ provider-neutral fork of [TogetherLink](https://github.com/Nutlope/togetherlink)
   README "Quick start".
 
 ### Baseline
+
 Forked from TogetherLink at pin `9f56ed93` (v0.5.26). Milestones M0–M6
 (provider-neutral runtime, secret-safe runtime, OpenCode+Ollama,
 OpenCode+OpenRouter, Claude multi-provider, Codex multi-provider) were completed

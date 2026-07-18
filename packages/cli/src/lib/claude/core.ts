@@ -143,7 +143,7 @@ function setTierModelEnv(
   env[prefix] = model.alias;
   env[`${prefix}_NAME`] = model.definition.name;
   env[`${prefix}_DESCRIPTION`] =
-    `${providerLabel} (${model.definition.name}) via togetherlink — not Anthropic`;
+    `${providerLabel} (${model.definition.name}) via openharness — not Anthropic`;
 }
 
 /**
@@ -182,7 +182,7 @@ export async function runClaudeTogether(options: ClaudeLaunchOptions): Promise<C
     binary: "claude",
     keepaliveLabel: "Claude session",
     banner: (name) =>
-      `togetherlink ▸ Routing Claude Code → ${providerLabel} (${name}). Not Anthropic.\n`,
+      `openharness ▸ Routing Claude Code → ${providerLabel} (${name}). Not Anthropic.\n`,
     buildEnv: ({ proxyUrl, authToken, modelId }) =>
       buildClaudeEnv({
         modelId,
@@ -243,7 +243,7 @@ function claudeCacheFriendlyArgs(args: string[]): string[] {
   return ["--exclude-dynamic-system-prompt-sections"];
 }
 
-// Extra settings.json keys togetherlink applies by default. These are
+// Extra settings.json keys openharness applies by default. These are
 // settings-only (no env-var equivalent), so they're injected via claude's
 // `--settings <json>` flag, which *merges* into the user's existing settings
 // rather than replacing them. We bail out entirely if the user already passed
@@ -257,7 +257,7 @@ function claudeExtraSettingsArgs(args: string[]): string[] {
 
   // skipWebFetchPreflight: the WebFetch tool pings api.anthropic.com directly
   // (bypassing ANTHROPIC_BASE_URL / our proxy) for its domain safety check. In
-  // a togetherlink session api.anthropic.com isn't our model endpoint, so the
+  // a openharness session api.anthropic.com isn't our model endpoint, so the
   // preflight fails and WebFetch breaks entirely. Skipping it restores
   // WebFetch without reaching Anthropic. Only sends a boolean — no other
   // settings keys are added here.

@@ -67,7 +67,7 @@ export function toCodexModelCatalogEntry(
   return {
     slug: model.id,
     display_name: model.definition.name,
-    description: `${providerLabel} model via togetherlink (${model.definition.id})`,
+    description: `${providerLabel} model via openharness (${model.definition.id})`,
     default_reasoning_level: model.definition.reasoning ? "medium" : "none",
     supported_reasoning_levels: reasoningLevels,
     shell_type: "shell_command",

@@ -47,7 +47,7 @@ function sessionInput(token: string): SessionPersistInput {
     modelDefinition: MODEL,
     startedAt: Date.now(),
     lastSeenAt: Date.now(),
-    costSummary: "[togetherlink cost] session total: $0.0000 (0 in, 0 out)",
+    costSummary: "[openharness cost] session total: $0.0000 (0 in, 0 out)",
     costTotals: { promptTokens: 0, cachedTokens: 0, completionTokens: 0, costUsd: 0 },
   };
 }

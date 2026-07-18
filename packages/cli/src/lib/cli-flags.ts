@@ -1,6 +1,6 @@
 /**
  * Product flags that may appear after a harness name (users often write
- * `togetherlink claude --provider openrouter`). Peel them into context so
+ * `openharness claude --provider openrouter`). Peel them into context so
  * they are not forwarded to the native binary.
  */
 export function peelProductFlags(args: string[]): {

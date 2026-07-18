@@ -10,8 +10,8 @@ import {
 } from "../../cli/src/lib/context-fit.js";
 import { postChatCompletion, postChatCompletionStream } from "../../cli/src/lib/together-client.js";
 
-const TRIM_MARKER = "[togetherlink trimmed older context to fit the model window]";
-const IMAGE_PLACEHOLDER = "[togetherlink removed an older image to fit the model window]";
+const TRIM_MARKER = "[openharness trimmed older context to fit the model window]";
+const IMAGE_PLACEHOLDER = "[openharness removed an older image to fit the model window]";
 
 const model: ModelDefinition = {
   id: "test/fit-model",

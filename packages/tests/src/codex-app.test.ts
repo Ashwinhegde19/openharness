@@ -61,7 +61,7 @@ describe("Codex App alpha config", () => {
       catalogPath: "/tmp/new.json",
     });
 
-    expect(second.match(/>>> togetherlink codex-app alpha >>>/g)).toHaveLength(1);
+    expect(second.match(/>>> openharness codex-app alpha >>>/g)).toHaveLength(1);
     expect(second).not.toContain("/tmp/old.json");
     expect(second).not.toContain("/session/old/v1");
     expect(second).toContain('model = "moonshotai/Kimi-K2.7-Code"');

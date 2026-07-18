@@ -8,8 +8,8 @@ import {
   tomlString,
 } from "@togetherlink/cli/dist/lib/codex-app/toml.js";
 
-const START = "# >>> togetherlink codex-app alpha >>>";
-const END = "# <<< togetherlink codex-app alpha <<<";
+const START = "# >>> openharness codex-app alpha >>>";
+const END = "# <<< openharness codex-app alpha <<<";
 
 describe("codex-app/toml.ts — pure TOML preamble manipulation (#4)", () => {
   test("removeManagedBlock strips a marked block cleanly", () => {

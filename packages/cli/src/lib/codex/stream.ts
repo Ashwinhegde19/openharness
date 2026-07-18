@@ -750,5 +750,5 @@ function debugLog(
   label: string,
   payload: unknown | (() => unknown),
 ): void {
-  writeProxyDebugLog("togetherlink codex proxy", options, label, payload);
+  writeProxyDebugLog("openharness codex proxy", options, label, payload);
 }

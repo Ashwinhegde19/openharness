@@ -42,8 +42,8 @@ import {
 } from "./codex-app/process.js";
 
 const CODEX_APP_PROVIDER_ID = `${CODEX_PROVIDER_ID}_codex_app`;
-const CODEX_APP_CONFIG_MARKER_START = "# >>> togetherlink codex-app alpha >>>";
-const CODEX_APP_CONFIG_MARKER_END = "# <<< togetherlink codex-app alpha <<<";
+const CODEX_APP_CONFIG_MARKER_START = "# >>> openharness codex-app alpha >>>";
+const CODEX_APP_CONFIG_MARKER_END = "# <<< openharness codex-app alpha <<<";
 const CODEX_APP_REQUIRES_OPENAI_AUTH_WORKAROUND = true;
 const BACKUP_MANIFEST = "latest.json";
 
@@ -70,8 +70,8 @@ export async function runCodexAppCommand(ctx: HarnessContext): Promise<HarnessRe
   if (!apiKey) {
     throw new Error(
       "ChatGPT Desktop integration currently uses the Together provider preset and needs a key. " +
-        "Pass --api-key, set TOGETHER_API_KEY, or run `togetherlink configure`. " +
-        "For local models without a cloud key: `togetherlink opencode` (Ollama).",
+        "Pass --api-key, set TOGETHER_API_KEY, or run `openharness configure`. " +
+        "For local models without a cloud key: `openharness opencode` (Ollama).",
     );
   }
 
@@ -154,7 +154,7 @@ export async function runCodexAppCommand(ctx: HarnessContext): Promise<HarnessRe
     "ChatGPT App profile changed to Togetherlink. (alpha)",
     `Model: ${selectedModel.definition.name}`,
     "Start a task or open a repository in ChatGPT App as usual.",
-    "Restore your previous ChatGPT App profile with: togetherlink chatgpt --restore",
+    "Restore your previous ChatGPT App profile with: openharness chatgpt --restore",
     `Backup: ${backup}`,
     codexAppLaunchMessage(launch),
   ]
@@ -204,14 +204,14 @@ export function buildCodexAppConfig(
     "openai_base_url",
     "profile",
     // Strip legacy global context-window overrides that were emitted by early
-    // versions of the togetherlink managed config. They become stale the
+    // versions of the openharness managed config. They become stale the
     // moment the user switches models inside ChatGPT Desktop.
     "model_context_window",
     "model_auto_compact_token_limit",
   ]);
   const providerBlock = [
     CODEX_APP_CONFIG_MARKER_START,
-    "# togetherlink codex-app configures a dedicated alpha provider for ChatGPT Desktop.",
+    "# openharness codex-app configures a dedicated alpha provider for ChatGPT Desktop.",
     `[model_providers.${options.providerId}]`,
     `name = ${tomlString(options.providerName)}`,
     `base_url = ${tomlString(options.baseUrl)}`,
@@ -254,7 +254,7 @@ async function restoreCodexApp(home: string): Promise<HarnessResult> {
   // the codex-app session after the user restores their original profile.
   await clearAppRegistration(togetherlinkHomeDir(home));
   // Restore should also drop the models cache: a stale OpenAI-only cache left
-  // behind by a togetherlink session would make Codex show "Unknown model"
+  // behind by a openharness session would make Codex show "Unknown model"
   // warnings for the user's real (restored) model until the cache expires.
   await bustStaleModelsCache(home);
 

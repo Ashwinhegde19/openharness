@@ -2,7 +2,7 @@ import os from "node:os";
 import path from "node:path";
 
 /**
- * Resolve the togetherlink home directory — the one source of truth for where
+ * Resolve the openharness home directory — the one source of truth for where
  * the pid file, the sqlite session database, and the codex-app registration
  * file live. Replaces the four byte-identical `resolveTogetherlinkHome()`
  * copies that previously lived in `daemon/{storage,server,launch,

@@ -67,7 +67,7 @@ export async function ensureDaemon(): Promise<{ url: string }> {
   // `import.meta.url` points at `dist/lib/daemon/launch.js`, which only exports
   // symbols and has no top-level main, so a self-spawn of it would exit
   // immediately and ensureDaemon would always time out. `process.argv[1]` is
-  // the entry the user invoked (the bundle path, or `dist/bin/togetherlink.js`
+  // the entry the user invoked (the bundle path, or `dist/bin/openharness.js`
   // in dev) in both builds.
   const scriptPath = currentScriptPath();
   const child = spawn(process.execPath, [scriptPath, "--daemon"], {
@@ -89,7 +89,7 @@ export async function ensureDaemon(): Promise<{ url: string }> {
     }
   }
   throw new Error(
-    `togetherlink daemon did not become healthy on ${url} within ${HEALTH_POLL_TIMEOUT_MS / 1000}s. ` +
+    `openharness daemon did not become healthy on ${url} within ${HEALTH_POLL_TIMEOUT_MS / 1000}s. ` +
       `Set TOGETHERLINK_PORT to use a different port.`,
   );
 }
@@ -177,7 +177,7 @@ async function waitForDaemonToExit(port: number): Promise<void> {
 /**
  * Absolute path of the CLI entrypoint, for `bun/node <scriptPath> --daemon`.
  * Prefers `process.argv[1]` (the entry the user actually invoked — the bundle
- * under the install, or `dist/bin/togetherlink.js` under `pnpm dev`), resolved
+ * under the install, or `dist/bin/openharness.js` under `pnpm dev`), resolved
  * to an absolute path. Falls back to this module's `import.meta.url` only if
  * argv[1] is unavailable; note that import.meta.url is the wrong target in the
  * multi-file tsc dist (see the call-site comment above).
@@ -312,7 +312,7 @@ export function startDaemonSessionKeepalive(
     });
     if (options.debug) {
       process.stderr.write(
-        `[togetherlink daemon] restored ${options.label ?? registration.agent ?? "session"} after ${reason}.\n`,
+        `[openharness daemon] restored ${options.label ?? registration.agent ?? "session"} after ${reason}.\n`,
       );
     }
   };
@@ -323,7 +323,7 @@ export function startDaemonSessionKeepalive(
     } catch (err) {
       if (options.debug) {
         process.stderr.write(
-          `[togetherlink daemon] could not restore ${options.label ?? registration.agent ?? "session"}: ${
+          `[openharness daemon] could not restore ${options.label ?? registration.agent ?? "session"}: ${
             err instanceof Error ? err.message : String(err)
           }\n`,
         );

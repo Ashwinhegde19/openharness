@@ -56,12 +56,12 @@ export async function assertNoLiveCodexAppSession(home: string): Promise<void> {
     return;
   }
   throw new Error(
-    `Another togetherlink chatgpt session appears to be running (pid ${lock.pid}). Stop it with Ctrl+C, or run \`togetherlink chatgpt --restore\` after it exits.`,
+    `Another openharness chatgpt session appears to be running (pid ${lock.pid}). Stop it with Ctrl+C, or run \`openharness chatgpt --restore\` after it exits.`,
   );
 }
 
 /**
- * Is the codex config at ~/.codex/config.toml one that togetherlink wrote?
+ * Is the codex config at ~/.codex/config.toml one that openharness wrote?
  * Detects both the current managed block (marker comments) and the legacy
  * openai-provider+local-proxy+catalog triplet. Used by the orchestrator to
  * decide whether an interrupted session is recoverable, and by backup to

@@ -19,37 +19,37 @@ import { OPENROUTER_API_KEY_ENV } from "../provider/openrouter-preset.js";
 import { VERSION } from "../version.js";
 
 export function printHelp() {
-  console.log(`togetherlink v${VERSION} — session-scoped multi-provider harness launcher
+  console.log(`openharness v${VERSION} — session-scoped multi-provider harness launcher
 
 Connect Claude Code, Codex, OpenCode, and Pi to model providers for one session
 without permanently rewriting harness config. Together is an optional preset,
 not a product requirement.
 
 Usage:
-  togetherlink doctor                 # diagnose harness + provider setup
-  togetherlink dry-run opencode [...] # preview the launch plan (no spawn)
-  togetherlink configure              # optional provider keys (all skippable)
-  togetherlink whoami
-  togetherlink opencode [...]         # default provider: Ollama (no API key)
-  togetherlink claude [...]           # default Together preset
-  togetherlink codex [...]            # default Together preset
-  togetherlink pi [...]               # Together preset today
-  togetherlink chatgpt [--model <model>] [--restore]  (alpha · Together preset)
+  openharness doctor                 # diagnose harness + provider setup
+  openharness dry-run opencode [...] # preview the launch plan (no spawn)
+  openharness configure              # optional provider keys (all skippable)
+  openharness whoami
+  openharness opencode [...]         # default provider: Ollama (no API key)
+  openharness claude [...]           # default Together preset
+  openharness codex [...]            # default Together preset
+  openharness pi [...]               # Together preset today
+  openharness chatgpt [--model <model>] [--restore]  (alpha · Together preset)
 
 Claude / Codex providers (local protocol proxy; no permanent harness config mutation):
-  togetherlink claude                                      # Together (default)
-  togetherlink claude --provider openrouter --main openai/gpt-4o-mini
-  togetherlink claude --provider ollama --main llama3.2
-  togetherlink codex --provider openrouter --main openai/gpt-4o-mini
-  togetherlink codex --provider ollama --main llama3.2
+  openharness claude                                      # Together (default)
+  openharness claude --provider openrouter --main openai/gpt-4o-mini
+  openharness claude --provider ollama --main llama3.2
+  openharness codex --provider openrouter --main openai/gpt-4o-mini
+  openharness codex --provider ollama --main llama3.2
 
 OpenCode providers (session-only; does not write ~/.config/opencode):
-  togetherlink opencode                                    # Ollama (default, no key)
-  togetherlink opencode --provider ollama --main llama3.2
-  togetherlink opencode --provider openrouter              # OPENROUTER_API_KEY
-  togetherlink opencode --provider openrouter --main openai/gpt-4o-mini
-  togetherlink opencode --provider together                # TOGETHER_API_KEY
-  togetherlink --provider openrouter opencode              # flags before harness OK
+  openharness opencode                                    # Ollama (default, no key)
+  openharness opencode --provider ollama --main llama3.2
+  openharness opencode --provider openrouter              # OPENROUTER_API_KEY
+  openharness opencode --provider openrouter --main openai/gpt-4o-mini
+  openharness opencode --provider together                # TOGETHER_API_KEY
+  openharness --provider openrouter opencode              # flags before harness OK
 
 Credentials are required only for the selected provider at launch time.
 `);
@@ -57,7 +57,7 @@ Credentials are required only for the selected provider at launch time.
 
 export async function runConfigure(): Promise<boolean> {
   const home = os.homedir();
-  clack.intro("togetherlink configure");
+  clack.intro("openharness configure");
   clack.log.info(
     "Keys are optional and per provider. Skip any prompt with Enter. " +
       "Ollama needs no key. Claude/Codex/Pi still use the Together preset today.",
@@ -147,7 +147,7 @@ export async function runConfigure(): Promise<boolean> {
   if (launchable.length > 0) {
     clack.log.info(
       `Ready: ${launchable.map((h) => HARNESS_LABEL[h]).join(", ")}. ` +
-        `Try \`togetherlink opencode\` (Ollama, no key) or a harness that matches a key you set.`,
+        `Try \`openharness opencode\` (Ollama, no key) or a harness that matches a key you set.`,
     );
   }
 

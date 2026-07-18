@@ -1,13 +1,12 @@
 import os from "node:os";
-import {
-  ALL_HARNESSES,
-  HARNESS_INSTALL,
-  HARNESS_LABEL,
-  type HarnessId,
-} from "../harness.js";
+import { ALL_HARNESSES, HARNESS_INSTALL, HARNESS_LABEL, type HarnessId } from "../harness.js";
 import { detectInstalledHarnesses } from "../detect.js";
 import { discoverOllamaModels, type OllamaDiscoveryResult } from "../provider/ollama-discovery.js";
-import { OLLAMA_PROVIDER_ID, OPENROUTER_PROVIDER_ID, TOGETHER_PROVIDER_ID } from "../provider/index.js";
+import {
+  OLLAMA_PROVIDER_ID,
+  OPENROUTER_PROVIDER_ID,
+  TOGETHER_PROVIDER_ID,
+} from "../provider/index.js";
 import { OPENROUTER_API_KEY_ENV } from "../provider/openrouter-preset.js";
 import {
   readGlobalConfig,
@@ -25,7 +24,7 @@ const SEVERITY_RANK: Record<DoctorSeverity, number> = {
   error: 3,
 };
 
-const PRODUCT_NAME = "togetherlink";
+const PRODUCT_NAME = "openharness";
 
 export type DoctorOptions = {
   /** Emit the structured report as JSON. */
@@ -49,15 +48,20 @@ export async function collectDoctorReport(options: DoctorOptions = {}): Promise<
   await collectProviderChecks(checks, { home, fetchImpl: options.fetchImpl });
 
   const status = checks.reduce<DoctorSeverity>(
-    (worst, check) => (SEVERITY_RANK[check.severity] > SEVERITY_RANK[worst] ? check.severity : worst),
+    (worst, check) =>
+      SEVERITY_RANK[check.severity] > SEVERITY_RANK[worst] ? check.severity : worst,
     "ok",
   );
 
   const installed = checks
     .filter((c) => c.id.startsWith("harness:") && (c.severity === "ok" || c.severity === "info"))
     .map((c) => c.id.replace("harness:", ""));
-  const ollamaReachable = checks.some((c) => c.id === `provider:${OLLAMA_PROVIDER_ID}` && c.severity === "ok");
-  const togetherKey = checks.some((c) => c.id === `provider:${TOGETHER_PROVIDER_ID}` && c.severity === "ok");
+  const ollamaReachable = checks.some(
+    (c) => c.id === `provider:${OLLAMA_PROVIDER_ID}` && c.severity === "ok",
+  );
+  const togetherKey = checks.some(
+    (c) => c.id === `provider:${TOGETHER_PROVIDER_ID}` && c.severity === "ok",
+  );
   const recommendation = buildRecommendation({ installed, ollamaReachable, togetherKey });
 
   return {
@@ -133,7 +137,7 @@ async function collectProviderChecks(
     severity: openrouter.present ? "ok" : "info",
     detail: openrouter.present
       ? `Found via ${openrouter.source}. Optional — needed for \`--provider openrouter\`.`
-      : "Not set. Optional — set OPENROUTER_API_KEY or run `togetherlink configure`.",
+      : "Not set. Optional — set OPENROUTER_API_KEY or run `openharness configure`.",
   });
 
   const together = await keyStatus("TOGETHER_API_KEY", async () => {
@@ -166,7 +170,8 @@ async function collectProviderChecks(
     id: "product:no-global-key",
     label: "No global provider key required",
     severity: "ok",
-    detail: "The product launches without a product-level API key; credentials are per-provider at launch.",
+    detail:
+      "The product launches without a product-level API key; credentials are per-provider at launch.",
   });
 }
 
@@ -207,25 +212,28 @@ function buildRecommendation(input: {
     return (
       "Install a harness to begin. The lowest-friction first run is OpenCode + local Ollama " +
       "(no API key): `npm install -g opencode-ai@latest`, `ollama serve`, `ollama pull llama3.2`, " +
-      "then `togetherlink opencode`."
+      "then `openharness opencode`."
     );
   }
   if (input.installed.includes(OLLAMA_PROVIDER_ID) && input.ollamaReachable) {
-    return "Ready: run `togetherlink opencode` to start a local Ollama session (no API key).";
+    return "Ready: run `openharness opencode` to start a local Ollama session (no API key).";
   }
   if (input.installed.includes(OLLAMA_PROVIDER_ID)) {
     return (
       "OpenCode is installed but Ollama is not reachable. Start it with `ollama serve` and pull a " +
-      "model (`ollama pull llama3.2`), then run `togetherlink opencode` (no API key)."
+      "model (`ollama pull llama3.2`), then run `openharness opencode` (no API key)."
     );
   }
-  if ((input.installed.includes("claude") || input.installed.includes("codex")) && input.togetherKey) {
+  if (
+    (input.installed.includes("claude") || input.installed.includes("codex")) &&
+    input.togetherKey
+  ) {
     const harness = input.installed.includes("claude") ? "claude" : "codex";
-    return `Run \`togetherlink ${harness}\` to start a Together session (key detected).`;
+    return `Run \`openharness ${harness}\` to start a Together session (key detected).`;
   }
   return (
     "A harness is installed but no provider key is set. For a keyless start, install OpenCode + Ollama " +
-    "(`togetherlink opencode`). For cloud providers, set a key or run `togetherlink configure`."
+    "(`openharness opencode`). For cloud providers, set a key or run `openharness configure`."
   );
 }
 
@@ -247,7 +255,8 @@ function printDoctorReport(report: DoctorReport): void {
     }
   }
   console.log("─".repeat(48));
-  const summary = report.status === "error" ? "errors found" : report.status === "warn" ? "warnings" : "ok";
+  const summary =
+    report.status === "error" ? "errors found" : report.status === "warn" ? "warnings" : "ok";
   console.log(`Status: ${summary}`);
   console.log(`Next: ${report.recommendation}`);
 }

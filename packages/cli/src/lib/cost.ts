@@ -274,13 +274,13 @@ export class CostTracker {
       return this.externalSummary;
     }
     const main =
-      `[togetherlink cost] session total: $${this.costUsd.toFixed(4)} ` +
+      `[openharness cost] session total: $${this.costUsd.toFixed(4)} ` +
       `(${this.formatTokens(this.promptTokens)} in` +
       (this.cachedTokens > 0 ? ` incl ${this.formatTokens(this.cachedTokens)} cached` : "") +
       `, ${this.formatTokens(this.completionTokens)} out)`;
     if (this.visionCalls > 0) {
       return (
-        `${main}\n[togetherlink cost] vision: ${this.visionCalls} image(s), ` +
+        `${main}\n[openharness cost] vision: ${this.visionCalls} image(s), ` +
         `$${this.visionCostUsd.toFixed(4)} ` +
         `(${this.formatTokens(this.visionPromptTokens)} in, ${this.formatTokens(this.visionCompletionTokens)} out)`
       );
